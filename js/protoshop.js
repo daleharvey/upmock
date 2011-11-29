@@ -117,25 +117,27 @@ var Protoshop = function() {
     };
 
     var offset = {
-      left: e.pageX - size.width,
-      top: e.pageY - size.height
+      left: self.selected.$dom.position().left,
+      top: self.selected.$dom.position().top
     };
+
+    var start = e;
     var len = type.length;
 
     var resize = {
       'n': function(e, obj) {
-        obj.top = e.pageY - size.height;
-        //obj.height = size.height - (e.clientY - offset.top);
+        obj.top = e.clientY - (start.clientY - offset.top);
+        obj.height = size.height + (offset.top - obj.top);
       },
       'e': function(e, obj) {
-        obj.width = e.clientX - offset.left;
+        obj.width = e.clientX - (start.pageX - size.width);
       },
       's': function(e, obj) {
-        obj.height = e.clientY - offset.top;
+        obj.height = e.clientY - (start.pageY - size.height);
       },
       'w': function(e, obj) {
-        obj.left = e.clientX;
-        obj.width = size.width - (e.clientX - offset.left);
+        obj.left = e.clientX - (start.clientX - offset.left);
+        obj.width = size.width + (offset.left - obj.left);
       }
     };
 
