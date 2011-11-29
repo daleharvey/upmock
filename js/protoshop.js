@@ -19,6 +19,7 @@ var CoreElement = function() {
     this.$dom.addClass('selected');
     this.$dom.append($handles);
     this.$dom.append($info);
+    this.updateInfo();
   };
 
   this.deselect = function() {
@@ -48,7 +49,7 @@ var BlockElement = function(index, obj) {
 };
 BlockElement.prototype = new CoreElement();
 
-var TextElement = function(index) {
+var TextElement = function(index, obj) {
   this.$dom = obj || $('<div>', {
     'z-index': index,
     'data-type': 'text',
