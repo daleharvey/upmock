@@ -40,7 +40,7 @@
       .bottom { bottom: -4px; left: 50%; margin-left: -3px; cursor: ns-resize; }
       .left { top: 50%; left: -4px; margin-top: -3px; cursor: ew-resize; }
 
-      #top-bar { position:fixed; top: 0px; left: 0px; right: 0px; background: #666; height: 30px; padding: 10px; }
+      #top-bar { position:fixed; top: 0px; left: 0px; right: 0px; background: #666; height: 30px; padding: 10px; z-index: 1000; }
 
       #add-block { background: url(./img/famfam/shape_square.png) }
       #add-text { background: url(./img/famfam/text_italic.png) }
@@ -52,7 +52,7 @@
       .info-box { position:absolute; bottom: -25px; background: yellow; font-family: monospace; border:1px solid orange; white-space: nowrap; display:none; }
       .selected .info-box { display:block; }
 
-      #grid-overlay { position:absolute; height: 100%; width: 100%; background: url(./img/16_col.png); opacity: 0.5; }
+      #grid-overlay { position:absolute; height: 100%; width: 100%; background: url(./img/16_col.png); opacity: 0.5; z-index: 500; }
 
       .overlay { display: none; z-index: 1000; pointer-events: none; -moz-user-select: -moz-none; }
 
@@ -93,8 +93,9 @@
     </div>
 
     <div id="canvas_wrapper"><div id="canvas">
-        <div id="grid-overlay" class="overlay"></div>
     </div></div>
+
+    <div id="grid-overlay" class="overlay"></div>
 
     <div id="keyboard-help" class="modal-overlay"><div class="inner-modal">
         <h2>Keyboard Shortcuts</h2>

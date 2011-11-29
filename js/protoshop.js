@@ -28,8 +28,7 @@ var CoreElement = function() {
   };
 
   this.updateInfo = function() {
-    $info.text("y:" + this.$dom.position().top + " x:" +
-               this.$dom.position().left +
+    $info.text("y:" + this.$dom.position().top + " x:" + this.$dom.position().left +
                " [" + this.$dom.width() + "x" + this.$dom.height() + "]");
   };
 
@@ -39,8 +38,8 @@ var CoreElement = function() {
   };
 };
 
-var BlockElement = function(index) {
-  this.$dom = $('<div>', {
+var BlockElement = function(index, obj) {
+  this.$dom = obj || $('<div>', {
     'z-index': index,
     'data-type': 'block',
     'class': 'block'
@@ -50,7 +49,7 @@ var BlockElement = function(index) {
 BlockElement.prototype = new CoreElement();
 
 var TextElement = function(index) {
-  this.$dom = $('<div>', {
+  this.$dom = obj || $('<div>', {
     'z-index': index,
     'data-type': 'text',
     'class': 'text'
@@ -268,8 +267,32 @@ var Protoshop = function() {
   });
   $('#keyboard-placer').html(html.join(''));
 
+  (function() {
+    var autoSave = setInterval(function() {
+      var toSave = $canvas.clone();
+      toSave.find('.handles, .info-box').remove();
+      localStorage.saved = toSave.html();
+    }, 5000);
+
+    var index = 0;
+    if (localStorage.saved) {
+      $canvas.html(localStorage.saved);
+
+      _.each($canvas.find('[data-type=block]'), function(obj) {
+        new BlockElement(++index, $(obj));
+      });
+      _.each($canvas.find('[data-type=text]'), function(obj) {
+        new TextElement(++index, $(obj));
+      });
+
+      var sel = $canvas.find('.selected').data('obj');
+      if (sel) {
+        self.selectElement(sel);
+      }
+    }
+  })();
 
 };
 
-var x = new Protoshop();
+new Protoshop();
 
