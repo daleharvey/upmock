@@ -28,7 +28,7 @@ var CoreElement = function() {
     this.updateInfo();
   };
 
-  this.deselect = function() {
+  CoreElement.prototype.deselect = function() {
     this.$dom.removeClass('selected');
     this.$handles.remove();
     this.$handles = null;
@@ -37,8 +37,9 @@ var CoreElement = function() {
   };
 
   this.updateInfo = function() {
-    this.$info.text("y:" + this.$dom.position().top + " x:" + this.$dom.position().left +
-               " [" + this.$dom.width() + "x" + this.$dom.height() + "]");
+    this.$info.text("y:" + this.$dom.position().top + " x:" +
+                    this.$dom.position().left +
+                    " [" + this.$dom.width() + "x" + this.$dom.height() + "]");
   };
 
   this.css = function(obj) {
@@ -65,13 +66,33 @@ var BlockElement = function(index, obj) {
 };
 BlockElement.prototype = new CoreElement();
 
-var TextElement = function() {
+var TextElement = function(index, obj) {
+
   this.$dom = obj || $('<div>', {
     'z-index': index,
     'data-type': 'text',
     'class': 'text'
   }).append('<span>text</span>');
+
   this.$dom.data('obj', this);
+
+  this.startEditing = function() {
+    var text = this.$dom.find('span').text();
+    this.$inp = $('<textarea>' + text + '</textarea>');
+    this.$dom.find('span').replaceWith(this.$inp);
+    this.$inp[0].focus();
+    this.$inp[0].select();
+  };
+
+  this.deselect = function() {
+    if (this.$inp) {
+      var text = this.$inp.val();
+      this.$inp.replaceWith('<span>' + text + '</span>');
+      this.$inp = null;
+    }
+    CoreElement.prototype.deselect.call(this);
+  };
+
 };
 TextElement.prototype = new CoreElement();
 
@@ -259,17 +280,9 @@ var Protoshop = function() {
     var obj = $targ.data('obj');
 
     if (obj instanceof TextElement) {
-      self.selected = obj;
-      var text = $targ.find('span').text();
-      var $inp = $('<textarea>' + text + '</textarea>');
-      $targ.find('span').replaceWith($inp);
-      $inp[0].focus();
-      $inp[0].select();
-
-      $targ.data('deselect', function() {
-        var text = $inp.val();
-        $targ.find('textarea').replaceWith('<span>' + text + '</span>');
-      });
+      self.selectElement(null);
+      self.selectElement(obj);
+      obj.startEditing();
     }
 
   });
