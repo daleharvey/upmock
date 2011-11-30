@@ -228,11 +228,11 @@ var Protoshop = function() {
 
   function bindMouseSelection(e) {
 
-    var yOffset = parseInt($('#canvas_wrapper').css('margin-top'), 0);
+    var yOffset = $canvas_wrapper[0].scrollTop - $canvas_wrapper[0].offsetTop;
     var start = e;
     var selected = [];
 
-    start.clientY -= yOffset;
+    start.clientY += yOffset;
 
     var objects = _.filter($canvas.find('div'), function(obj) {
       return typeof $(obj).data('obj') !== 'undefined';
@@ -244,16 +244,18 @@ var Protoshop = function() {
     $selection.show();
 
     $canvas.bind('mousemove.selecting', function(e) {
-      e.clientY -= yOffset;
+      e.clientY += yOffset;
       var top = Math.min(start.clientY, e.clientY);
       var left = Math.min(start.clientX, e.clientX);
       var width = Math.max(start.clientX, e.clientX) - left;
       var height = Math.max(start.clientY, e.clientY) - top;
       $selection.css({width: width, height: height, top: top, left: left});
-
+      top -= $canvas[0].offsetTop;
       _.each(selected, function(obj) { obj.removeClass('soft-select'); });
+
       selected = _.filter(objects, function(obj) {
         var pos = obj.position();
+        pos.left += $canvas[0].offsetLeft;
         return !(pos.left > (left + width) || (pos.left + obj.width()) < left ||
                  pos.top > (top + height) || (pos.top + obj.height()) < top);
       });

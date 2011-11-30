@@ -10,8 +10,8 @@
       ul { padding: 0px; margin: 0px; }
 
 
-      #canvas_wrapper { margin-top: 50px; overflow:auto; position:relative; }
-      #canvas { width: 1024px; height: 800px; background:white; margin: 20px auto; }
+      #canvas_wrapper { overflow:scroll; position:absolute; top: 50px; left: 0px; bottom: 0px; right: 0px; }
+      #canvas { width: 1024px; height: 800px; background:white; margin: 20px auto; position:relative; }
 
       #panel { position:fixed; top:80px; left: 0px; background: #666; }
       #panel ul { list-style-type:none; padding: 5px; overflow:auto; }
@@ -52,7 +52,7 @@
       .info-box { position:absolute; bottom: -25px; background: yellow; font-family: monospace; border:1px solid orange; white-space: nowrap; display:none; }
       .selected .info-box { display:block; }
 
-      #grid-overlay { position:absolute; height: 100%; width: 100%; background: url(./img/16_col.png); opacity: 0.5; z-index: 500; top: 0px;}
+      #grid-overlay { position:absolute; height: 100%; width: 100%; background: url(./img/16_col.png); opacity: 0.5; z-index: 500; top: 0px; }
 
       .overlay { display: none; z-index: 1000; pointer-events: none; -moz-user-select: -moz-none; }
 
@@ -98,7 +98,7 @@
 
     <div id="canvas_wrapper">
       <div id="canvas"></div>
-      <div id="selection"></div>
+      <div style="width: 800px; margin: 20px auto"><div id="selection"</div></div>
     </div>
 
     <div id="grid-overlay" class="overlay"></div>
