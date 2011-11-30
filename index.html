@@ -10,8 +10,8 @@
       ul { padding: 0px; margin: 0px; }
 
 
-      #canvas_wrapper { position: absolute; top: 50px; bottom: 0px; left: 0px; right: 0px; overflow:auto; }
-      #canvas { width: 1024px; height: 800px; background:white; margin: 20px auto; border: 1px solid #CCC; position:relative; }
+      #canvas_wrapper { margin-top: 50px; overflow:auto; position:relative; }
+      #canvas { width: 1024px; height: 800px; background:white; margin: 20px auto; }
 
       #panel { position:fixed; top:80px; left: 0px; background: #666; }
       #panel ul { list-style-type:none; padding: 5px; overflow:auto; }
@@ -82,6 +82,10 @@
       }
       .shortcut-section { margin: 10px; float:left; }
       #keyboard-placer { overflow: auto; }
+#selection { background: transparent; border: 1px dotted #666; position: absolute; display:none; pointer-events: none; -moz-user-select: -moz-none;}
+      .soft-select {
+        opacity: 0.5;
+      }
     </style>
 
   </head>
@@ -92,8 +96,10 @@
       <a id="toggle-grid"></a>
     </div>
 
-    <div id="canvas_wrapper"><div id="canvas">
-    </div></div>
+    <div id="canvas_wrapper">
+      <div id="canvas"></div>
+      <div id="selection"></div>
+    </div>
 
     <div id="grid-overlay" class="overlay"></div>
 

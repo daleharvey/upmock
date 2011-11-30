@@ -1,5 +1,7 @@
 var CoreElement = function() {
 
+  var self = this;
+
   var $handles = $('<div class="handles">' +
     '<div class="top-left" data-handle="nw" data-type="handle"></div>' +
     '<div class="top-right" data-handle="ne" data-type="handle"></div>' +
@@ -13,28 +15,42 @@ var CoreElement = function() {
 
   var $info = $('<div class="info-box"></div>');
 
-  var $dom = this.$dom = null;
+  this.$handles = null;
+  this.$info = null;
+  this.$dom = null;
 
   this.select = function() {
+    this.$handles = $handles.clone();
+    this.$info = $info.clone();
     this.$dom.addClass('selected');
-    this.$dom.append($handles);
-    this.$dom.append($info);
+    this.$dom.append(this.$handles);
+    this.$dom.append(this.$info);
     this.updateInfo();
   };
 
   this.deselect = function() {
     this.$dom.removeClass('selected');
-    $handles.remove();
-    $info.remove();
+    this.$handles.remove();
+    this.$handles = null;
+    this.$info.remove();
+    this.$info = null;
   };
 
   this.updateInfo = function() {
-    $info.text("y:" + this.$dom.position().top + " x:" + this.$dom.position().left +
+    this.$info.text("y:" + this.$dom.position().top + " x:" + this.$dom.position().left +
                " [" + this.$dom.width() + "x" + this.$dom.height() + "]");
   };
 
   this.css = function(obj) {
     this.$dom.css(obj);
+    this.updateInfo();
+  };
+
+  CoreElement.prototype.move = function(y, x) {
+    this.css({
+      left: this.$dom.position().left + x,
+      top: this.$dom.position().top + y
+    });
     this.updateInfo();
   };
 };
@@ -49,7 +65,7 @@ var BlockElement = function(index, obj) {
 };
 BlockElement.prototype = new CoreElement();
 
-var TextElement = function(index, obj) {
+var TextElement = function() {
   this.$dom = obj || $('<div>', {
     'z-index': index,
     'data-type': 'text',
@@ -63,43 +79,60 @@ TextElement.prototype = new CoreElement();
 var Protoshop = function() {
 
   var self = this;
-  var $canvas = $('#canvas');
 
-  this.selected = null;
+  var $canvas = $('#canvas');
+  var $canvas_wrapper = $('#canvas_wrapper');
+
+  this.selected = [];
+  this.bounds = {};
 
   this.selectElement = function(el) {
 
-    if (self.selected) {
-      self.selected.deselect();
-      $(document).unbind('.keymove');
-
-      if (self.selected.$dom.data('deselect')) {
-        self.selected.$dom.data('deselect')();
-        self.selected.$dom.data('deselect', null);
-      }
-    }
-
-    self.selected = el;
-
     if (el) {
+      self.selected.push(el);
       var $el = el.$dom;
       el.select();
-      bindKeyMove(self.selected.$dom);
+      bindKeyMove();
+    } else {
+      $(document).unbind('.editing');
+      _.each(self.selected, function(obj) { obj.deselect.apply(obj); });
+      self.selected = [];
     }
+
+    this.calculateSelectionBounds();
+  };
+
+  this.onSelected = function(callback) {
+    var params = _.toArray(arguments).slice(1);
+    _.each(self.selected, function(obj) {
+      obj[callback].apply(obj, params);
+    });
+  };
+
+  this.calculateSelectionBounds = function() {
+
+    var min = function(a, b) { return a === null ? b : Math.min(a, b); };
+    var max = function(a, b) { return a === null ? b : Math.max(a, b); };
+
+    self.bounds = {nw: { x: null, y: null}, se: { x: null, y: null}};
+
+    _.each(self.selected, function(obj) {
+      var pos = obj.$dom.position();
+      self.bounds.nw.x = min(self.bounds.nw.x, pos.left);
+      self.bounds.nw.y = min(self.bounds.nw.y, pos.top);
+      self.bounds.se.x = max(self.bounds.se.x, pos.left + obj.$dom.width());
+      self.bounds.se.y = max(self.bounds.se.y, pos.top + obj.$dom.height());
+    });
   };
 
   function bindMouseMove(e) {
 
-    var offset = {
-      left: e.clientX - self.selected.$dom.position().left,
-      top: e.clientY - self.selected.$dom.position().top
-    };
+    var start = e, orig = {}, diff = {};
 
     $canvas.bind('mousemove.editing', function(e) {
-      self.selected.css({
-        left: e.clientX - offset.left,
-        top: e.clientY - offset.top
-      });
+      diff = {x: e.clientX - start.clientX, y: e.clientY - start.clientY};
+      self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
+      orig = diff;
     });
 
     $canvas.bind('mouseup.moving', function(e) {
@@ -112,13 +145,13 @@ var Protoshop = function() {
   function bindMouseResize($el, e, type) {
 
     var size = {
-      width: self.selected.$dom.width(),
-      height: self.selected.$dom.height()
+      width: self.selected[0].$dom.width(),
+      height: self.selected[0].$dom.height()
     };
 
     var offset = {
-      left: self.selected.$dom.position().left,
-      top: self.selected.$dom.position().top
+      left: self.selected[0].$dom.position().left,
+      top: self.selected[0].$dom.position().top
     };
 
     var start = e;
@@ -146,7 +179,7 @@ var Protoshop = function() {
       for(i = 0; i < len; i++) {
         resize[type[i]](e, obj);
       }
-      self.selected.css(obj);
+      self.selected[0].css(obj);
     });
 
     $canvas.bind('mouseup.moving', function(e) {
@@ -170,6 +203,55 @@ var Protoshop = function() {
     });
   }
 
+  var $selection = $('#selection');
+
+  function bindMouseSelection(e) {
+
+    var yOffset = 50; // Just hard coding for now, thos offset between canvas and page
+    var start = e;
+    var selected = [];
+
+    start.clientY -= yOffset;
+
+    var objects = _.filter($canvas.find('div'), function(obj) {
+      return typeof $(obj).data('obj') !== 'undefined';
+    });
+
+    objects = _.map(objects, function(obj) { return $(obj); });
+
+    $selection.css({top: start.clientY, left: start.clientX, height: 1, width: 1});
+    $selection.show();
+
+    $canvas.bind('mousemove.selecting', function(e) {
+      e.clientY -= yOffset;
+      var top = Math.min(start.clientY, e.clientY);
+      var left = Math.min(start.clientX, e.clientX);
+      var width = Math.max(start.clientX, e.clientX) - left;
+      var height = Math.max(start.clientY, e.clientY) - top;
+      $selection.css({width: width, height: height, top: top, left: left});
+
+      _.each(selected, function(obj) { obj.removeClass('soft-select'); });
+      selected = _.filter(objects, function(obj) {
+        var pos = obj.position();
+        return !(pos.left > (left + width) || (pos.left + obj.width()) < left ||
+                 pos.top > (top + height) || (pos.top + obj.height()) < top);
+      });
+      _.each(selected, function(obj) { obj.addClass('soft-select'); });
+
+    });
+
+    $canvas.bind('mouseup.selecting', function(e) {
+      $selection.hide();
+      $canvas.unbind('.selecting');
+      _.each(selected, function(obj) {
+        obj.removeClass('soft-select');
+        self.selectElement(obj.data('obj'));
+      });
+    });
+
+  }
+
+
 
   $canvas.bind('dblclick', function(e) {
 
@@ -192,10 +274,12 @@ var Protoshop = function() {
 
   });
 
+
   $canvas.bind('mousedown', function(e) {
 
     if (e.target === this) {
       self.selectElement(null);
+      bindMouseSelection(e);
       return true;
     }
 
@@ -203,17 +287,30 @@ var Protoshop = function() {
     var obj = $el.data('obj');
 
     if (obj instanceof CoreElement) {
+
       e.preventDefault();
       e.stopPropagation();
+
+      if (!e.shiftKey && $.inArray(obj, self.selected) === -1) {
+        self.selectElement(null);
+      }
+
       if (!$el.is('.selected')) {
         self.selectElement($el.data('obj'));
       }
+
       bindMouseMove(e);
     }
 
     if ($el.data('type') === 'handle') {
+
       e.preventDefault();
       e.stopPropagation();
+
+      var tmp = $el.parent().parent().data('obj');
+      self.selectElement(null);
+      self.selectElement(tmp);
+
       bindMouseResize($el.parent().parent(), e, $el.data('handle'));
    }
 
@@ -232,11 +329,13 @@ var Protoshop = function() {
       'add-block': function() {
         var el = new BlockElement(++index);
         el.$dom.appendTo($canvas);
+        self.selectElement(null);
         self.selectElement(el);
       },
       'add-text': function() {
         var el = new TextElement(++index);
         el.$dom.appendTo($canvas);
+        self.selectElement(null);
         self.selectElement(el);
       }
     };
