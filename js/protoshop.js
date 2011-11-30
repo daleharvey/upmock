@@ -408,6 +408,21 @@ var Protoshop = function() {
     }
   })();
 
+
+  var $bg = $('#bg-picker');
+  var bgPicker = new jscolor.color($bg[0], {});
+
+  $bg.bind('change', function() {
+    self.onSelected('css',{'background-color': '#' + bgPicker.toString()});
+  });
+
+  var $fg = $('#fg-picker');
+  var fgPicker = new jscolor.color($fg[0], {});
+
+  $fg.bind('change', function() {
+    self.onSelected('css',{'color': '#' + fgPicker.toString()});
+  });
+
 };
 
 new Protoshop();

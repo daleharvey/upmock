@@ -130,11 +130,11 @@ html, body {
 }
 
 #add-block {
-    background: url(./img/famfam/shape_square.png)
+    background: url(../img/famfam/shape_square.png)
 }
 
 #add-text {
-    background: url(./img/famfam/text_italic.png)
+    background: url(../img/famfam/text_italic.png)
 }
 
 #top-bar a {
@@ -146,7 +146,7 @@ html, body {
 }
 
 #toggle-grid {
-    background: url(./img/grid.png)
+    background: url(../img/grid.png)
 }
 
 .info-box {
@@ -167,7 +167,7 @@ html, body {
     position:absolute;
     height: 100%;
     width: 100%;
-    background: url(./img/16_col.png);
+    background: url(../img/16_col.png);
     opacity: 0.5;
     z-index: 500;
     top: 0px;
@@ -262,4 +262,9 @@ h3 {
 
 .soft-select {
     opacity: 0.5;
+}
+
+#top-bar * {
+    float:left;
+    margin-right: 10px;
 }
