@@ -228,7 +228,7 @@ var Protoshop = function() {
 
   function bindMouseSelection(e) {
 
-    var yOffset = 50; // Just hard coding for now, thos offset between canvas and page
+    var yOffset = parseInt($('#canvas_wrapper').css('margin-top'), 0);
     var start = e;
     var selected = [];
 
@@ -269,7 +269,6 @@ var Protoshop = function() {
         self.selectElement(obj.data('obj'));
       });
     });
-
   }
 
 
