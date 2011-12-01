@@ -69,14 +69,11 @@ input[type=text], input[type=color] {
 }
 
 #canvas div.block, #canvas div.text {
-    border: 1px solid transparent;
+    border: 0px solid black;
     position:absolute;
     left: 50px;
     top: 50px;
-}
-
-#canvas div.selected {
-    border: 1px solid blue;
+    box-sizing: border-box;
 }
 
 #canvas > div.block {
@@ -290,4 +287,29 @@ h3 {
 #top-bar * {
     float:left;
     margin-right: 10px;
+}
+
+.slider {
+    position:relative;
+}
+
+.slider span {
+    display:block;
+    background: white;
+    width: 15px;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 3px 20px 3px 2px;
+    border: 1px solid black;
+}
+
+.slider input {
+    display: none;
+    position:absolute;
+    top: 5px;
+    right: 0px;
+    height: 100px;
+    width: 15px;
+    -webkit-appearance: slider-vertical;
+    background: white;
 }

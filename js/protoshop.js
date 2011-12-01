@@ -466,6 +466,29 @@ var Protoshop = function() {
     $('#grid-overlay').toggle();
   });
 
+  $('.slider').each(function() {
+    var $value = $(this).find('span');
+    var $input = $(this).find('input');
+    $value.bind('mousedown', function() {
+      $input.toggle();
+      setTimeout(function() {
+        $(document).bind('mousedown.range', function(e) {
+          if (e.target !== $input[0]) {
+            $(document).unbind('mousedown.range');
+            $input.hide();
+          }
+        });
+      }, 0);
+    });
+    $input.bind('change', function() {
+      $value.text(this.value);
+      var tmp = {};
+      tmp[$(this).attr('data-css')] = this.value + 'px';
+      self.onSelected('css', tmp);
+    });
+
+  });
+
 
 };
 
