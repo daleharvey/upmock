@@ -470,11 +470,14 @@ var Protoshop = function() {
     var $value = $(this).find('span');
     var $input = $(this).find('input');
     $value.bind('mousedown', function() {
+      var selected = self.selected;
       $input.toggle();
       setTimeout(function() {
         $(document).bind('mousedown.range', function(e) {
           if (e.target !== $input[0]) {
             $(document).unbind('mousedown.range');
+            // Dirty hack, canvas mousedown is hit first and deselects everything
+            _.each(selected, function(x) { self.selectElement(x); });
             $input.hide();
           }
         });
