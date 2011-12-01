@@ -54,6 +54,31 @@ var CoreElement = function() {
     });
     this.updateInfo();
   };
+
+  this.toggleBold = function() {
+    if (this.$dom.css('font-weight') !== '700') {
+      this.$dom.css('font-weight', 'bold');
+    } else {
+      this.$dom.css('font-weight', '');
+    }
+  };
+
+  this.toggleItalic = function() {
+    if (this.$dom.css('font-style') !== 'italic') {
+      this.$dom.css('font-style', 'italic');
+    } else {
+      this.$dom.css('font-style', '');
+    }
+  };
+
+  this.toggleUnderline = function() {
+    if (this.$dom.css('text-decoration') !== 'underline') {
+      this.$dom.css('text-decoration', 'underline');
+    } else {
+      this.$dom.css('text-decoration', '');
+    }
+  };
+
 };
 
 var BlockElement = function(index, obj) {
@@ -372,13 +397,6 @@ var Protoshop = function() {
 
   })();
 
-  $('#top-bar').bind('mousedown', function(e) {
-    var id = $(e.target).attr('id');
-    if (e.target.nodeName === 'A') {
-      $('#grid-overlay').toggle();
-    }
-  });
-
   var template = Handlebars.compile($('#shortcut-section-tpl').html());
   var html = _.map(shortcuts, function(data) {
     return template(data);
@@ -427,13 +445,26 @@ var Protoshop = function() {
 
 
   $('#font-size').bind('change', function() {
-    self.onSelected('css',{'font-size': $(this).val() + 'px'});
+    self.onSelected('css',{'font-size': $(this).val()});
   });
 
   $('#font-family').bind('change', function() {
     self.onSelected('css',{'font-family': $(this).val()});
   });
 
+  $('#bold').bind('mousedown', function() {
+    self.onSelected('toggleBold');
+  });
+  $('#italic').bind('mousedown', function() {
+    self.onSelected('toggleItalic');
+  });
+  $('#underline').bind('mousedown', function() {
+    self.onSelected('toggleUnderline');
+  });
+
+  $('#toggle-grid').bind('mousedown', function(e) {
+    $('#grid-overlay').toggle();
+  });
 
 
 };

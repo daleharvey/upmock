@@ -157,6 +157,15 @@ input[type=text], input[type=color] {
 #toggle-grid {
     background: url(../img/grid.png)
 }
+#bold {
+    background: url(../img/famfam/text_bold.png)
+}
+#italic {
+    background: url(../img/famfam/text_italic.png)
+}
+#underline {
+    background: url(../img/famfam/text_underline.png)
+}
 
 .info-box {
     position:absolute;
@@ -168,6 +177,9 @@ input[type=text], input[type=color] {
     display:none;
     color: black;
     font-size: 10px;
+    font-weight: normal;
+    text-decoration:none;
+    font-style: normal;
 }
 
 .selected .info-box {
