@@ -443,11 +443,6 @@ var Protoshop = function() {
     self.onSelected('css',{'color': '#' + fgPicker.toString()});
   });
 
-
-  $('#font-size').bind('change', function() {
-    self.onSelected('css',{'font-size': $(this).val()});
-  });
-
   $('#font-family').bind('change', function() {
     self.onSelected('css',{'font-family': $(this).val()});
   });
