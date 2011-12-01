@@ -457,6 +457,20 @@ var Protoshop = function() {
     self.onSelected('toggleUnderline');
   });
 
+  $('#align-left').bind('mousedown', function() {
+    self.onSelected('css',{'text-align': 'left'});
+  });
+  $('#align-center').bind('mousedown', function() {
+    self.onSelected('css',{'text-align': 'center'});
+  });
+  $('#align-right').bind('mousedown', function() {
+    self.onSelected('css',{'text-align': 'right'});
+  });
+  $('#align-justify').bind('mousedown', function() {
+    self.onSelected('css',{'text-align': 'justify'});
+  });
+
+
   $('#toggle-grid').bind('mousedown', function(e) {
     $('#grid-overlay').toggle();
     $(this).toggleClass('active');

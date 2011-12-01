@@ -171,6 +171,18 @@ input[type=text], input[type=color] {
 #underline {
     background: url(../img/famfam/text_underline.png)
 }
+#align-right {
+    background: url(../img/famfam/text_align_right.png)
+}
+#align-center {
+    background: url(../img/famfam/text_align_center.png)
+}
+#align-left {
+    background: url(../img/famfam/text_align_left.png)
+}
+#align-justify {
+    background: url(../img/famfam/text_align_justify.png)
+}
 #bg-picker, #fg-picker {
     text-indent: -999px;
     padding: 0px;
@@ -300,7 +312,7 @@ h3 {
 
 #top-bar * {
     float:left;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .slider {
