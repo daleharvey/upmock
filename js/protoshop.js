@@ -459,6 +459,7 @@ var Protoshop = function() {
 
   $('#toggle-grid').bind('mousedown', function(e) {
     $('#grid-overlay').toggle();
+    $(this).toggleClass('active');
   });
 
   $('.slider').each(function() {
