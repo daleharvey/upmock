@@ -8,7 +8,7 @@ var shortcuts = {
         callback: function() {
           this.selectElement(null);
           $('#panel, #top-bar').toggle();
-          $('#canvas_wrapper').css({'top': $('#panel').is(':visible') ? 50 : 0});
+          $('#canvas_wrapper').css({'top': $('#panel').is(':visible') ? 30 : 0});
         },
         description: 'Preview Design'
       },
