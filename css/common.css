@@ -25,7 +25,7 @@ input[type=text], input[type=color] {
 #canvas_wrapper {
     overflow:scroll;
     position:absolute;
-    top: 50px;
+    top: 30px;
     left: 0px;
     bottom: 0px;
     right: 0px;
@@ -133,9 +133,14 @@ input[type=text], input[type=color] {
     right: 0px;
     background: #DDD;
     height: 19px;
-    padding: 15px;
+    padding: 5px;
     z-index: 1000;
     border-bottom: 1px solid #CCC;
+}
+
+#top-bar-inner {
+    width: 800px;
+    margin: 0px auto;
 }
 
 #add-block {
@@ -310,7 +315,7 @@ h3 {
     opacity: 0.5;
 }
 
-#top-bar * {
+#top-bar-inner * {
     float:left;
     margin-right: 5px;
 }
