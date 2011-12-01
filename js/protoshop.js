@@ -495,8 +495,11 @@ var Protoshop = function() {
     });
     $input.bind('change', function() {
       $value.text(this.value);
-      var tmp = {};
-      tmp[$(this).attr('data-css')] = this.value + 'px';
+      var tmp = {}, key = $(this).attr('data-css');
+      tmp[key] = this.value + 'px';
+      if (key === 'opacity') {
+        tmp[key] = parseInt(tmp[key], 0) / 100;
+      }
       self.onSelected('css', tmp);
     });
 
