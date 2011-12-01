@@ -6,7 +6,6 @@ var shortcuts = {
         key: 'esc',
         e: 'keydown',
         callback: function() {
-          console.log(this);
           this.selectElement(null);
           $('#panel, #top-bar').toggle();
           $('#canvas_wrapper').css({'top': $('#panel').is(':visible') ? 50 : 0});
