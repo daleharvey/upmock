@@ -21,10 +21,10 @@ var CoreElement = function() {
 
   this.select = function() {
     this.$handles = $handles.clone();
-    this.$info = $info.clone();
+    //this.$info = $info.clone();
     this.$dom.addClass('selected');
     this.$dom.append(this.$handles);
-    this.$dom.append(this.$info);
+    //this.$dom.append(this.$info);
     this.updateInfo();
   };
 
@@ -32,14 +32,14 @@ var CoreElement = function() {
     this.$dom.removeClass('selected');
     this.$handles.remove();
     this.$handles = null;
-    this.$info.remove();
-    this.$info = null;
+    //this.$info.remove();
+    //this.$info = null;
   };
 
   this.updateInfo = function() {
-    this.$info.text("y:" + this.$dom.position().top + " x:" +
-                    this.$dom.position().left +
-                    " [" + this.$dom.width() + "x" + this.$dom.height() + "]");
+    //this.$info.text("y:" + this.$dom.position().top + " x:" +
+    //                this.$dom.position().left +
+    //                " [" + this.$dom.width() + "x" + this.$dom.height() + "]");
   };
 
   this.css = function(obj) {
