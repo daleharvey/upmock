@@ -367,6 +367,9 @@ var Protoshop = function() {
     var index = 0;
 
     var panelFuns = {
+      'cursor': function() {
+        self.selectElement(null);
+      },
       'add-block': function() {
         var el = new BlockElement(++index);
         el.$dom.appendTo($canvas);
@@ -469,7 +472,6 @@ var Protoshop = function() {
   $('#align-justify').bind('mousedown', function() {
     self.onSelected('css',{'text-align': 'justify'});
   });
-
 
   $('#toggle-grid').bind('mousedown', function(e) {
     $('#grid-overlay').toggle();

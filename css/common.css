@@ -67,7 +67,9 @@ input[type=text], input[type=color] {
     width: 16px;
     height: 16px;
     border: 1px solid #DDD;
-    background-color: white;
+}
+#panel li a:hover, #panel li a.active {
+    background-color: #EEE;
 }
 
 #canvas div.block, #canvas div.text {
@@ -143,12 +145,16 @@ input[type=text], input[type=color] {
     margin: 0px auto;
 }
 
+#cursor {
+    background: url(../img/famfam/cursor.png)
+}
+
 #add-block {
     background: url(../img/famfam/shape_square.png)
 }
 
 #add-text {
-    background: url(../img/famfam/text_italic.png)
+    background: url(../img/text.gif)
 }
 
 #top-bar a, #bg-picker, #fg-picker {
