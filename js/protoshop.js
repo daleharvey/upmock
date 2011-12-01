@@ -56,7 +56,8 @@ var CoreElement = function() {
   };
 
   this.toggleBold = function() {
-    if (this.$dom.css('font-weight') !== '700') {
+    if (this.$dom.css('font-weight') !== '700' &&
+        this.$dom.css('font-weight') !== 'bold') {
       this.$dom.css('font-weight', 'bold');
     } else {
       this.$dom.css('font-weight', '');
