@@ -331,7 +331,9 @@ var Protoshop = function() {
   });
 
   _.each(shortcuts.global.shortcuts, function(key) {
-    $(document).bind(key.e, key.override || key.key, key.callback);
+    $(document).bind(key.e, key.override || key.key, function() {
+      key.callback.apply(self, arguments);
+    });
   });
 
 
