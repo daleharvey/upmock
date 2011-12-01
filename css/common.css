@@ -13,6 +13,15 @@ html, body {
     font: 13.34px/1.4 helvetica,arial,freesans,clean,sans-serif;
 }
 
+input {
+    padding: 2px;
+    font: 13.34px/1.4 helvetica,arial,freesans,clean,sans-serif;
+}
+
+input[type=text], input[type=color] {
+    border: 1px solid #666;
+}
+
 #canvas_wrapper {
     overflow:scroll;
     position:absolute;
@@ -157,6 +166,8 @@ html, body {
     border:1px solid orange;
     white-space: nowrap;
     display:none;
+    color: black;
+    font-size: 10px;
 }
 
 .selected .info-box {

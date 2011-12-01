@@ -12,8 +12,24 @@
 
     <div id="top-bar">
       <a id="toggle-grid"></a>
-      <input type="color" id="bg-picker" />
-      <input type="color" id="fg-picker" />
+      <input type="text" id="bg-picker" />
+      <input type="text" id="fg-picker" />
+      <select id="font-family">
+        <option value="sans-serif" class="sans">Sans Serif</option>
+        <option value="serif" class="serif">Serif</option>
+        <option value="monospace" class="monospace">MonoSpace</option>
+        <option value="'Lucida Casual', 'Comic Sans MS'" class="comicsans">Comic Sans</option>
+      </select>
+      <select id="font-size">
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="24">24</option>
+        <option value="36">36</option>
+        <option value="72">72</option>
+      </select>
     </div>
 
     <div id="canvas_wrapper">

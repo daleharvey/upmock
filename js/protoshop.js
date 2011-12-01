@@ -410,18 +410,29 @@ var Protoshop = function() {
 
 
   var $bg = $('#bg-picker');
-  var bgPicker = new jscolor.color($bg[0], {});
+  var bgPicker = new jscolor.color($bg[0], {pickerClosable:true});
 
   $bg.bind('change', function() {
     self.onSelected('css',{'background-color': '#' + bgPicker.toString()});
   });
 
   var $fg = $('#fg-picker');
-  var fgPicker = new jscolor.color($fg[0], {});
+  var fgPicker = new jscolor.color($fg[0], {pickerClosable:true});
 
   $fg.bind('change', function() {
     self.onSelected('css',{'color': '#' + fgPicker.toString()});
   });
+
+
+  $('#font-size').bind('change', function() {
+    self.onSelected('css',{'font-size': $(this).val() + 'px'});
+  });
+
+  $('#font-family').bind('change', function() {
+    self.onSelected('css',{'font-family': $(this).val()});
+  });
+
+
 
 };
 
