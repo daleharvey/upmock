@@ -43,7 +43,9 @@ input[type=text], input[type=color] {
     position:fixed;
     top:80px;
     left: 0px;
-    background: #666;
+    background: #DDD;
+    border: 1px solid #CCC;
+    border-width: 1px 1px 1px 0;
 }
 
 #panel ul {
@@ -129,10 +131,11 @@ input[type=text], input[type=color] {
     top: 0px;
     left: 0px;
     right: 0px;
-    background: #666;
-    height: 30px;
-    padding: 10px;
+    background: #DDD;
+    height: 19px;
+    padding: 15px;
     z-index: 1000;
+    border-bottom: 1px solid #CCC;
 }
 
 #add-block {
@@ -143,12 +146,13 @@ input[type=text], input[type=color] {
     background: url(../img/famfam/text_italic.png)
 }
 
-#top-bar a {
+#top-bar a, #bg-picker, #fg-picker {
+    cursor: pointer;
     display: block;
     width: 16px;
     height: 16px;
-    border: 1px solid #DDD;
-    background-color: white;
+    border: 1px solid transparent;
+    background-color: transparent;
 }
 
 #toggle-grid {
@@ -162,6 +166,12 @@ input[type=text], input[type=color] {
 }
 #underline {
     background: url(../img/famfam/text_underline.png)
+}
+#bg-picker, #fg-picker {
+    text-indent: -999px;
+    padding: 0px;
+    border:1px solid transparent;
+    background: url(../img/famfam/color_wheel.png) center center no-repeat !important
 }
 
 .info-box {
@@ -299,8 +309,8 @@ h3 {
     width: 15px;
     font-size: 10px;
     cursor: pointer;
-    padding: 3px 20px 3px 2px;
-    border: 1px solid black;
+    padding: 1px 20px 1px 2px;
+    border: 1px solid #CCC;
 }
 
 .slider input {
