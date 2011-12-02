@@ -169,6 +169,11 @@ var Protoshop = function() {
   }
 
 
+  function is_inside(obj, parent) {
+    return ( obj == parent ) ||
+      ( obj.parentNode != null && is_inside(obj.parentNode, parent) );
+  }
+
   function bindMouseResize($el, e, type) {
 
     var size = {
@@ -509,6 +514,45 @@ var Protoshop = function() {
       self.onSelected('css', tmp);
     });
 
+  });
+
+  $('#shadow').bind('change', function() {
+    var x = $('#shadow-x').val();
+    var y = $('#shadow-y').val();
+    var size = $('#shadow-size').val();
+    var color = $('#shadow-color').val();
+    var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
+    self.onSelected('css',{'box-shadow': css});
+  });
+
+  $('#text-shadow').bind('change', function() {
+    var x = $('#text-shadow-x').val();
+    var y = $('#text-shadow-y').val();
+    var size = $('#text-shadow-size').val();
+    var color = $('#text-shadow-color').val();
+    var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
+    self.onSelected('css',{'text-shadow': css});
+  });
+
+  $('.dropdown').each(function() {
+    var $el = $(this);
+    var $inner = $el.find('.inner');
+    $(this).bind('mousedown', function() {
+      if (!$inner.is(':visible')) {
+        $el.addClass('active');
+        self.$canvas.unbind('mousedown.global');
+        setTimeout(function() {
+          $(document).bind('mousedown.range', function(e) {
+            if (!(is_inside(e.target, $el[0]) ||
+                  $(e.target).parent().hasClass('jscolor'))) {
+              $(document).unbind('mousedown.range');
+              $el.removeClass('active');
+              self.$canvas.bind('mousedown.global', self.globalMouseDown);
+            }
+          });
+        }, 0);
+      }
+    });
   });
 
 

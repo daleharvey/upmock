@@ -593,6 +593,7 @@ var jscolor = {
 			var p = jscolor.picker;
 
 			// controls interaction
+                        p.box.className = 'jscolor';
 			p.box.onmouseup =
 			p.box.onmouseout = function() { target.focus(); };
 			p.box.onmousedown = function() { abortBlur=true; };

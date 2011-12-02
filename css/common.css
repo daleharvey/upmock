@@ -157,7 +157,7 @@ input[type=text], input[type=color] {
     background: url(../img/text.gif)
 }
 
-#top-bar a, #bg-picker, #fg-picker, #border-picker, #top-bar .slider {
+#top-bar a, #bg-picker, #fg-picker, #border-picker, #top-bar .slider, .dropdown {
     cursor: pointer;
     display: block;
     width: 16px;
@@ -168,7 +168,23 @@ input[type=text], input[type=color] {
     background-repeat: no-repeat;
 }
 
-#top-bar a:hover, #top-bar a.active {
+.dropdown {
+    position:relative;
+}
+.dropdown .inner {
+    display: none;
+    background: #EEE;
+    padding: 10px;
+    border: 1px solid #BBB;
+    position: absolute;
+    top: 16px;
+}
+
+.dropdown.active .inner {
+    display: block;
+}
+
+#top-bar a:hover, #top-bar a.active, .dropdown.active {
     background-color: #EEE;
 }
 
@@ -219,6 +235,12 @@ input[type=text], input[type=color] {
 }
 #lock {
     background: url(../img/famfam/lock.png);
+}
+#shadow {
+    background-image: url(../img/famfam/contrast.png);
+}
+#text-shadow {
+    background-image: url(../img/fague/edit-shadow.png);
 }
 
 #bg-picker, #fg-picker, #border-picker {
@@ -352,7 +374,7 @@ h3 {
     opacity: 0.5;
 }
 
-#top-bar-inner * {
+#top-bar-inner > * {
     float:left;
     margin-right: 5px;
 }
