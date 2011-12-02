@@ -13,25 +13,18 @@ var CoreElement = function() {
     '<div class="left" data-handle="w" data-type="handle"></div>' +
     '</div>');
 
-  var $info = $('<div class="info-box"></div>');
-
   this.$handles = null;
-  this.$info = null;
   this.$dom = null;
 
   this.select = function() {
 
-    console.log(this.$dom.attr('data-lock'));
     if (this.$dom.attr('data-lock') === 'true') {
       return false;
     }
 
     this.$handles = $handles.clone();
-    //this.$info = $info.clone();
     this.$dom.addClass('selected');
     this.$dom.append(this.$handles);
-    //this.$dom.append(this.$info);
-    this.updateInfo();
 
     return true;
   };
@@ -40,19 +33,10 @@ var CoreElement = function() {
     this.$dom.removeClass('selected');
     this.$handles.remove();
     this.$handles = null;
-    //this.$info.remove();
-    //this.$info = null;
-  };
-
-  this.updateInfo = function() {
-    //this.$info.text("y:" + this.$dom.position().top + " x:" +
-    //                this.$dom.position().left +
-    //                " [" + this.$dom.width() + "x" + this.$dom.height() + "]");
   };
 
   this.css = function(obj) {
     this.$dom.css(obj);
-    this.updateInfo();
   };
 
   CoreElement.prototype.move = function(y, x) {
@@ -60,7 +44,6 @@ var CoreElement = function() {
       left: this.$dom.position().left + x,
       top: this.$dom.position().top + y
     });
-    this.updateInfo();
   };
 
   this.toggleBold = function() {
@@ -432,7 +415,7 @@ var Protoshop = function() {
   (function() {
     var autoSave = setInterval(function() {
       var toSave = $canvas.clone();
-      toSave.find('.handles, .info-box').remove();
+      toSave.find('.handles').remove();
       localStorage.saved = toSave.html();
     }, 5000);
 
