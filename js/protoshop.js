@@ -1,3 +1,7 @@
+if (Modernizr.inputtypes.range ){
+  $(document.body).addClass('range');
+}
+
 var CoreElement = function() {
 
   var self = this;
@@ -502,42 +506,32 @@ var Protoshop = function() {
     $(this).toggleClass('active');
   });
 
-  $('.slider').each(function() {
-    var $slider = $(this);
-    var $value = $slider.find('span');
-    var $input = $slider.find('input');
-    $(this).bind('mousedown', function() {
-      if (!$input.is(':visible')) {
-        $slider.addClass('active');
-        self.$canvas.unbind('mousedown.global');
-        $input.show();
-        setTimeout(function() {
-          $(document).bind('mousedown.range', function(e) {
-            if (e.target !== $input[0]) {
-              $(document).unbind('mousedown.range');
-              $input.hide();
-              $slider.removeClass('active');
-              if (!$(e.target).parents().hasClass('slider')) {
-                self.$canvas.bind('mousedown.global', self.globalMouseDown);
-              }
-            }
-          });
-        }, 0);
-      }
-    });
-    $input.bind('change', function() {
-      $value.text(this.value);
-      var tmp = {}, key = $(this).attr('data-css');
-      tmp[key] = this.value + 'px';
+  $('#toggle-grid').bind('mousedown', function(e) {
+    $('#grid-overlay').toggle();
+    $(this).toggleClass('active');
+  });
+
+  function bindRange($dom) {
+    var $label = $dom.find('.label');
+    $dom.bind('change keyup', function(e) {
+      var tmp = {}, key = $(e.target).attr('data-css');
+      tmp[key] = new Number(e.target.value).toFixed(1) + 'px';
       if (key === 'opacity') {
         tmp[key] = parseInt(tmp[key], 0) / 100;
       }
+      $label.text(tmp[key]);
       self.onSelected('css', tmp);
     });
+  }
 
-  });
+  bindRange($('#font-size'));
+  bindRange($('#line-height'));
+  bindRange($('#letter-spacing'));
+  bindRange($('#border-width'));
+  bindRange($('#border-radius'));
+  bindRange($('#opacity'));
 
-  $('#shadow').bind('change', function() {
+  $('#shadow').bind('change keyup', function() {
     var x = $('#shadow-x').val();
     var y = $('#shadow-y').val();
     var size = $('#shadow-size').val();
@@ -546,7 +540,7 @@ var Protoshop = function() {
     self.onSelected('css',{'box-shadow': css});
   });
 
-  $('#text-shadow').bind('change', function() {
+  $('#text-shadow').bind('change keyup', function() {
     var x = $('#text-shadow-x').val();
     var y = $('#text-shadow-y').val();
     var size = $('#text-shadow-size').val();

@@ -197,52 +197,52 @@ td { padding: 0px 5px; }
 }
 
 #toggle-grid {
-    background: url(../img/grid.png)
+    background-image: url(../img/grid.png)
 }
 #bold {
-    background: url(../img/famfam/text_bold.png)
+    background-image: url(../img/famfam/text_bold.png)
 }
 #italic {
-    background: url(../img/famfam/text_italic.png)
+    background-image: url(../img/famfam/text_italic.png)
 }
 #underline {
-    background: url(../img/famfam/text_underline.png)
+    background-image: url(../img/famfam/text_underline.png)
 }
 #align-right {
-    background: url(../img/famfam/text_align_right.png)
+    background-image: url(../img/famfam/text_align_right.png)
 }
 #align-center {
-    background: url(../img/famfam/text_align_center.png)
+    background-image: url(../img/famfam/text_align_center.png)
 }
 #align-left {
-    background: url(../img/famfam/text_align_left.png)
+    background-image: url(../img/famfam/text_align_left.png)
 }
 #align-justify {
-    background: url(../img/famfam/text_align_justify.png)
+    background-image: url(../img/famfam/text_align_justify.png)
 }
 #opacity {
-    background: url(../img/fague/layer-transparent.png) center center no-repeat
+    background-image: url(../img/fague/layer-transparent.png);
 }
 #letter-spacing {
-    background: url(../img/famfam/text_letterspacing.png)
+    background-image: url(../img/famfam/text_letterspacing.png)
 }
 #line-height {
-    background: url(../img/famfam/text_linespacing.png)
+    background-image: url(../img/famfam/text_linespacing.png)
 }
 #font-size {
-    background: url(../img/famfam/text_smallcaps.png)
+    background-image: url(../img/famfam/text_smallcaps.png)
 }
 #border-width {
-    background: url(../img/fague/border-weight.png)
+    background-image: url(../img/fague/border-weight.png)
 }
 #border-radius {
-    background: url(../img/fague/layer-shape-round.png)
+    background-image: url(../img/fague/layer-shape-round.png)
 }
 #border-picker {
-    background: url(../img/fague/border-color.png) center center no-repeat !important;
+    background-image: url(../img/fague/border-color.png);
 }
 #lock {
-    background: url(../img/famfam/lock.png);
+    background-image: url(../img/famfam/lock.png);
 }
 #shadow {
     background-image: url(../img/famfam/contrast.png);
@@ -261,12 +261,13 @@ td { padding: 0px 5px; }
     text-indent: -999px;
     padding: 0px;
     border:1px solid transparent;
+    background-color: transparent !important;
 }
 #bg-picker {
-    background: url(../img/famfam/color_wheel.png) center center no-repeat !important
+    background-image: url(../img/famfam/color_wheel.png);
 }
 #fg-picker {
-    background: url(../img/fague/edit-color.png) center center no-repeat !important
+    background-image: url(../img/fague/edit-color.png);
 }
 .info-box {
     position:absolute;
@@ -393,49 +394,14 @@ h3 {
     margin-right: 5px;
 }
 
-#top-bar-inner .slider {
-    cursor: pointer;
-    display: block;
-    border: 1px solid transparent;
-    background-color: transparent;
-    position:relative;
-    float:left;
-}
-
-#top-bar-inner .slider:hover {
-    background-color: white;
-}
-
-#top-bar-inner .slider.active {
-    height: 140px;
-    background-color: white;
-    position:relative;
-    border: 1px solid #DDD;
-}
-
-.slider.active span, .slider.active input {
-    display: block;
-}
-
-.slider span {
-    display:none;
-    position:absolute;
-    top: 17px;
-    background: white;
-    width: 16px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 9px;
-    cursor: pointer;
-}
-
-.slider input {
+.label {
     display: none;
-    position:absolute;
-    top: 30px;
-    left: -1px;
-    height: 100px;
-    width: 16px;
-    -webkit-appearance: slider-vertical;
-    background: white;
+    width: 25px;
+    margin-top: -5px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.range .label {
+    display: block;
 }
