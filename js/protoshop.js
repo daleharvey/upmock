@@ -129,7 +129,6 @@ var Protoshop = function() {
   var $canvas_wrapper = $('#canvas_wrapper');
 
   this.selected = [];
-  this.bounds = {};
   this.$canvas = $canvas;
 
   this.selectElement = function(el) {
@@ -144,30 +143,12 @@ var Protoshop = function() {
       _.each(self.selected, function(obj) { obj.deselect.apply(obj); });
       self.selected = [];
     }
-
-    this.calculateSelectionBounds();
   };
 
   this.onSelected = function(callback) {
     var params = _.toArray(arguments).slice(1);
     _.each(self.selected, function(obj) {
       obj[callback].apply(obj, params);
-    });
-  };
-
-  this.calculateSelectionBounds = function() {
-
-    var min = function(a, b) { return a === null ? b : Math.min(a, b); };
-    var max = function(a, b) { return a === null ? b : Math.max(a, b); };
-
-    self.bounds = {nw: { x: null, y: null}, se: { x: null, y: null}};
-
-    _.each(self.selected, function(obj) {
-      var pos = obj.$dom.position();
-      self.bounds.nw.x = min(self.bounds.nw.x, pos.left);
-      self.bounds.nw.y = min(self.bounds.nw.y, pos.top);
-      self.bounds.se.x = max(self.bounds.se.x, pos.left + obj.$dom.width());
-      self.bounds.se.y = max(self.bounds.se.y, pos.top + obj.$dom.height());
     });
   };
 
