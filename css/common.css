@@ -157,7 +157,7 @@ input[type=text], input[type=color] {
     background: url(../img/text.gif)
 }
 
-#top-bar a, #bg-picker, #fg-picker, #top-bar .slider {
+#top-bar a, #bg-picker, #fg-picker, #border-picker, #top-bar .slider {
     cursor: pointer;
     display: block;
     width: 16px;
@@ -214,14 +214,18 @@ input[type=text], input[type=color] {
 #border-radius {
     background: url(../img/fague/layer-shape-round.png)
 }
+#border-picker {
+    background: url(../img/fague/border-color.png) center center no-repeat !important;;
+}
 
-#bg-picker, #fg-picker {
+#bg-picker, #fg-picker, #border-picker {
     text-indent: -999px;
     padding: 0px;
     border:1px solid transparent;
+}
+#bg-picker {
     background: url(../img/famfam/color_wheel.png) center center no-repeat !important
 }
-
 #fg-picker {
     background: url(../img/fague/edit-color.png) center center no-repeat !important
 }

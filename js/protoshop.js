@@ -435,6 +435,13 @@ var Protoshop = function() {
     }
   })();
 
+  var $border = $('#border-picker');
+  var borderPicker = new jscolor.color($border[0], {pickerClosable:true});
+
+  $border.bind('change', function() {
+    self.onSelected('css',{'border-color': '#' + borderPicker.toString()});
+  });
+
 
   var $bg = $('#bg-picker');
   var bgPicker = new jscolor.color($bg[0], {pickerClosable:true});
