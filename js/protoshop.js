@@ -132,6 +132,7 @@ var Protoshop = function() {
 
   this.selected = [];
   this.bounds = {};
+  this.$canvas = $canvas;
 
   this.selectElement = function(el) {
 
@@ -315,7 +316,7 @@ var Protoshop = function() {
   });
 
 
-  $canvas.bind('mousedown', function(e) {
+  this.globalMouseDown = function(e) {
 
     if (e.target === this) {
       self.selectElement(null);
@@ -354,7 +355,9 @@ var Protoshop = function() {
       bindMouseResize($el.parent().parent(), e, $el.data('handle'));
    }
 
-  });
+  };
+
+  $canvas.bind('mousedown.global', this.globalMouseDown);
 
   _.each(shortcuts.global.shortcuts, function(key) {
     $(document).bind(key.e, key.override || key.key, function() {
@@ -480,21 +483,27 @@ var Protoshop = function() {
   });
 
   $('.slider').each(function() {
-    var $value = $(this).find('span');
-    var $input = $(this).find('input');
-    $value.bind('mousedown', function() {
-      var selected = self.selected;
-      $input.toggle();
-      setTimeout(function() {
-        $(document).bind('mousedown.range', function(e) {
-          if (e.target !== $input[0]) {
-            $(document).unbind('mousedown.range');
-            // Dirty hack, canvas mousedown is hit first and deselects everything
-            _.each(selected, function(x) { self.selectElement(x); });
-            $input.hide();
-          }
-        });
-      }, 0);
+    var $slider = $(this);
+    var $value = $slider.find('span');
+    var $input = $slider.find('input');
+    $(this).bind('mousedown', function() {
+      if (!$input.is(':visible')) {
+        $slider.addClass('active');
+        self.$canvas.unbind('mousedown.global');
+        $input.show();
+        setTimeout(function() {
+          $(document).bind('mousedown.range', function(e) {
+            if (e.target !== $input[0]) {
+              $(document).unbind('mousedown.range');
+              $input.hide();
+              $slider.removeClass('active');
+              if (!$(e.target).parents().hasClass('slider')) {
+                self.$canvas.bind('mousedown.global', self.globalMouseDown);
+              }
+            }
+          });
+        }, 0);
+      }
     });
     $input.bind('change', function() {
       $value.text(this.value);
