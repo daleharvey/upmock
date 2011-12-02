@@ -175,10 +175,18 @@ input[type=text], input[type=color] {
     display: none;
     background: #EEE;
     padding: 10px;
-    border: 1px solid #BBB;
+    border: 3px solid #CCC;
+    border-radius: 3px;
     position: absolute;
-    top: 16px;
+    top: 18px;
+    left: -10px;
 }
+
+.inner table td:first-child {
+    text-align:right;
+}
+
+td { padding: 0px 5px; }
 
 .dropdown.active .inner {
     display: block;
