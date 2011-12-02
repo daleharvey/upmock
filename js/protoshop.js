@@ -82,10 +82,10 @@ var CoreElement = function() {
 
 var BlockElement = function(index, obj) {
   this.$dom = obj || $('<div>', {
-    'z-index': index,
     'data-type': 'block',
     'class': 'block'
   });
+  this.$dom.css('z-index', index);
   this.$dom.data('obj', this);
 };
 BlockElement.prototype = new CoreElement();
@@ -93,11 +93,11 @@ BlockElement.prototype = new CoreElement();
 var TextElement = function(index, obj) {
 
   this.$dom = obj || $('<div>', {
-    'z-index': index,
     'data-type': 'text',
     'class': 'text'
   }).append('<span>text</span>');
 
+  this.$dom.css('z-index', index);
   this.$dom.data('obj', this);
 
   this.startEditing = function() {
@@ -354,22 +354,24 @@ var Protoshop = function() {
   });
 
 
+  this.index = {min: 2000, max: 2000};
+
+
   (function() {
 
-    var index = 0;
 
     var panelFuns = {
       'cursor': function() {
         self.selectElement(null);
       },
       'add-block': function() {
-        var el = new BlockElement(++index);
+        var el = new BlockElement(++self.index.max);
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
       },
       'add-text': function() {
-        var el = new TextElement(++index);
+        var el = new TextElement(++self.index.max);
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
@@ -399,21 +401,33 @@ var Protoshop = function() {
   $('#keyboard-placer').html(html.join(''));
 
   (function() {
+
     var autoSave = setInterval(function() {
       var toSave = $canvas.clone();
       toSave.find('.handles').remove();
       localStorage.saved = toSave.html();
     }, 5000);
 
-    var index = 0;
     if (localStorage.saved) {
       $canvas.html(localStorage.saved);
 
       _.each($canvas.find('[data-type=block]'), function(obj) {
-        new BlockElement(++index, $(obj));
+        var index = parseInt($(obj).css('z-index'), 0);
+        if (index > self.index.max) {
+          self.index.max = index;
+        } else if (index < self.index.min) {
+          self.index.min = index;
+        }
+        new BlockElement(index, $(obj));
       });
       _.each($canvas.find('[data-type=text]'), function(obj) {
-        new TextElement(++index, $(obj));
+        var index = parseInt($(obj).css('z-index'), 0);
+        if (index > self.index.max) {
+          self.index.max = index;
+        } else if (index < self.index.min) {
+          self.index.min = index;
+        }
+        new TextElement(index, $(obj));
       });
 
       var sel = $canvas.find('.selected').data('obj');
@@ -447,6 +461,13 @@ var Protoshop = function() {
 
   $('#font-family').bind('change', function() {
     self.onSelected('css',{'font-family': $(this).val()});
+  });
+
+  $('#bring-to-front').bind('mousedown', function() {
+    self.onSelected('css', {'z-index': ++self.index.max});
+  });
+  $('#send-to-back').bind('mousedown', function() {
+    self.onSelected('css', {'z-index': --self.index.min});
   });
 
   $('#bold').bind('mousedown', function() {
