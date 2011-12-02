@@ -215,7 +215,10 @@ input[type=text], input[type=color] {
     background: url(../img/fague/layer-shape-round.png)
 }
 #border-picker {
-    background: url(../img/fague/border-color.png) center center no-repeat !important;;
+    background: url(../img/fague/border-color.png) center center no-repeat !important;
+}
+#lock {
+    background: url(../img/famfam/lock.png);
 }
 
 #bg-picker, #fg-picker, #border-picker {

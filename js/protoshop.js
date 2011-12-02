@@ -20,12 +20,20 @@ var CoreElement = function() {
   this.$dom = null;
 
   this.select = function() {
+
+    console.log(this.$dom.attr('data-lock'));
+    if (this.$dom.attr('data-lock') === 'true') {
+      return false;
+    }
+
     this.$handles = $handles.clone();
     //this.$info = $info.clone();
     this.$dom.addClass('selected');
     this.$dom.append(this.$handles);
     //this.$dom.append(this.$info);
     this.updateInfo();
+
+    return true;
   };
 
   CoreElement.prototype.deselect = function() {
@@ -78,6 +86,13 @@ var CoreElement = function() {
     } else {
       this.$dom.css('text-decoration', '');
     }
+  };
+
+  this.lock = function() {
+    this.$dom.attr('data-lock', true);
+  };
+  this.unlock = function() {
+    this.$dom.removeAttr('data-lock');
   };
 
 };
@@ -137,9 +152,9 @@ var Protoshop = function() {
   this.selectElement = function(el) {
 
     if (el) {
-      self.selected.push(el);
-      var $el = el.$dom;
-      el.select();
+      if (el.select()) {
+        self.selected.push(el);
+      }
       bindKeyMove();
     } else {
       $(document).unbind('.editing');
@@ -327,6 +342,10 @@ var Protoshop = function() {
     var $el = $(e.target);
     var obj = $el.data('obj');
 
+    if ($el.data('lock') === true && e.altKey) {
+      obj.unlock();
+    }
+
     if (obj instanceof CoreElement) {
 
       e.preventDefault();
@@ -469,6 +488,10 @@ var Protoshop = function() {
   });
   $('#underline').bind('mousedown', function() {
     self.onSelected('toggleUnderline');
+  });
+  $('#lock').bind('mousedown', function() {
+    self.onSelected('lock');
+    self.selectElement(null);
   });
 
   $('#align-left').bind('mousedown', function() {
