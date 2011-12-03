@@ -133,6 +133,7 @@ var Protoshop = function() {
   var $selection = $('#selection');
   var $canvas_wrapper = $('#canvas_wrapper');
 
+  this.$selection = $selection;
   this.selected = [];
   this.$canvas = $canvas;
   this.index = {min: 2000, max: 2000};
@@ -149,6 +150,8 @@ var Protoshop = function() {
       _.each(self.selected, function(obj) { obj.deselect.apply(obj); });
       self.selected = [];
     }
+
+    self.$selection.trigger('change', {selected: self.selected});
 
   };
 
@@ -173,11 +176,6 @@ var Protoshop = function() {
       $canvas.unbind('.editing');
     });
 
-  }
-
-  function is_inside(obj, parent) {
-    return ( obj == parent ) ||
-      ( obj.parentNode != null && is_inside(obj.parentNode, parent) );
   }
 
   function bindMouseResize($el, e, type) {
@@ -296,7 +294,6 @@ var Protoshop = function() {
       });
     });
   }
-
 
 
   $canvas.bind('dblclick', function(e) {
@@ -448,6 +445,12 @@ var Protoshop = function() {
     }
   })();
 
+};
+
+Protoshop.Toolbar = function(protoshop) {
+
+  var self = this;
+  var $root = $('#top-bar-inner');
 
   var fonts = {
     'tnr': "Cambria, 'Hoefler Text', 'Times New Roman', serif",
@@ -462,70 +465,171 @@ var Protoshop = function() {
     'monospace': "Consolas, 'DejaVu Sans Mono', Monaco, Courier, monospace"
   };
 
-  var $border = $('#border-picker');
-  var borderPicker = new jscolor.color($border[0], {pickerClosable:true, styleElement:null});
+  this.protoshop = protoshop;
 
-  $border.bind('change', function() {
-    self.onSelected('css',{'border-color': '#' + borderPicker.toString()});
+  this.tpls = {
+    'global': Handlebars.compile($('#global-toolbar-tpl').html()),
+    'text': Handlebars.compile($('#text-toolbar-tpl').html()),
+    'element': Handlebars.compile($('#textandblock-toolbar-tpl').html())
+  };
+
+  this.events = {};
+
+  this.events['global'] = function() {
+    $('#toggle-grid').bind('mousedown', function(e) {
+      $('#grid-overlay').toggle();
+      $(this).toggleClass('active');
+    });
+  }
+
+
+  this.events['element'] = function() {
+    $('#bring-to-front').bind('mousedown', function() {
+      self.protoshop.onSelected('css', {'z-index': ++self.index.max});
+    });
+    $('#send-to-back').bind('mousedown', function() {
+      self.protoshop.onSelected('css', {'z-index': --self.index.min});
+    });
+
+    $('#lock').bind('mousedown', function() {
+      self.protoshop.onSelected('lock');
+      self.protoshop.selectElement(null);
+    });
+
+    bindRange($('#border-width'));
+    bindRange($('#border-radius'));
+    bindRange($('#opacity'));
+
+    $('#shadow').bind('change keyup', function() {
+      var x = $('#shadow-x').val();
+      var y = $('#shadow-y').val();
+      var size = $('#shadow-size').val();
+      var color = $('#shadow-color').val();
+      var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
+      self.protoshop.onSelected('css',{'box-shadow': css});
+    });
+
+  }
+
+
+  this.events['text'] = function() {
+
+    $('#font-family').bind('change', function() {
+      self.protoshop.onSelected('css',{'font-family': fonts[$(this).val()]});
+    });
+    $('#bold').bind('mousedown', function() {
+      self.protoshop.onSelected('toggleBold');
+    });
+    $('#italic').bind('mousedown', function() {
+      self.protoshop.onSelected('toggleItalic');
+    });
+    $('#underline').bind('mousedown', function() {
+      self.protoshop.onSelected('toggleUnderline');
+    });
+    $('#align-left').bind('mousedown', function() {
+      self.protoshop.onSelected('css',{'text-align': 'left'});
+    });
+    $('#align-center').bind('mousedown', function() {
+      self.protoshop.onSelected('css',{'text-align': 'center'});
+    });
+    $('#align-right').bind('mousedown', function() {
+      self.protoshop.onSelected('css',{'text-align': 'right'});
+    });
+    $('#align-justify').bind('mousedown', function() {
+      self.protoshop.onSelected('css',{'text-align': 'justify'});
+    });
+
+    $('#text-shadow').bind('change keyup', function() {
+      var x = $('#text-shadow-x').val();
+      var y = $('#text-shadow-y').val();
+      var size = $('#text-shadow-size').val();
+      var color = $('#text-shadow-color').val();
+      var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
+      self.protoshop.onSelected('css',{'text-shadow': css});
+    });
+
+    bindRange($('#font-size'));
+    bindRange($('#line-height'));
+    bindRange($('#letter-spacing'));
+
+  }
+
+  this.protoshop.$selection.bind('change', function(evt, data) {
+    if (data.selected.length > 0) {
+      self.render(['global', 'text', 'element']);
+    } else {
+      self.render(['global']);
+    }
   });
 
 
-  var $bg = $('#bg-picker');
-  var bgPicker = new jscolor.color($bg[0], {pickerClosable:true, styleElement:null});
+  this.render = function(sections, selected) {
 
-  $bg.bind('change', function() {
-    self.onSelected('css',{'background-color': '#' + bgPicker.toString()});
-  });
+    var html = _.map(sections, function(section) {
+      return self.tpls[section](selected);
+    });
 
-  var $fg = $('#fg-picker');
-  var fgPicker = new jscolor.color($fg[0], {pickerClosable:true, styleElement:null});
+    $root.html(html.join(""));
 
-  $fg.bind('change', function() {
-    self.onSelected('css',{'color': '#' + fgPicker.toString()});
-  });
+    _.each(sections, function(section) {
+      if (self.events[section]) {
+        self.events[section]();
+      }
+    });
 
-  $('#font-family').bind('change', function() {
-    self.onSelected('css',{'font-family': fonts[$(this).val()]});
-  });
+    $('.dropdown').each(bindDropDown);
+    $('.picker').each(bindColour);
+    $('.color').each(bindPlainColour);
+  }
 
-  $('#bring-to-front').bind('mousedown', function() {
-    self.onSelected('css', {'z-index': ++self.index.max});
-  });
-  $('#send-to-back').bind('mousedown', function() {
-    self.onSelected('css', {'z-index': --self.index.min});
-  });
 
-  $('#bold').bind('mousedown', function() {
-    self.onSelected('toggleBold');
-  });
-  $('#italic').bind('mousedown', function() {
-    self.onSelected('toggleItalic');
-  });
-  $('#underline').bind('mousedown', function() {
-    self.onSelected('toggleUnderline');
-  });
-  $('#lock').bind('mousedown', function() {
-    self.onSelected('lock');
-    self.selectElement(null);
-  });
+  function is_inside(obj, parent) {
+    return ( obj == parent ) ||
+      ( obj.parentNode != null && is_inside(obj.parentNode, parent) );
+  }
 
-  $('#align-left').bind('mousedown', function() {
-    self.onSelected('css',{'text-align': 'left'});
-  });
-  $('#align-center').bind('mousedown', function() {
-    self.onSelected('css',{'text-align': 'center'});
-  });
-  $('#align-right').bind('mousedown', function() {
-    self.onSelected('css',{'text-align': 'right'});
-  });
-  $('#align-justify').bind('mousedown', function() {
-    self.onSelected('css',{'text-align': 'justify'});
-  });
+  function bindPlainColour() {
+    new jscolor.color(this, {pickerClosable:true});
+  }
 
-  $('#toggle-grid').bind('mousedown', function(e) {
-    $('#grid-overlay').toggle();
-    $(this).toggleClass('active');
-  });
+  function bindColour() {
+
+    var picker = new jscolor.color(this, {
+      pickerClosable:true,
+      styleElement:null
+    });
+
+    $(this).bind('change', function() {
+      var obj = {};
+      obj[$(this).data('css')] = '#' + picker.toString();
+      self.protoshop.onSelected('css', obj);
+    });
+
+  }
+
+
+  function bindDropDown() {
+    var $el = $(this);
+    var $inner = $el.find('.inner');
+    $(this).bind('mousedown', function() {
+      if (!$inner.is(':visible')) {
+        $el.addClass('active');
+        self.protoshop.$canvas.unbind('mousedown.global');
+        setTimeout(function() {
+          $(document).bind('mousedown.range', function(e) {
+            if (!(is_inside(e.target, $el[0]) ||
+                  $(e.target).parent().hasClass('jscolor'))) {
+              $(document).unbind('mousedown.range');
+              $el.removeClass('active');
+              self.protoshop.$canvas.bind('mousedown.global',
+                                          self.protoshop.globalMouseDown);
+            }
+          });
+        }, 0);
+      }
+    });
+  }
+
 
   function bindRange($dom) {
     var $label = $dom.find('.label');
@@ -536,58 +640,16 @@ var Protoshop = function() {
         tmp[key] = parseInt(tmp[key], 0) / 100;
       }
       $label.text(tmp[key]);
-      self.onSelected('css', tmp);
+      self.protoshop.onSelected('css', tmp);
     });
   }
 
-  bindRange($('#font-size'));
-  bindRange($('#line-height'));
-  bindRange($('#letter-spacing'));
-  bindRange($('#border-width'));
-  bindRange($('#border-radius'));
-  bindRange($('#opacity'));
 
-  $('#shadow').bind('change keyup', function() {
-    var x = $('#shadow-x').val();
-    var y = $('#shadow-y').val();
-    var size = $('#shadow-size').val();
-    var color = $('#shadow-color').val();
-    var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
-    self.onSelected('css',{'box-shadow': css});
-  });
-
-  $('#text-shadow').bind('change keyup', function() {
-    var x = $('#text-shadow-x').val();
-    var y = $('#text-shadow-y').val();
-    var size = $('#text-shadow-size').val();
-    var color = $('#text-shadow-color').val();
-    var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
-    self.onSelected('css',{'text-shadow': css});
-  });
-
-  $('.dropdown').each(function() {
-    var $el = $(this);
-    var $inner = $el.find('.inner');
-    $(this).bind('mousedown', function() {
-      if (!$inner.is(':visible')) {
-        $el.addClass('active');
-        self.$canvas.unbind('mousedown.global');
-        setTimeout(function() {
-          $(document).bind('mousedown.range', function(e) {
-            if (!(is_inside(e.target, $el[0]) ||
-                  $(e.target).parent().hasClass('jscolor'))) {
-              $(document).unbind('mousedown.range');
-              $el.removeClass('active');
-              self.$canvas.bind('mousedown.global', self.globalMouseDown);
-            }
-          });
-        }, 0);
-      }
-    });
-  });
-
+  this.render(['global', 'text', 'element']);
 
 };
 
-new Protoshop();
+var protoshop = new Protoshop();
+var toolbar = new Protoshop.Toolbar(protoshop);
+
 
