@@ -6,91 +6,123 @@
     <link rel="stylesheet" href="./css/common.css" />
   </head>
 
-  <body>
+  <body class="range">
 
     <div id="top-bar"><div id="top-bar-inner">
-      <a id="toggle-grid" title="Toggle 960gs Grid Overlay"></a>
-      <input type="text" id="bg-picker" />
-      <input type="text" id="fg-picker" />
-      <input type="text" id="border-picker" />
-      <select id="font-family">
-        <option value="Cambria, 'Hoefler Text', 'Times New Roman', serif">Times New Roman</option>
-        <option value="Constantia, 'Lucida Bright', 'Bitstream Vera Serif', 'Liberation Serif', Georgia, serif">Georgia</option>
-        <option value="'Palatino Linotype', Baskerville, 'Bookman Old Style', 'Bitstream Charter', Garamond, Georgia, serif">Garamond</option>
-        <option value="Frutiger, Univers, Helvetica, Arial, sans-serif">Helvetica</option>
-        <option value="Corbel, 'Bitstream Vera Sans', Verdana, sans-serif">Verdana</option>
-        <option value="'Segoe UI', 'Trebuchet MS', Verdana, sans-serif">Trebuchet</option>
-        <option value="Impact, 'Franklin Gothic Bold', 'Arial Black', sans-serif">Impact</option>
-        <option value="Consolas, 'DejaVu Sans Mono', Monaco, 'Courier New', Courier, monospace">Monospace</option>
-      </select>
-      <div class="dropdown" id="font-size">
-        <table class="inner"><tr>
-            <td><input type="range" value="0"  data-css="font-size" /></td>
-            <td><span title="Font Size" class="label">0</span></td>
-        </tr></table>
-      </div>
-      <div class="dropdown" id="line-height">
-        <table class="inner"><tr>
-            <td><input type="range" value="0" max="200" data-css="line-height" /></td>
-            <td><span title="Line Height" class="label">0</span></td>
-        </tr></table>
-      </div>
-      <div class="dropdown" id="letter-spacing">
-        <table class="inner"><tr>
-            <td><input type="range" value="0" min="-2" max="2" step="0.1" data-css="letter-spacing" /></td>
-            <td><span title="Letter Spacing" class="label">0</span></td>
-        </tr></table>
-      </div>
-      <a id="bold" title="Bold"></a>
-      <a id="italic" title="Italic"></a>
-      <a id="underline" title="Underline"></a>
-      <a id="align-left" title="Align Left"></a>
-      <a id="align-center" title="Align Center"></a>
-      <a id="align-right" title="Align Right"></a>
-      <a id="align-justify" title="Justify"></a>
-      <div class="dropdown" id="border-width">
-        <table class="inner"><tr>
-            <td><input type="range" value="0"  min="0" data-css="border-width" /></td>
-            <td><span title="Border Width" class="label">0</span></td>
-        </tr></table>
-      </div>
-      <div class="dropdown" id="border-radius">
-        <table class="inner"><tr>
-            <td><input type="range" value="0" data-css="border-radius" /></td>
-            <td><span title="Border Radius" class="label">0</span></td>
-        </tr></table>
-      </div>
-      <div class="dropdown" id="opacity">
-        <table class="inner"><tr>
-            <td><input type="range" value="0" data-css="opacity" /></td>
-            <td><span title="Opacity" class="label">0</span></td>
-        </tr></table>
-      </div>
-      <a id="lock" title="Lock"></a>
+        <section id="global">
+          <a id="toggle-grid" title="Toggle 960gs Grid Overlay"></a>
+        </section>
+        <section id="text">
+          <input type="text" id="fg-picker" />
+          <select id="font-family">
+            <option value="tnr">Times New Roman</option>
+            <option value="georgia">Georgia</option>
+            <option value="garamond">Garamond</option>
+            <option value="helvetica">Helvetica</option>
+            <option value="verdana">Verdana</option>
+            <option value="trebuchet">Trebuchet</option>
+            <option value="impact">Impact</option>
+            <option value="monospace">Monospace</option>
+          </select>
+          <div class="dropdown" id="font-size">
+            <table class="inner"><tr>
+                <td><input type="range" value="0"  data-css="font-size" /></td>
+                <td><span title="Font Size" class="label">0</span></td>
+            </tr></table>
+          </div>
+          <div class="dropdown" id="line-height">
+            <table class="inner"><tr>
+                <td>
+                  <input type="range" value="0" max="200" data-css="line-height" />
+                </td>
+                <td><span title="Line Height" class="label">0</span></td>
+            </tr></table>
+          </div>
+          <div class="dropdown" id="letter-spacing">
+            <table class="inner"><tr>
+                <td><input type="range" value="0" min="-2" max="2" step="0.1"
+                           data-css="letter-spacing" /></td>
+                <td><span title="Letter Spacing" class="label">0</span></td>
+            </tr></table>
+          </div>
+          <a id="bold" title="Bold"></a>
+          <a id="italic" title="Italic"></a>
+          <a id="underline" title="Underline"></a>
+          <a id="align-left" title="Align Left"></a>
+          <a id="align-center" title="Align Center"></a>
+          <a id="align-right" title="Align Right"></a>
+          <a id="align-justify" title="Justify"></a>
+          <div class="dropdown" id="text-shadow"><div class="inner">
+              <table>
+                <tr>
+                  <td>width:</td>
+                  <td><input id="text-shadow-size" type="range" value="0" /></td>
+                </tr>
+                <tr>
+                  <td>y:</td>
+                  <td><input id="text-shadow-y" type="range" value="0" /></td>
+                </tr>
+                <tr>
+                  <td>x:</td>
+                  <td><input id="text-shadow-x" type="range" value="0" /></td>
+                </tr>
+                <tr>
+                  <td>colour:</td>
+                  <td><input id="text-shadow-color" type="text" class="color" /></td>
+                </tr>
+              </table>
+          </div></div>
+        </section>
 
-      <div class="dropdown" id="shadow">
-        <div class="inner">
-          <table>
-            <tr><td>width:</td><td><input id="shadow-size" type="range" value="0" /></td></tr>
-            <tr><td>y:</td><td><input id="shadow-y" type="range" value="0" /></td></tr>
-            <tr><td>x:</td><td><input id="shadow-x" type="range" value="0" /></td></tr>
-            <tr><td>colour:</td><td><input id="shadow-color" type="text" class="color" /></td></tr>
-          </table>
-        </div>
-      </div>
+        <section id="textandblock">
+          <input type="text" id="bg-picker" />
+          <input type="text" id="border-picker" />
+          <div class="dropdown" id="border-width">
+            <table class="inner"><tr>
+                <td><input type="range" value="0"  min="0"
+                           data-css="border-width" /></td>
+                <td><span title="Border Width" class="label">0</span></td>
+            </tr></table>
+          </div>
+          <div class="dropdown" id="border-radius">
+            <table class="inner"><tr>
+                <td><input type="range" value="0" data-css="border-radius" /></td>
+                <td><span title="Border Radius" class="label">0</span></td>
+            </tr></table>
+          </div>
+          <div class="dropdown" id="opacity">
+            <table class="inner"><tr>
+                <td><input type="range" value="0" data-css="opacity" /></td>
+                <td><span title="Opacity" class="label">0</span></td>
+            </tr></table>
+          </div>
+          <a id="lock" title="Lock"></a>
 
-      <div class="dropdown" id="text-shadow">
-        <div class="inner">
-          <table>
-            <tr><td>width:</td><td><input id="text-shadow-size" type="range" value="0" /></td></tr>
-            <tr><td>y:</td><td><input id="text-shadow-y" type="range" value="0" /></td></tr>
-            <tr><td>x:</td><td><input id="text-shadow-x" type="range" value="0" /></td></tr>
-            <tr><td>colour:</td><td><input id="text-shadow-color" type="text" class="color" /></td></tr>
-          </table>
-        </div>
-      </div>
-      <a id="send-to-back" title="Send to Back"></a>
-      <a id="bring-to-front" title="Bring to Front"></a>
+          <div class="dropdown" id="shadow">
+            <div class="inner">
+              <table>
+                <tr>
+                  <td>width:</td>
+                  <td><input id="shadow-size" type="range" value="0" /></td>
+                </tr>
+                <tr>
+                  <td>y:</td>
+                  <td><input id="shadow-y" type="range" value="0" /></td>
+                </tr>
+                <tr>
+                  <td>x:</td>
+                  <td><input id="shadow-x" type="range" value="0" /></td>
+                </tr>
+                <tr>
+                  <td>colour:</td>
+                  <td><input id="shadow-color" type="text" class="color" /></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <a id="send-to-back" title="Send to Back"></a>
+          <a id="bring-to-front" title="Bring to Front"></a>
+      </section>
     </div></div>
 
     <div id="canvas_wrapper">

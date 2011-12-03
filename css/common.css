@@ -389,8 +389,11 @@ h3 {
 .soft-select {
     opacity: 0.5;
 }
-
-#top-bar-inner > * {
+#top-bar-inner section {
+    display: block;
+    float:left;
+}
+#top-bar-inner section > * {
     float:left;
     margin-right: 5px;
 }

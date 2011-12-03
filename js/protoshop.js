@@ -443,6 +443,20 @@ var Protoshop = function() {
     }
   })();
 
+
+  var fonts = {
+    'tnr': "Cambria, 'Hoefler Text', 'Times New Roman', serif",
+    'georgia': "Constantia, 'Lucida Bright', 'Bitstream Vera Serif', " +
+      "'Liberation Serif', Georgia, serif",
+    'garamond': "'Palatino Linotype', Baskerville, 'Bookman Old Style', " +
+      "'Bitstream Charter', Garamond, Georgia, serif",
+    'helvetica': "Frutiger, Univers, Helvetica, Arial, sans-serif",
+    'verdana': "Corbel, 'Bitstream Vera Sans', Verdana, sans-serif",
+    'trebuchet': "'Segoe UI', 'Trebuchet MS', Verdana, sans-serif",
+    'impact': "Impact, 'Franklin Gothic Bold', 'Arial Black', sans-serif",
+    'monospace': "Consolas, 'DejaVu Sans Mono', Monaco, Courier, monospace"
+  };
+
   var $border = $('#border-picker');
   var borderPicker = new jscolor.color($border[0], {pickerClosable:true});
 
@@ -466,7 +480,7 @@ var Protoshop = function() {
   });
 
   $('#font-family').bind('change', function() {
-    self.onSelected('css',{'font-family': $(this).val()});
+    self.onSelected('css',{'font-family': fonts[$(this).val()]});
   });
 
   $('#bring-to-front').bind('mousedown', function() {
