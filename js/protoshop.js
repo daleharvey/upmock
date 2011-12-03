@@ -307,6 +307,8 @@ var Protoshop = function() {
   this.globalMouseDown = function(e) {
 
     if (e.target === this) {
+      e.preventDefault();
+      e.stopPropagation();
       self.selectElement(null);
       bindMouseSelection(e);
       return true;
