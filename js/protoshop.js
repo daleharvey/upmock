@@ -438,11 +438,12 @@ var Protoshop = function() {
         new TextElement(index, $(obj));
       });
 
-      var sel = $canvas.find('.selected').data('obj');
-      if (sel) {
-        self.selectElement(sel);
-      }
+      $canvas.find('.selected').each(function() {
+        self.selectElement($(this).data('obj'));
+      });
+
     }
+
   })();
 
 };
@@ -555,11 +556,21 @@ Protoshop.Toolbar = function(protoshop) {
   }
 
   this.protoshop.$selection.bind('change', function(evt, data) {
-    if (data.selected.length > 0) {
-      self.render(['global', 'text', 'element']);
-    } else {
-      self.render(['global']);
+
+    if (data.selected.length < 1) {
+      return self.render(['global']);
     }
+
+    if (_.all(data.selected, function(x) { return x instanceof TextElement; })) {
+      return self.render(['global', 'text']);
+    }
+
+    if (_.all(data.selected, function(x) { return x instanceof BlockElement; })) {
+      return self.render(['global', 'element']);
+    }
+
+    self.render(['global', 'element']);
+
   });
 
 
@@ -644,8 +655,7 @@ Protoshop.Toolbar = function(protoshop) {
     });
   }
 
-
-  this.render(['global', 'text', 'element']);
+  protoshop.$selection.trigger('change', {selected: protoshop.selected});
 
 };
 
