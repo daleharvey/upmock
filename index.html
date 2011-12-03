@@ -6,15 +6,16 @@
     <link rel="stylesheet" href="./css/common.css" />
   </head>
 
-  <body class="range">
+  <body>
 
-    <div id="top-bar"><div id="top-bar-inner">
-        <section id="global">
-          <a id="toggle-grid" title="Toggle 960gs Grid Overlay"></a>
-        </section>
-        <section id="text">
-          <input type="text" id="fg-picker" />
-          <select id="font-family">
+    <header>
+      <div id="top-bar-inner">
+        <div class="section" id="global">
+          <a id="toggle-grid" class="toolbar-icon" title="Toggle Grid Overlay"></a>
+        </div>
+        <div class="section" id="text">
+          <input type="text" id="fg-picker" class="toolbar-icon picker" />
+          <select id="font-family" class="toolbar-select">
             <option value="tnr">Times New Roman</option>
             <option value="georgia">Georgia</option>
             <option value="garamond">Garamond</option>
@@ -24,13 +25,13 @@
             <option value="impact">Impact</option>
             <option value="monospace">Monospace</option>
           </select>
-          <div class="dropdown" id="font-size">
+          <div class="dropdown toolbar-icon" id="font-size" >
             <table class="inner"><tr>
                 <td><input type="range" value="0"  data-css="font-size" /></td>
                 <td><span title="Font Size" class="label">0</span></td>
             </tr></table>
           </div>
-          <div class="dropdown" id="line-height">
+          <div class="dropdown toolbar-icon" id="line-height">
             <table class="inner"><tr>
                 <td>
                   <input type="range" value="0" max="200" data-css="line-height" />
@@ -38,67 +39,67 @@
                 <td><span title="Line Height" class="label">0</span></td>
             </tr></table>
           </div>
-          <div class="dropdown" id="letter-spacing">
+          <div class="dropdown toolbar-icon" id="letter-spacing">
             <table class="inner"><tr>
                 <td><input type="range" value="0" min="-2" max="2" step="0.1"
                            data-css="letter-spacing" /></td>
                 <td><span title="Letter Spacing" class="label">0</span></td>
             </tr></table>
           </div>
-          <a id="bold" title="Bold"></a>
-          <a id="italic" title="Italic"></a>
-          <a id="underline" title="Underline"></a>
-          <a id="align-left" title="Align Left"></a>
-          <a id="align-center" title="Align Center"></a>
-          <a id="align-right" title="Align Right"></a>
-          <a id="align-justify" title="Justify"></a>
-          <div class="dropdown" id="text-shadow"><div class="inner">
-              <table>
-                <tr>
-                  <td>width:</td>
-                  <td><input id="text-shadow-size" type="range" value="0" /></td>
-                </tr>
-                <tr>
-                  <td>y:</td>
-                  <td><input id="text-shadow-y" type="range" value="0" /></td>
-                </tr>
-                <tr>
-                  <td>x:</td>
-                  <td><input id="text-shadow-x" type="range" value="0" /></td>
-                </tr>
-                <tr>
-                  <td>colour:</td>
-                  <td><input id="text-shadow-color" type="text" class="color" /></td>
-                </tr>
-              </table>
-          </div></div>
-        </section>
+          <a id="bold" title="Bold" class="toolbar-icon"></a>
+          <a id="italic" title="Italic" class="toolbar-icon"></a>
+          <a id="underline" title="Underline" class="toolbar-icon"></a>
+          <a id="align-left" title="Align Left" class="toolbar-icon"></a>
+          <a id="align-center" title="Align Center" class="toolbar-icon"></a>
+          <a id="align-right" title="Align Right" class="toolbar-icon"></a>
+          <a id="align-justify" title="Justify" class="toolbar-icon"></a>
+          <div class="dropdown toolbar-icon" id="text-shadow">
+            <table class="inner">
+              <tr>
+                <td>width:</td>
+                <td><input id="text-shadow-size" type="range" value="0" /></td>
+              </tr>
+              <tr>
+                <td>y:</td>
+                <td><input id="text-shadow-y" type="range" value="0" /></td>
+              </tr>
+              <tr>
+                <td>x:</td>
+                <td><input id="text-shadow-x" type="range" value="0" /></td>
+              </tr>
+              <tr>
+                <td>colour:</td>
+                <td><input id="text-shadow-color" type="text" class="color" /></td>
+              </tr>
+            </table>
+          </div>
+        </div>
 
-        <section id="textandblock">
-          <input type="text" id="bg-picker" />
-          <input type="text" id="border-picker" />
-          <div class="dropdown" id="border-width">
+        <div class="section" id="textandblock">
+          <input type="text" id="bg-picker"  class="toolbar-icon picker" />
+          <input type="text" id="border-picker" class="toolbar-icon picker" />
+          <div class="dropdown toolbar-icon" id="border-width">
             <table class="inner"><tr>
                 <td><input type="range" value="0"  min="0"
                            data-css="border-width" /></td>
                 <td><span title="Border Width" class="label">0</span></td>
             </tr></table>
           </div>
-          <div class="dropdown" id="border-radius">
+          <div class="dropdown toolbar-icon" id="border-radius">
             <table class="inner"><tr>
                 <td><input type="range" value="0" data-css="border-radius" /></td>
                 <td><span title="Border Radius" class="label">0</span></td>
             </tr></table>
           </div>
-          <div class="dropdown" id="opacity">
+          <div class="dropdown toolbar-icon" id="opacity">
             <table class="inner"><tr>
                 <td><input type="range" value="0" data-css="opacity" /></td>
                 <td><span title="Opacity" class="label">0</span></td>
             </tr></table>
           </div>
-          <a id="lock" title="Lock"></a>
+          <a id="lock" title="Lock" class="toolbar-icon"></a>
 
-          <div class="dropdown" id="shadow">
+          <div class="dropdown toolbar-icon" id="shadow">
             <div class="inner">
               <table>
                 <tr>
@@ -120,23 +121,26 @@
               </table>
             </div>
           </div>
-          <a id="send-to-back" title="Send to Back"></a>
-          <a id="bring-to-front" title="Bring to Front"></a>
-      </section>
-    </div></div>
+          <a id="send-to-back" title="Send to Back" class="toolbar-icon"></a>
+          <a id="bring-to-front" title="Bring to Front" class="toolbar-icon"></a>
+        </div>
+      </div>
+    </header>
 
     <div id="canvas_wrapper">
       <div id="canvas"></div>
-      <div style="width: 800px; margin: 20px auto"><div id="selection"</div></div>
+      <div id="canvas_copy"><div id="selection"></div></div>
     </div>
 
     <div id="grid-overlay" class="overlay"></div>
 
-    <div id="keyboard-help" class="modal-overlay"><div class="inner-modal">
+    <div id="keyboard-help" class="modal-overlay">
+      <div class="inner-modal">
         <h2>Keyboard Shortcuts</h2>
         <hr />
         <div id="keyboard-placer"></div>
-    </div></div>
+      </div>
+    </div>
 
     <script type="text/html" id="shortcut-section-tpl">
       <div class="shortcut-section">

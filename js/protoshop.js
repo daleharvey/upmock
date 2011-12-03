@@ -458,7 +458,7 @@ var Protoshop = function() {
   };
 
   var $border = $('#border-picker');
-  var borderPicker = new jscolor.color($border[0], {pickerClosable:true});
+  var borderPicker = new jscolor.color($border[0], {pickerClosable:true, styleElement:null});
 
   $border.bind('change', function() {
     self.onSelected('css',{'border-color': '#' + borderPicker.toString()});
@@ -466,14 +466,14 @@ var Protoshop = function() {
 
 
   var $bg = $('#bg-picker');
-  var bgPicker = new jscolor.color($bg[0], {pickerClosable:true});
+  var bgPicker = new jscolor.color($bg[0], {pickerClosable:true, styleElement:null});
 
   $bg.bind('change', function() {
     self.onSelected('css',{'background-color': '#' + bgPicker.toString()});
   });
 
   var $fg = $('#fg-picker');
-  var fgPicker = new jscolor.color($fg[0], {pickerClosable:true});
+  var fgPicker = new jscolor.color($fg[0], {pickerClosable:true, styleElement:null});
 
   $fg.bind('change', function() {
     self.onSelected('css',{'color': '#' + fgPicker.toString()});
