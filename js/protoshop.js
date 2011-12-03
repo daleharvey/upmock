@@ -508,11 +508,6 @@ var Protoshop = function() {
     $(this).toggleClass('active');
   });
 
-  $('#toggle-grid').bind('mousedown', function(e) {
-    $('#grid-overlay').toggle();
-    $(this).toggleClass('active');
-  });
-
   function bindRange($dom) {
     var $label = $dom.find('.label');
     $dom.bind('change keyup', function(e) {
