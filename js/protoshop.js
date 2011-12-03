@@ -130,10 +130,12 @@ var Protoshop = function() {
   var self = this;
 
   var $canvas = $('#canvas');
+  var $selection = $('#selection');
   var $canvas_wrapper = $('#canvas_wrapper');
 
   this.selected = [];
   this.$canvas = $canvas;
+  this.index = {min: 2000, max: 2000};
 
   this.selectElement = function(el) {
 
@@ -147,6 +149,7 @@ var Protoshop = function() {
       _.each(self.selected, function(obj) { obj.deselect.apply(obj); });
       self.selected = [];
     }
+
   };
 
   this.onSelected = function(callback) {
@@ -171,7 +174,6 @@ var Protoshop = function() {
     });
 
   }
-
 
   function is_inside(obj, parent) {
     return ( obj == parent ) ||
@@ -239,8 +241,6 @@ var Protoshop = function() {
     });
   }
 
-  var $selection = $('#selection');
-
   function bindMouseSelection(e) {
 
     var yOffset = $canvas_wrapper[0].scrollTop - $canvas_wrapper[0].offsetTop;
@@ -260,22 +260,31 @@ var Protoshop = function() {
 
     $canvas.bind('mousemove.selecting', function(e) {
       e.clientY += yOffset;
-      var top = Math.min(start.clientY, e.clientY);
-      var left = Math.min(start.clientX, e.clientX);
-      var width = Math.max(start.clientX, e.clientX) - left;
-      var height = Math.max(start.clientY, e.clientY) - top;
-      $selection.css({width: width, height: height, top: top, left: left});
-      top -= $canvas[0].offsetTop;
-      _.each(selected, function(obj) { obj.removeClass('soft-select'); });
 
+      var bounds = {
+        top: Math.min(start.clientY, e.clientY),
+        left: Math.min(start.clientX, e.clientX)
+      };
+      bounds.width = Math.max(start.clientX, e.clientX) - bounds.left;
+      bounds.height = Math.max(start.clientY, e.clientY) - bounds.top;
+
+      $selection.css(bounds);
+      bounds.top -= $canvas[0].offsetTop;
+
+      _.each(selected, function(obj) { obj.removeClass('soft-select'); });
       selected = _.filter(objects, function(obj) {
         var pos = obj.position();
         pos.left += $canvas[0].offsetLeft;
-        return !(pos.left > (left + width) || (pos.left + obj.width()) < left ||
-                 pos.top > (top + height) || (pos.top + obj.height()) < top);
-      });
-      _.each(selected, function(obj) { obj.addClass('soft-select'); });
+        var inside =  !(pos.left > (bounds.left + bounds.width) ||
+                        (pos.left + obj.width()) < bounds.left ||
+                        pos.top > (bounds.top + bounds.height) ||
+                        (pos.top + obj.height()) < bounds.top);
+        if (inside) {
+          obj.addClass('soft-select');
+        }
 
+        return inside;
+      });
     });
 
     $canvas.bind('mouseup.selecting', function(e) {
@@ -358,10 +367,6 @@ var Protoshop = function() {
       key.callback.apply(self, arguments);
     });
   });
-
-
-  this.index = {min: 2000, max: 2000};
-
 
   (function() {
 
