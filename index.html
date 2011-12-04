@@ -28,8 +28,10 @@
     <script type="text/html" id="textandblock-toolbar-tpl">
       <div class="section" id="textandblock">
 
-        <input id="bg-picker" data-css="background-color" class="toolbar-icon picker" />
-        <input id="border-picker" data-css="border-color" class="toolbar-icon picker" />
+        <input id="bg-picker" data-css="background-color" value="{{backgroundColor}}"
+               class="toolbar-icon picker" />
+        <input id="border-picker" data-css="border-color" value="{{borderColor}}"
+               class="toolbar-icon picker" />
 
         <div class="dropdown toolbar-label-icon" id="border-width">
           <span title="Border Width" class="label">{{borderWidth}}</span>
@@ -89,7 +91,8 @@
 
     <script type="text/html" id="text-toolbar-tpl">
       <div class="section" id="text">
-        <input id="fg-picker" data-css="color" class="toolbar-icon picker" />
+
+        <input id="fg-picker" data-css="color" class="toolbar-icon picker" value="{{color}}" />
 
         <select id="font-family" class="toolbar-select">
           <option {{#family-helvetica}}selected="selected"{{/family-helvetica}}

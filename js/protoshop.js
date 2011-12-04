@@ -564,7 +564,12 @@ Protoshop.Toolbar = function(protoshop) {
 
   }
 
-  // TODO: Major maajor ugly
+  function parseRBG(text) {
+    var parts = text.split(" ");
+    return rgbToHex(parts[0].slice(4), parseInt(parts[1]), parseInt(parts[2]));
+  }
+
+  // TODO: Major major ugly
   function parseShadow(text) {
 
     var parts = text.split(" ");
@@ -590,8 +595,14 @@ Protoshop.Toolbar = function(protoshop) {
       borderRadius: parseInt(dom.css('borderTopLeftRadius'), 0),
       borderWidth: parseInt(dom.css('border-top-width'), 0),
       opacity: parseFloat(dom.css('opacity'), 0).toFixed(2),
-      shadow: parseShadow(dom.css('box-shadow'))
+      shadow: parseShadow(dom.css('box-shadow')),
+      backgroundColor: parseRBG(dom.css('background-color')),
+      borderColor: 'transparent'
     };
+
+    if (obj.borderRadius > 0) {
+      obj.borderColor = parseRBG(dom.css('borderTopColor'));
+    }
 
     return obj;
   }
@@ -606,7 +617,8 @@ Protoshop.Toolbar = function(protoshop) {
       isBold: /(bold|700)/.test(dom.css('font-weight')),
       isItalic: dom.css('font-style') === 'italic',
       isUnderline: dom.css('text-decoration') === 'underline',
-      shadow: parseShadow(dom.css('text-shadow'))
+      shadow: parseShadow(dom.css('text-shadow')),
+      color: parseRBG(dom.css('color'))
     };
 
     if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {
@@ -700,8 +712,7 @@ Protoshop.Toolbar = function(protoshop) {
   function bindColour() {
 
     var picker = new jscolor.color(this, {
-      pickerClosable:true,
-      styleElement:null
+      pickerClosable: true
     });
 
     $(this).bind('change', function() {
