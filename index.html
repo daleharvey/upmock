@@ -56,26 +56,25 @@
         <a id="lock" title="Lock" class="toolbar-icon"></a>
 
         <div class="dropdown toolbar-icon" id="shadow">
-          <div class="inner">
-            <table>
-              <tr>
-                <td>width:</td>
-                <td><input id="shadow-size" type="range" value="0" /></td>
-              </tr>
-              <tr>
-                <td>y:</td>
-                <td><input id="shadow-y" type="range" value="0" /></td>
-              </tr>
-              <tr>
-                <td>x:</td>
-                <td><input id="shadow-x" type="range" value="0" /></td>
-              </tr>
-              <tr>
-                <td>colour:</td>
-                <td><input id="shadow-color" type="text" class="color" /></td>
-              </tr>
-            </table>
-          </div>
+          <table class="inner">
+            <tr>
+              <td>width:</td>
+              <td><input id="shadow-size" type="range" value="{{shadow.size}}" /></td>
+            </tr>
+            <tr>
+              <td>y:</td>
+              <td><input id="shadow-y" type="range" value="{{shadow.y}}" /></td>
+            </tr>
+            <tr>
+              <td>x:</td>
+              <td><input id="shadow-x" type="range" value="{{shadow.x}}" /></td>
+            </tr>
+            <tr>
+              <td>colour:</td>
+              <td><input id="shadow-color" type="text" class="color"
+                         value="{{shadow.colour}}" /></td>
+            </tr>
+          </table>
         </div>
         <a id="send-to-back" title="Send to Back" class="toolbar-icon"></a>
         <a id="bring-to-front" title="Bring to Front" class="toolbar-icon"></a>
@@ -154,19 +153,19 @@
           <table class="inner">
             <tr>
               <td>width:</td>
-              <td><input id="text-shadow-size" type="range" value="0" /></td>
+              <td><input id="text-shadow-size" type="range" value="{{shadow.size}}" /></td>
             </tr>
             <tr>
               <td>y:</td>
-              <td><input id="text-shadow-y" type="range" value="0" /></td>
+              <td><input id="text-shadow-y" type="range" value="{{shadow.y}}" /></td>
             </tr>
             <tr>
               <td>x:</td>
-              <td><input id="text-shadow-x" type="range" value="0" /></td>
+              <td><input id="text-shadow-x" type="range" value="{{shadow.x}}" /></td>
             </tr>
             <tr>
               <td>colour:</td>
-              <td><input id="text-shadow-color" type="text" class="color" /></td>
+              <td><input id="text-shadow-color" type="text" class="color" value="{{shadow.colour}}" /></td>
             </tr>
           </table>
         </div>

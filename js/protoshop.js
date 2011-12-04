@@ -1,7 +1,3 @@
-if (Modernizr.inputtypes.range ){
-  $(document.body).addClass('range');
-}
-
 var CoreElement = function() {
 
   var self = this;
@@ -568,16 +564,36 @@ Protoshop.Toolbar = function(protoshop) {
 
   }
 
+  // TODO: Major maajor ugly
+  function parseShadow(text) {
+
+    var parts = text.split(" ");
+
+    if (parts.length < 1) {
+      return false;
+    }
+
+    return {
+      x: parseInt(parts[3], 10),
+      y: parseInt(parts[4], 10),
+      size: parseInt(parts[5], 10),
+      colour: rgbToHex(parts[0].slice(4), parseInt(parts[1]), parseInt(parts[2]))
+    };
+  }
+
   this.data['global'] = function(obj) {
     return {isOverlay: $('#grid-overlay').is(':visible')}
   }
   this.data['element'] = function(obj) {
     var dom = obj.$dom;
-    return {
+    var obj = {
       borderRadius: parseInt(dom.css('borderTopLeftRadius'), 0),
       borderWidth: parseInt(dom.css('border-top-width'), 0),
-      opacity: parseFloat(dom.css('opacity'), 0).toFixed(2)
+      opacity: parseFloat(dom.css('opacity'), 0).toFixed(2),
+      shadow: parseShadow(dom.css('box-shadow'))
     };
+
+    return obj;
   }
   this.data['text'] = function(obj) {
     var dom = obj.$dom;
@@ -589,7 +605,8 @@ Protoshop.Toolbar = function(protoshop) {
       letterSpacing: parseInt(dom.css('letter-spacing'), 0) || 0,
       isBold: /(bold|700)/.test(dom.css('font-weight')),
       isItalic: dom.css('font-style') === 'italic',
-      isUnderline: dom.css('text-decoration') === 'underline'
+      isUnderline: dom.css('text-decoration') === 'underline',
+      shadow: parseShadow(dom.css('text-shadow'))
     };
 
     if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {
@@ -603,6 +620,19 @@ Protoshop.Toolbar = function(protoshop) {
   }
 
 
+  function rgbToHex(R,G,B) {
+    return toHex(R)+toHex(G)+toHex(B)
+  }
+
+  function toHex(n) {
+    n = parseInt(n,10);
+    if (isNaN(n)) return "00";
+    n = Math.max(0,Math.min(n,255));
+    return "0123456789ABCDEF".charAt((n-n%16)/16)
+      + "0123456789ABCDEF".charAt(n%16);
+  }
+
+
   function findKey(obj, val) {
     for (var prop in obj) {
       if (obj.hasOwnProperty(prop)) {
@@ -613,6 +643,7 @@ Protoshop.Toolbar = function(protoshop) {
     }
     return false;
   }
+
 
   this.protoshop.$selection.bind('change', function(evt, data) {
 
@@ -709,7 +740,7 @@ Protoshop.Toolbar = function(protoshop) {
     var $label = $dom.find('.label');
     $dom.bind('change keyup', function(e) {
       var tmp = {}, key = $(e.target).attr('data-css');
-      tmp[key] = new Number(e.target.value).toFixed(1) + 'px';
+      tmp[key] = e.target.value + 'px';
       if (key === 'opacity') {
         tmp[key] = new Number(parseInt(tmp[key], 0) / 100).toFixed(2);
       }
