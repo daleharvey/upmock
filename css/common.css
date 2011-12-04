@@ -82,6 +82,22 @@ header {
     position: relative;
 }
 
+.toolbar-label-icon {
+    cursor: pointer;
+    display: block;
+    border: 1px solid #CCC;
+    background-position: 2px 0;
+    background-repeat: no-repeat;
+    float: left;
+    padding-left: 20px;
+    width: 35px;
+    line-height: 16px;
+    font-size: 9px;
+    border-radius: 3px;
+    margin-right: 5px;
+    position: relative;
+}
+
 .toolbar-icon.picker {
     text-indent: -999px;
 }
@@ -91,6 +107,7 @@ header {
     margin-right: 5px;
 }
 
+.toolbar-label-icon:hover, .toolbar-label-icon.active,
 .toolbar-icon:hover, .toolbar-icon.active {
     background-color: #EEE;
 }
@@ -122,18 +139,6 @@ header {
     float: left;
 }
 
-.label {
-    display: none;
-    width: 25px;
-    margin-top: -5px;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-.range .label {
-    display: block;
-}
-
 #toggle-grid    { background-image: url(../img/grid.png); }
 #bold           { background-image: url(../img/famfam/text_bold.png); }
 #italic         { background-image: url(../img/famfam/text_italic.png); }
@@ -157,6 +162,20 @@ header {
 #bg-picker      { background-image: url(../img/famfam/color_wheel.png); }
 #fg-picker      { background-image: url(../img/fague/edit-color.png); }
 
+.text-preview {
+    display: block;
+    position: absolute;
+    top: -4px;
+    left: -8px;
+    height: 12px;
+    width: 12px;
+    background: #333;
+    color:white;
+    border-radius: 8px;
+    font-size: 8px;
+    text-align: center;
+    font-family: verdana;
+}
 
 /*
  * MAIN CANVAS

@@ -157,7 +157,7 @@ var Protoshop = function() {
 
   this.onSelected = function(callback) {
     var params = _.toArray(arguments).slice(1);
-    _.each(self.selected, function(obj) {
+    return _.map(self.selected, function(obj) {
       obj[callback].apply(obj, params);
     });
   };
@@ -475,6 +475,7 @@ Protoshop.Toolbar = function(protoshop) {
   };
 
   this.events = {};
+  this.data = {};
 
   this.events['global'] = function() {
     $('#toggle-grid').bind('mousedown', function(e) {
@@ -485,6 +486,7 @@ Protoshop.Toolbar = function(protoshop) {
 
 
   this.events['element'] = function() {
+
     $('#bring-to-front').bind('mousedown', function() {
       self.protoshop.onSelected('css', {'z-index': ++self.index.max});
     });
@@ -519,24 +521,35 @@ Protoshop.Toolbar = function(protoshop) {
       self.protoshop.onSelected('css',{'font-family': fonts[$(this).val()]});
     });
     $('#bold').bind('mousedown', function() {
+      $(this).toggleClass('active');
       self.protoshop.onSelected('toggleBold');
     });
     $('#italic').bind('mousedown', function() {
+      $(this).toggleClass('active');
       self.protoshop.onSelected('toggleItalic');
     });
     $('#underline').bind('mousedown', function() {
+      $(this).toggleClass('active');
       self.protoshop.onSelected('toggleUnderline');
     });
     $('#align-left').bind('mousedown', function() {
+      $('.align').removeClass('active');
+      $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'left'});
     });
     $('#align-center').bind('mousedown', function() {
+      $('.align').removeClass('active');
+      $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'center'});
     });
     $('#align-right').bind('mousedown', function() {
+      $('.align').removeClass('active');
+      $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'right'});
     });
     $('#align-justify').bind('mousedown', function() {
+      $('.align').removeClass('active');
+      $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'justify'});
     });
 
@@ -555,29 +568,79 @@ Protoshop.Toolbar = function(protoshop) {
 
   }
 
+  this.data['global'] = function(obj) {
+    return {isOverlay: $('#grid-overlay').is(':visible')}
+  }
+  this.data['element'] = function(obj) {
+    var dom = obj.$dom;
+    return {
+      borderRadius: parseInt(dom.css('borderTopLeftRadius'), 0),
+      borderWidth: parseInt(dom.css('border-top-width'), 0),
+      opacity: parseFloat(dom.css('opacity'), 0).toFixed(2)
+    };
+  }
+  this.data['text'] = function(obj) {
+    var dom = obj.$dom;
+    var family = findKey(fonts, dom.css('font-family')) || 'helvetica';
+    var align = dom.css('text-align');
+    var obj = {
+      fontSize: parseInt(dom.css('font-size'), 0),
+      lineHeight: parseInt(dom.css('line-height'), 0),
+      letterSpacing: parseInt(dom.css('letter-spacing'), 0) || 0,
+      isBold: /(bold|700)/.test(dom.css('font-weight')),
+      isItalic: dom.css('font-style') === 'italic',
+      isUnderline: dom.css('text-decoration') === 'underline'
+    };
+
+    if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {
+      align = 'left';
+    }
+
+    obj['family-' + family] = true;
+    obj['align-' + align] = true;
+
+    return obj;
+  }
+
+
+  function findKey(obj, val) {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        if (obj[prop] === val) {
+          return prop;
+        }
+      }
+    }
+    return false;
+  }
+
   this.protoshop.$selection.bind('change', function(evt, data) {
 
     if (data.selected.length < 1) {
-      return self.render(['global']);
+      return self.render(['global'], data);
     }
 
     if (_.all(data.selected, function(x) { return x instanceof TextElement; })) {
-      return self.render(['global', 'text']);
+      return self.render(['global', 'text'], data);
     }
 
     if (_.all(data.selected, function(x) { return x instanceof BlockElement; })) {
-      return self.render(['global', 'element']);
+      return self.render(['global', 'element'], data);
     }
 
-    self.render(['global', 'element']);
+    self.render(['global', 'element'], data);
 
   });
 
 
-  this.render = function(sections, selected) {
+  this.render = function(sections, args) {
+
+    var picked = (args && args.selected && args.selected.length > 0) ?
+      args.selected[0] : false;
 
     var html = _.map(sections, function(section) {
-      return self.tpls[section](selected);
+      var data = self.data[section](picked);
+      return self.tpls[section](data);
     });
 
     $root.html(html.join(""));
@@ -648,7 +711,7 @@ Protoshop.Toolbar = function(protoshop) {
       var tmp = {}, key = $(e.target).attr('data-css');
       tmp[key] = new Number(e.target.value).toFixed(1) + 'px';
       if (key === 'opacity') {
-        tmp[key] = parseInt(tmp[key], 0) / 100;
+        tmp[key] = new Number(parseInt(tmp[key], 0) / 100).toFixed(2);
       }
       $label.text(tmp[key]);
       self.protoshop.onSelected('css', tmp);

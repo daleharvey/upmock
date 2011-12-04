@@ -31,26 +31,26 @@
         <input id="bg-picker" data-css="background-color" class="toolbar-icon picker" />
         <input id="border-picker" data-css="border-color" class="toolbar-icon picker" />
 
-        <div class="dropdown toolbar-icon" id="border-width">
-          <table class="inner"><tr>
-              <td><input type="range" value="0"  min="0"
-                         data-css="border-width" /></td>
-              <td><span title="Border Width" class="label">0</span></td>
-          </tr></table>
+        <div class="dropdown toolbar-label-icon" id="border-width">
+          <span title="Border Width" class="label">{{borderWidth}}</span>
+          <div class="inner">
+            <input type="range" value="{{borderWidth}}"  min="0"
+                   data-css="border-width" />
+          </div>
         </div>
 
-        <div class="dropdown toolbar-icon" id="border-radius">
-          <table class="inner"><tr>
-              <td><input type="range" value="0" data-css="border-radius" /></td>
-              <td><span title="Border Radius" class="label">0</span></td>
-          </tr></table>
+        <div class="dropdown toolbar-label-icon" id="border-radius">
+          <span title="Border Radius" class="label">{{borderRadius}}px</span>
+          <div class="inner">
+            <input type="range" value="{{borderRadius}}" data-css="border-radius" />
+          </div>
         </div>
 
-        <div class="dropdown toolbar-icon" id="opacity">
-          <table class="inner"><tr>
-              <td><input type="range" value="0" data-css="opacity" /></td>
-              <td><span title="Opacity" class="label">0</span></td>
-          </tr></table>
+        <div class="dropdown toolbar-label-icon" id="opacity">
+          <span title="Opacity" class="label">{{opacity}}</span>
+          <div class="inner">
+            <input type="range" value="{{opacity}}" data-css="opacity" />
+          </div>
         </div>
 
         <a id="lock" title="Lock" class="toolbar-icon"></a>
@@ -84,57 +84,71 @@
 
     <script type="text/html" id="global-toolbar-tpl">
       <div class="section" id="global">
-        <a id="toggle-grid" class="toolbar-icon" title="Toggle Grid Overlay"></a>
+        <a id="toggle-grid" class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}" title="Toggle Grid Overlay"></a>
       </div>
     </script>
 
     <script type="text/html" id="text-toolbar-tpl">
       <div class="section" id="text">
-
         <input id="fg-picker" data-css="color" class="toolbar-icon picker" />
 
         <select id="font-family" class="toolbar-select">
-          <option value="tnr">Times New Roman</option>
-          <option value="georgia">Georgia</option>
-          <option value="garamond">Garamond</option>
-          <option value="helvetica">Helvetica</option>
-          <option value="verdana">Verdana</option>
-          <option value="trebuchet">Trebuchet</option>
-          <option value="impact">Impact</option>
-          <option value="monospace">Monospace</option>
+          <option {{#family-helvetica}}selected="selected"{{/family-helvetica}}
+                  value="helvetica">Helvetica</option>
+          <option {{#family-tnr}}selected="selected"{{/family-tnr}}
+                  value="tnr">Times New Roman</option>
+          <option {{#family-georgia}}selected="selected"{{/family-georgia}}
+                  value="georgia">Georgia</option>
+          <option {{#family-garamond}}selected="selected"{{/family-garamond}}
+                  value="garamond">Garamond</option>
+          <option {{#family-verdana}}selected="selected"{{/family-verdana}}
+                  value="verdana">Verdana</option>
+          <option {{#family-trebuchet}}selected="selected"{{/family-trebuchet}}
+                  value="trebuchet">Trebuchet</option>
+          <option {{#family-impact}}selected="selected"{{/family-impact}}
+                  value="impact">Impact</option>
+          <option {{#family-monospace}}selected="selected"{{/family-monospace}}
+                  value="monospace">Monospace</option>
         </select>
 
-        <div class="dropdown toolbar-icon" id="font-size" >
-          <table class="inner"><tr>
-              <td><input type="range" value="0"  data-css="font-size" /></td>
-              <td><span title="Font Size" class="label">0</span></td>
-          </tr></table>
+        <div class="dropdown toolbar-label-icon" id="font-size">
+          <span class="label">{{fontSize}}px</span>
+          <div class="inner">
+            <input type="range" value="{{fontSize}}"  min="0" max="400"
+                   data-css="font-size" />
+          </div>
         </div>
 
-        <div class="dropdown toolbar-icon" id="line-height">
-          <table class="inner"><tr>
-              <td>
-                <input type="range" value="0" max="200" data-css="line-height" />
-              </td>
-              <td><span title="Line Height" class="label">0</span></td>
-          </tr></table>
+        <div class="dropdown toolbar-label-icon" id="line-height">
+          <span title="Line Height" class="label">{{lineHeight}}px</span>
+          <div class="inner">
+            <input type="range" value="{{lineHeight}}" max="200"
+                   data-css="line-height" />
+          </div>
         </div>
 
-        <div class="dropdown toolbar-icon" id="letter-spacing">
-          <table class="inner"><tr>
-              <td><input type="range" value="0" min="-2" max="2" step="0.1"
-                         data-css="letter-spacing" /></td>
-              <td><span title="Letter Spacing" class="label">0</span></td>
-          </tr></table>
+        <div class="dropdown toolbar-label-icon" id="letter-spacing">
+          <span title="Letter Spacing" class="label">{{letterSpacing}}px</span>
+          <div class="inner">
+            <input type="range" value="{{letterSpacing}}" min="-10" max="10" step="1"
+                         data-css="letter-spacing" />
+          </div>
         </div>
 
-        <a id="bold" title="Bold" class="toolbar-icon"></a>
-        <a id="italic" title="Italic" class="toolbar-icon"></a>
-        <a id="underline" title="Underline" class="toolbar-icon"></a>
-        <a id="align-left" title="Align Left" class="toolbar-icon"></a>
-        <a id="align-center" title="Align Center" class="toolbar-icon"></a>
-        <a id="align-right" title="Align Right" class="toolbar-icon"></a>
-        <a id="align-justify" title="Justify" class="toolbar-icon"></a>
+        <a id="bold" title="Bold"
+           class="toolbar-icon {{#isBold}}active{{/isBold}}"></a>
+        <a id="italic" title="Italic"
+           class="toolbar-icon {{#isItalic}}active{{/isItalic}}"></a>
+        <a id="underline" title="Underline"
+           class="toolbar-icon {{#isUnderline}}active{{/isUnderline}}"></a>
+        <a id="align-left" title="Align Left"
+           class="toolbar-icon align {{#align-left}}active{{/align-left}}"></a>
+        <a id="align-center" title="Align Center"
+           class="toolbar-icon align {{#align-center}}active{{/align-center}}"></a>
+        <a id="align-right" title="Align Right"
+           class="toolbar-icon align {{#align-right}}active{{/align-right}}"></a>
+        <a id="align-justify" title="Justify"
+           class="toolbar-icon align {{#align-justify}}active{{/align-justify}}"></a>
 
         <div class="dropdown toolbar-icon" id="text-shadow">
           <table class="inner">
