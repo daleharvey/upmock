@@ -579,9 +579,9 @@ Protoshop.Toolbar = function(protoshop) {
     }
 
     return {
-      x: parseInt(parts[3], 10),
-      y: parseInt(parts[4], 10),
-      size: parseInt(parts[5], 10),
+      x: parseInt(parts[3], 10) || 0,
+      y: parseInt(parts[4], 10) || 0,
+      size: parseInt(parts[5], 10) || 0,
       colour: rgbToHex(parts[0].slice(4), parseInt(parts[1]), parseInt(parts[2]))
     };
   }
