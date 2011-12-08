@@ -96,11 +96,13 @@ header {
     float: left;
     padding-left: 20px;
     width: 35px;
-    line-height: 16px;
+    line-height: 15px;
     font-size: 9px;
     border-radius: 3px;
     margin-right: 5px;
     position: relative;
+    margin-top:0px;
+    background-color: #CDCDCD;
 }
 
 .toolbar-icon.picker {
@@ -112,7 +114,7 @@ header {
     margin-right: 5px;
 }
 
-.toolbar-label-icon:hover, .toolbar-label-icon.active,
+.toolbar-label-icon:hover, .toolbar-label-icon.active, .toolbar-label-icon:focus,
 .toolbar-icon:hover, .toolbar-icon.active {
     background-color: #EEE;
 }
