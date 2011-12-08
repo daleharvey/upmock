@@ -68,7 +68,7 @@ header {
     margin: 0 auto;
 }
 
-.toolbar-icon {
+.toolbar-icon, .picker-wrapper {
     cursor: pointer;
     display: block;
     width: 16px;
@@ -80,6 +80,11 @@ header {
     float: left;
     margin-right: 5px;
     position: relative;
+}
+
+.picker-wrapper {
+    width: 20px;
+    height: 20px;
 }
 
 .toolbar-label-icon {
@@ -175,6 +180,15 @@ header {
     font-size: 8px;
     text-align: center;
     font-family: verdana;
+}
+
+.picker-preview {
+    position:absolute;
+    bottom: 3px;
+    left: 2px;
+    right: 2px;
+    height: 3px;
+    z-index: 30000;
 }
 
 /*

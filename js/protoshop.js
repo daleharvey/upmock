@@ -714,13 +714,21 @@ Protoshop.Toolbar = function(protoshop) {
 
   function bindColour() {
 
+    var $preview = $('<div class="picker-preview"></div>')
+      .css('background-color', '#' + this.value);
+
     var picker = new jscolor.color(this, {
-      pickerClosable: true
+      pickerClosable: true,
+      styleElement: null
     });
+
+    $(this).wrap('<div class="picker-wrapper"></div>')
+      .after($preview);
 
     $(this).bind('change', function() {
       var obj = {};
       obj[$(this).data('css')] = '#' + picker.toString();
+      $preview.css('background-color', '#' + picker.toString());
       self.protoshop.onSelected('css', obj);
     });
 
