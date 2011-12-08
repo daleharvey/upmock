@@ -473,15 +473,15 @@ Protoshop.Toolbar = function(protoshop) {
   this.events = {};
   this.data = {};
 
-  this.events['global'] = function() {
+  this.events.global = function() {
     $('#toggle-grid').bind('mousedown', function(e) {
       $('#grid-overlay').toggle();
       $(this).toggleClass('active');
     });
-  }
+  };
 
 
-  this.events['element'] = function() {
+  this.events.element = function() {
 
     $('#bring-to-front').bind('mousedown', function() {
       self.protoshop.onSelected('css', {'z-index': ++self.index.max});
@@ -495,9 +495,9 @@ Protoshop.Toolbar = function(protoshop) {
       self.protoshop.selectElement(null);
     });
 
-    bindRange($('#border-width'));
-    bindRange($('#border-radius'));
-    bindRange($('#opacity'));
+    bindChange($('#border-width'));
+    bindChange($('#border-radius'));
+    bindChange($('#opacity'));
 
     $('#shadow').bind('change keyup', function() {
       var x = $('#shadow-x').val();
@@ -508,10 +508,10 @@ Protoshop.Toolbar = function(protoshop) {
       self.protoshop.onSelected('css',{'box-shadow': css});
     });
 
-  }
+  };
 
 
-  this.events['text'] = function() {
+  this.events.text = function() {
 
     $('#font-family').bind('change', function() {
       self.protoshop.onSelected('css',{'font-family': fonts[$(this).val()]});
@@ -558,15 +558,15 @@ Protoshop.Toolbar = function(protoshop) {
       self.protoshop.onSelected('css',{'text-shadow': css});
     });
 
-    bindRange($('#font-size'));
-    bindRange($('#line-height'));
-    bindRange($('#letter-spacing'));
+    bindChange($('#font-size'));
+    bindChange($('#line-height'));
+    bindChange($('#letter-spacing'));
 
-  }
+  };
 
   function parseRBG(text) {
     var parts = text.split(" ");
-    return rgbToHex(parts[0].slice(4), parseInt(parts[1]), parseInt(parts[2]));
+    return rgbToHex(parts[0].slice(4), parseInt(parts[1], 10), parseInt(parts[2], 10));
   }
 
   // TODO: Major major ugly
@@ -582,14 +582,15 @@ Protoshop.Toolbar = function(protoshop) {
       x: parseInt(parts[3], 10) || 0,
       y: parseInt(parts[4], 10) || 0,
       size: parseInt(parts[5], 10) || 0,
-      colour: rgbToHex(parts[0].slice(4), parseInt(parts[1]), parseInt(parts[2]))
+      colour: rgbToHex(parts[0].slice(4), parseInt(parts[1], 10), parseInt(parts[2], 10))
     };
   }
 
-  this.data['global'] = function(obj) {
-    return {isOverlay: $('#grid-overlay').is(':visible')}
-  }
-  this.data['element'] = function(obj) {
+  this.data.global = function(obj) {
+    return {isOverlay: $('#grid-overlay').is(':visible')};
+  };
+
+  this.data.element = function(obj) {
     var dom = obj.$dom;
     var obj = {
       borderRadius: parseInt(dom.css('borderTopLeftRadius'), 0),
@@ -605,8 +606,9 @@ Protoshop.Toolbar = function(protoshop) {
     }
 
     return obj;
-  }
-  this.data['text'] = function(obj) {
+  };
+
+  this.data.text = function(obj) {
     var dom = obj.$dom;
     var family = findKey(fonts, dom.css('font-family')) || 'helvetica';
     var align = dom.css('text-align');
@@ -629,19 +631,19 @@ Protoshop.Toolbar = function(protoshop) {
     obj['align-' + align] = true;
 
     return obj;
-  }
+  };
 
 
   function rgbToHex(R,G,B) {
-    return toHex(R)+toHex(G)+toHex(B)
+    return toHex(R)+toHex(G)+toHex(B);
   }
 
   function toHex(n) {
     n = parseInt(n,10);
     if (isNaN(n)) return "00";
     n = Math.max(0,Math.min(n,255));
-    return "0123456789ABCDEF".charAt((n-n%16)/16)
-      + "0123456789ABCDEF".charAt(n%16);
+    return "0123456789ABCDEF".charAt((n-n%16)/16) +
+      "0123456789ABCDEF".charAt(n%16);
   }
 
 
@@ -697,12 +699,13 @@ Protoshop.Toolbar = function(protoshop) {
     $('.dropdown').each(bindDropDown);
     $('.picker').each(bindColour);
     $('.color').each(bindPlainColour);
-  }
+
+  };
 
 
   function is_inside(obj, parent) {
     return ( obj == parent ) ||
-      ( obj.parentNode != null && is_inside(obj.parentNode, parent) );
+      ( obj.parentNode !== null && is_inside(obj.parentNode, parent) );
   }
 
   function bindPlainColour() {
@@ -721,6 +724,20 @@ Protoshop.Toolbar = function(protoshop) {
       self.protoshop.onSelected('css', obj);
     });
 
+  }
+
+
+  function bindChange($dom) {
+    var key = $dom.attr('data-css');
+    $dom.bind('change input', function() {
+      var obj = {};
+      obj[key] = this.value + 'px';
+      if (key === 'opacity') {
+        obj[key] = Number(parseFloat(obj[key], 10)).toFixed(2);
+      }
+      //$label.text(obj[key]);
+      self.protoshop.onSelected('css', obj);
+    });
   }
 
 
@@ -753,7 +770,7 @@ Protoshop.Toolbar = function(protoshop) {
       var tmp = {}, key = $(e.target).attr('data-css');
       tmp[key] = e.target.value + 'px';
       if (key === 'opacity') {
-        tmp[key] = new Number(parseInt(tmp[key], 0) / 100).toFixed(2);
+        tmp[key] = new Number(parseFloat(tmp[key], 10)).toFixed(2);
       }
       $label.text(tmp[key]);
       self.protoshop.onSelected('css', tmp);

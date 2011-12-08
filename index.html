@@ -33,27 +33,14 @@
         <input id="border-picker" data-css="border-color" value="{{borderColor}}"
                class="toolbar-icon picker" />
 
-        <div class="dropdown toolbar-label-icon" id="border-width">
-          <span title="Border Width" class="label">{{borderWidth}}</span>
-          <div class="inner">
-            <input type="range" value="{{borderWidth}}"  min="0"
-                   data-css="border-width" />
-          </div>
-        </div>
+        <input type="number" id="border-width" data-css="border-width" value="{{borderWidth}}"
+               class="toolbar-label-icon" />
 
-        <div class="dropdown toolbar-label-icon" id="border-radius">
-          <span title="Border Radius" class="label">{{borderRadius}}px</span>
-          <div class="inner">
-            <input type="range" value="{{borderRadius}}" data-css="border-radius" />
-          </div>
-        </div>
+        <input type="number" id="border-radius" data-css="border-radius" value="{{borderRadius}}"
+               class="toolbar-label-icon" />
 
-        <div class="dropdown toolbar-label-icon" id="opacity">
-          <span title="Opacity" class="label">{{opacity}}</span>
-          <div class="inner">
-            <input type="range" value="{{opacity}}" data-css="opacity" />
-          </div>
-        </div>
+        <input type="number" id="opacity" data-css="opacity" value="{{opacity}}"
+               class="toolbar-label-icon" min="0" max="1" step="0.05" />
 
         <a id="lock" title="Lock" class="toolbar-icon"></a>
 
@@ -85,7 +72,8 @@
 
     <script type="text/html" id="global-toolbar-tpl">
       <div class="section" id="global">
-        <a id="toggle-grid" class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}" title="Toggle Grid Overlay"></a>
+        <a id="toggle-grid" class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}"
+           title="Toggle Grid Overlay"></a>
       </div>
     </script>
 
@@ -113,29 +101,14 @@
                   value="monospace">Monospace</option>
         </select>
 
-        <div class="dropdown toolbar-label-icon" id="font-size">
-          <span class="label">{{fontSize}}px</span>
-          <div class="inner">
-            <input type="range" value="{{fontSize}}"  min="0" max="400"
-                   data-css="font-size" />
-          </div>
-        </div>
+        <input type="number" id="font-size" data-css="font-size" value="{{fontSize}}"
+               class="toolbar-label-icon" min="0" max="400" />
 
-        <div class="dropdown toolbar-label-icon" id="line-height">
-          <span title="Line Height" class="label">{{lineHeight}}px</span>
-          <div class="inner">
-            <input type="range" value="{{lineHeight}}" max="200"
-                   data-css="line-height" />
-          </div>
-        </div>
+        <input type="number" id="line-height" data-css="line-height" value="{{lineHeight}}"
+               class="toolbar-label-icon" max="200" />
 
-        <div class="dropdown toolbar-label-icon" id="letter-spacing">
-          <span title="Letter Spacing" class="label">{{letterSpacing}}px</span>
-          <div class="inner">
-            <input type="range" value="{{letterSpacing}}" min="-10" max="10" step="1"
-                         data-css="letter-spacing" />
-          </div>
-        </div>
+        <input type="number" id="letter-spacing" data-css="letter-spacing"
+               value="{{letterSpacing}}" class="toolbar-label-icon" max="10" min="-10" />
 
         <a id="bold" title="Bold"
            class="toolbar-icon {{#isBold}}active{{/isBold}}"></a>
