@@ -162,14 +162,14 @@ var Protoshop = function() {
 
     var start = e, orig = {}, diff = {};
 
-    $canvas.bind('mousemove.editing', function(e) {
+    $canvas_wrapper.bind('mousemove.editing', function(e) {
       diff = {x: e.clientX - start.clientX, y: e.clientY - start.clientY};
       self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
       orig = diff;
     });
 
-    $canvas.bind('mouseup.moving', function(e) {
-      $canvas.unbind('.editing');
+    $canvas_wrapper.bind('mouseup.moving', function(e) {
+      $canvas_wrapper.unbind('.editing');
     });
 
   }
@@ -206,7 +206,7 @@ var Protoshop = function() {
       }
     };
 
-    $canvas.bind('mousemove.resize', function(e) {
+    $canvas_wrapper.bind('mousemove.resize', function(e) {
       var obj = {}, i;
       for(i = 0; i < len; i++) {
         resize[type[i]](e, obj);
@@ -214,8 +214,8 @@ var Protoshop = function() {
       self.selected[0].css(obj);
     });
 
-    $canvas.bind('mouseup.moving', function(e) {
-      $canvas.unbind('.resize');
+    $canvas_wrapper.bind('mouseup.moving', function(e) {
+      $canvas_wrapper.unbind('.resize');
     });
 
   }
@@ -252,7 +252,7 @@ var Protoshop = function() {
     $selection.css({top: start.clientY, left: start.clientX, height: 1, width: 1});
     $selection.show();
 
-    $canvas.bind('mousemove.selecting', function(e) {
+    $canvas_wrapper.bind('mousemove.selecting', function(e) {
       e.clientY += yOffset;
 
       var bounds = {
@@ -281,9 +281,9 @@ var Protoshop = function() {
       });
     });
 
-    $canvas.bind('mouseup.selecting', function(e) {
+    $canvas_wrapper.bind('mouseup.selecting', function(e) {
       $selection.hide();
-      $canvas.unbind('.selecting');
+      $canvas_wrapper.unbind('.selecting');
       _.each(selected, function(obj) {
         obj.removeClass('soft-select');
         self.selectElement(obj.data('obj'));
@@ -292,7 +292,7 @@ var Protoshop = function() {
   }
 
 
-  $canvas.bind('dblclick', function(e) {
+  $canvas_wrapper.bind('dblclick', function(e) {
 
     var $targ = $(e.target);
     var obj = $targ.data('obj');
@@ -308,7 +308,7 @@ var Protoshop = function() {
 
   this.globalMouseDown = function(e) {
 
-    if (e.target === this) {
+    if (e.target === this || e.target === $canvas[0]) {
       e.preventDefault();
       e.stopPropagation();
       self.selectElement(null);
@@ -353,7 +353,7 @@ var Protoshop = function() {
 
   };
 
-  $canvas.bind('mousedown.global', this.globalMouseDown);
+  $canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
 
   _.each(shortcuts.global.shortcuts, function(key) {
     $(document).bind(key.e, key.override || key.key, function() {
@@ -755,15 +755,15 @@ Protoshop.Toolbar = function(protoshop) {
     $(this).bind('mousedown', function() {
       if (!$inner.is(':visible')) {
         $el.addClass('active');
-        self.protoshop.$canvas.unbind('mousedown.global');
+        self.protoshop.$canvas_wrapper.unbind('mousedown.global');
         setTimeout(function() {
           $(document).bind('mousedown.range', function(e) {
             if (!(is_inside(e.target, $el[0]) ||
                   $(e.target).parent().hasClass('jscolor'))) {
               $(document).unbind('mousedown.range');
               $el.removeClass('active');
-              self.protoshop.$canvas.bind('mousedown.global',
-                                          self.protoshop.globalMouseDown);
+              self.protoshop.$canvas_wrapper.bind('mousedown.global',
+                                                  self.protoshop.globalMouseDown);
             }
           });
         }, 0);
