@@ -90,14 +90,18 @@ var BlockElement = function(index, obj) {
 };
 BlockElement.prototype = new CoreElement();
 
-var TextElement = function(index, obj) {
+var TextElement = function(opts, obj) {
 
   this.$dom = obj || $('<div>', {
     'data-type': 'text',
     'class': 'text'
-  }).append('<span>text</span>');
+  }).append('<span>' + (opts.text || 'text') + '</span>');
 
-  this.$dom.css('z-index', index);
+  if (opts.css) {
+    this.$dom.css(opts.css);
+  }
+
+  this.$dom.css('z-index', opts.index);
   this.$dom.data('obj', this);
 
   this.startEditing = function() {
@@ -375,7 +379,17 @@ var Protoshop = function() {
         self.selectElement(el);
       },
       'add-text': function() {
-        var el = new TextElement(++self.index.max);
+        var el = new TextElement({index: ++self.index.max});
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
+      },
+      'add-h1': function() {
+        var el = new TextElement({
+          index: ++self.index.max,
+          css: {'font-size': 24, 'font-weight': 'bold'},
+          text: 'Header'
+        });
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
@@ -431,7 +445,7 @@ var Protoshop = function() {
         } else if (index < self.index.min) {
           self.index.min = index;
         }
-        new TextElement(index, $(obj));
+        new TextElement({index: index}, $(obj));
       });
 
       $canvas.find('.selected').each(function() {
