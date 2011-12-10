@@ -645,7 +645,7 @@ Protoshop.Toolbar = function(protoshop) {
       borderColor: 'transparent'
     };
 
-    if (obj.borderRadius > 0) {
+    if (obj.borderWidth > 0) {
       obj.borderColor = parseRBG(dom.css('borderTopColor'));
     }
 
