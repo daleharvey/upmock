@@ -2,27 +2,20 @@ var CoreElement = function() {
 
   var self = this;
 
-  var $handles = $('<div class="handles">' +
-    '<div class="top-left" data-handle="nw" data-type="handle"></div>' +
-    '<div class="top-right" data-handle="ne" data-type="handle"></div>' +
-    '<div class="bottom-left" data-handle="sw" data-type="handle"></div>' +
-    '<div class="bottom-right" data-handle="se" data-type="handle"></div>' +
-    '<div class="top" data-handle="n" data-type="handle"></div>' +
-    '<div class="right" data-handle="e" data-type="handle"></div>' +
-    '<div class="bottom" data-handle="s" data-type="handle"></div>' +
-    '<div class="left" data-handle="w" data-type="handle"></div>' +
-    '</div>');
-
   this.$handles = null;
   this.$dom = null;
 
-  this.select = function() {
+  CoreElement.prototype.select = function() {
 
     if (this.$dom.attr('data-lock') === 'true') {
       return false;
     }
 
-    this.$handles = $handles.clone();
+    this.$handles = $('<div class="handles">' + _.map(this.handles, function(x) {
+      return '<div class="handle-' + x + '" data-handle="' + x +
+        '" data-type="handle"></div>';
+    }).join("") + '</div>');
+
     this.$dom.addClass('selected');
     this.$dom.append(this.$handles);
 
@@ -80,12 +73,24 @@ var CoreElement = function() {
 
 };
 
-var BlockElement = function(index, obj) {
-  this.$dom = obj || $('<div>', {
+var BlockElement = function(opts, obj) {
+
+  var attrs = $.extend({}, opts.attrs, {
     'data-type': 'block',
     'class': 'block'
   });
-  this.$dom.css('z-index', index);
+
+  this.$dom = obj || $('<div>', attrs);
+
+  if (opts.css) {
+    this.$dom.css(opts.css);
+  }
+
+  var handles =  this.$dom.data('handles');
+  this.handles = handles ? handles.split(',') :
+    ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
+
+  this.$dom.css('z-index', opts.index);
   this.$dom.data('obj', this);
 };
 BlockElement.prototype = new CoreElement();
@@ -96,6 +101,8 @@ var TextElement = function(opts, obj) {
     'data-type': 'text',
     'class': 'text'
   }).append('<span>' + (opts.text || 'text') + '</span>');
+
+  this.handles = ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
 
   if (opts.css) {
     this.$dom.css(opts.css);
@@ -373,7 +380,7 @@ var Protoshop = function() {
         self.selectElement(null);
       },
       'add-block': function() {
-        var el = new BlockElement(++self.index.max);
+        var el = new BlockElement({index: ++self.index.max});
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
@@ -393,7 +400,28 @@ var Protoshop = function() {
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
+      },
+      'add-hr': function() {
+        var el = new BlockElement({
+          attrs: {'data-handles': 'w,e'},
+          index: ++self.index.max,
+          css: {height: 1, width: 200}
+        });
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
+      },
+      'add-vr': function() {
+        var el = new BlockElement({
+          attrs: {'data-handles': 'n,s'},
+          index: ++self.index.max,
+          css: {height: 200, width: 1}
+        });
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
       }
+
     };
 
     var $panel = $('<div id="panel"></div>');
