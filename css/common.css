@@ -92,12 +92,13 @@ header {
     cursor: pointer;
     display: block;
     border: 1px solid #CCC;
-    background-position: 2px 0;
+    background-position: 2px center;
     background-repeat: no-repeat;
     float: left;
     padding-left: 20px;
     width: 35px;
     line-height: 15px;
+    height: 15px;
     font-size: 9px;
     border-radius: 3px;
     margin-right: 5px;
