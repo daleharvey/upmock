@@ -11,10 +11,19 @@ var CoreElement = function() {
       return false;
     }
 
-    this.$handles = $('<div class="handles">' + _.map(this.handles, function(x) {
-      return '<div class="handle-' + x + '" data-handle="' + x +
-        '" data-type="handle"></div>';
-    }).join("") + '</div>');
+    var handles = this.$dom.data('handles');
+    handles = typeof handles !== 'undefined' ? handles.split(',') :
+      ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
+    if (handles.length > 0 && handles[0] === "") {
+      handles = [];
+    }
+
+    if (handles.length > 0) {
+      this.$handles = $('<div class="handles">' + _.map(handles, function(x) {
+        return '<div class="handle-' + x + '" data-handle="' + x +
+          '" data-type="handle"></div>';
+      }).join("") + '</div>');
+    }
 
     this.$dom.addClass('selected');
     this.$dom.append(this.$handles);
@@ -24,7 +33,9 @@ var CoreElement = function() {
 
   CoreElement.prototype.deselect = function() {
     this.$dom.removeClass('selected');
-    this.$handles.remove();
+    if (this.$handles) {
+      this.$handles.remove();
+    }
     this.$handles = null;
   };
 
@@ -86,10 +97,6 @@ var BlockElement = function(opts, obj) {
     this.$dom.css(opts.css);
   }
 
-  var handles =  this.$dom.data('handles');
-  this.handles = handles ? handles.split(',') :
-    ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
-
   this.$dom.css('z-index', opts.index);
   this.$dom.data('obj', this);
 };
@@ -110,8 +117,8 @@ var HTMLElement = function(opts, obj) {
     this.$dom.css(opts.css);
   }
 
-  var handles =  this.$dom.data('handles');
-  this.handles = handles ? handles.split(',') :
+  var handles = this.$dom.data('handles');
+  this.handles = typeof handles !== 'undefined' ? handles.split(',') :
     ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
 
   this.$dom.css('z-index', opts.index);
@@ -456,7 +463,18 @@ var Protoshop = function() {
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
+      },
+      'add-checkbox': function() {
+        var el = new HTMLElement({
+          index: ++self.index.max,
+          html: '<input type="checkbox" />',
+          attrs: {'data-handles': ''}
+        });
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
       }
+
     };
 
     var $panel = $('<div id="panel"></div>');

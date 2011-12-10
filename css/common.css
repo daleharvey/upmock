@@ -50,6 +50,7 @@ html, body {
 #add-hr { background: url(../img/fague/ui-separator.png); }
 #add-vr { background: url(../img/fague/ui-vertical-separator.png); }
 #add-input { background: url(../img/fague/ui-text-field.png); }
+#add-checkbox { background: url(../img/fague/ui-check-box.png); }
 
 
 /*
@@ -238,11 +239,6 @@ header {
     box-sizing: border-box;
     padding: 0px;
     margin: -3px 0 0 -3px;
-}
-
-input::-moz-focus-inner{
-    padding: 0 !important;
-    border: 0 !important;
 }
 
 #canvas div.block, #canvas div.text, #canvas div.html {
