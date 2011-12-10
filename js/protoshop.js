@@ -23,10 +23,10 @@ var CoreElement = function() {
         return '<div class="handle-' + x + '" data-handle="' + x +
           '" data-type="handle"></div>';
       }).join("") + '</div>');
+      this.$dom.append(this.$handles);
     }
 
     this.$dom.addClass('selected');
-    this.$dom.append(this.$handles);
 
     return true;
   };
@@ -469,6 +469,24 @@ var Protoshop = function() {
           index: ++self.index.max,
           html: '<input type="checkbox" />',
           attrs: {'data-handles': ''}
+        });
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
+      },
+      'add-button': function() {
+        var el = new HTMLElement({
+          index: ++self.index.max,
+          html: '<input type="button" value="Submit" />',
+        });
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
+      },
+      'add-select': function() {
+        var el = new HTMLElement({
+          index: ++self.index.max,
+          html: '<select><option>Select Option:</option></select>',
         });
         el.$dom.appendTo($canvas);
         self.selectElement(null);

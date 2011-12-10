@@ -51,6 +51,8 @@ html, body {
 #add-vr { background: url(../img/fague/ui-vertical-separator.png); }
 #add-input { background: url(../img/fague/ui-text-field.png); }
 #add-checkbox { background: url(../img/fague/ui-check-box.png); }
+#add-button { background: url(../img/fague/ui-button.png); }
+#add-select { background: url(../img/fague/ui-combo-box.png); }
 
 
 /*
@@ -230,7 +232,7 @@ header {
     height: auto;
 }
 
-#canvas div.html input {
+#canvas div.html input, #canvas div.html select {
     pointer-events: none;
     -moz-user-select: -moz-none;
     display:block;
