@@ -95,6 +95,31 @@ var BlockElement = function(opts, obj) {
 };
 BlockElement.prototype = new CoreElement();
 
+
+var HTMLElement = function(opts, obj) {
+
+  var attrs = $.extend({}, opts.attrs, {
+    'data-type': 'block',
+    'class': 'html'
+  });
+
+  this.$dom = obj || $('<div>', attrs);
+  this.$dom.append(opts.html);
+
+  if (opts.css) {
+    this.$dom.css(opts.css);
+  }
+
+  var handles =  this.$dom.data('handles');
+  this.handles = handles ? handles.split(',') :
+    ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
+
+  this.$dom.css('z-index', opts.index);
+  this.$dom.data('obj', this);
+};
+HTMLElement.prototype = new CoreElement();
+
+
 var TextElement = function(opts, obj) {
 
   this.$dom = obj || $('<div>', {
@@ -422,8 +447,16 @@ var Protoshop = function() {
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
+      },
+      'add-input': function() {
+        var el = new HTMLElement({
+          index: ++self.index.max,
+          html: '<input type="text" />'
+        });
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
       }
-
     };
 
     var $panel = $('<div id="panel"></div>');

@@ -44,11 +44,12 @@ html, body {
 }
 
 #cursor { background: url(../img/famfam/cursor.png); }
-#add-block { background: url(../img/famfam/shape_square.png); }
+#add-block { background: url(../img/fague/ui-panel.png); }
 #add-text { background: url(../img/text.gif); }
 #add-h1 { background: url(../img/famfam/text_heading_1.png); }
 #add-hr { background: url(../img/fague/ui-separator.png); }
 #add-vr { background: url(../img/fague/ui-vertical-separator.png); }
+#add-input { background: url(../img/fague/ui-text-field.png); }
 
 
 /*
@@ -222,7 +223,29 @@ header {
     margin: 20px auto;
 }
 
-#canvas div.block, #canvas div.text {
+#canvas div.html {
+    position: relative;
+    width: auto;
+    height: auto;
+}
+
+#canvas div.html input {
+    pointer-events: none;
+    -moz-user-select: -moz-none;
+    display:block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0px;
+    margin: -3px 0 0 -3px;
+}
+
+input::-moz-focus-inner{
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+#canvas div.block, #canvas div.text, #canvas div.html {
     border: 0 solid black;
     position: absolute;
     left: 50px;
