@@ -147,6 +147,8 @@ var Protoshop = function() {
 
   this.selectElement = function(el) {
 
+    $('input').blur();
+
     if (el) {
       if (el.select()) {
         self.selected.push(el);
