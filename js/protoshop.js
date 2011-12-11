@@ -254,62 +254,61 @@ var Protoshop = function() {
         self.selectElement(null);
       },
       'add-block': function() {
-        append(new BlockElement({index: ++self.index.max}));
+        append(new Elements.BlockElement({index: ++self.index.max}));
       },
       'add-text': function() {
-        append(new TextElement({index: ++self.index.max}));
+        append(new Elements.TextElement({index: ++self.index.max}));
       },
       'add-h1': function() {
-        append(new TextElement({
+        append(new Elements.TextElement({
           index: ++self.index.max,
           css: {'font-size': 24, 'font-weight': 'bold'},
           text: 'Header'
         }));
       },
       'add-hr': function() {
-        append(new BlockElement({
+        append(new Elements.BlockElement({
           attrs: {'data-handles': 'w,e'},
           index: ++self.index.max,
           css: {height: 1, width: 200}
         }));
       },
       'add-vr': function() {
-        append(new BlockElement({
+        append(new Elements.BlockElement({
           attrs: {'data-handles': 'n,s'},
           index: ++self.index.max,
           css: {height: 200, width: 1}
         }));
       },
       'add-input': function() {
-        append(new HTMLElement({
+        append(new Elements.HTMLElement({
           index: ++self.index.max,
           html: '<input type="text" />'
         }));
       },
       'add-checkbox': function() {
-        append(new HTMLElement({
+        append(new Elements.HTMLElement({
           index: ++self.index.max,
           html: '<input type="checkbox" />',
           attrs: {'data-handles': ''}
         }));
       },
       'add-button': function() {
-        append(new HTMLElement({
+        append(new Elements.HTMLElement({
           index: ++self.index.max,
           html: '<input type="button" value="Submit" />',
         }));
       },
       'add-select': function() {
-        append(new HTMLElement({
+        append(new Elements.HTMLElement({
           index: ++self.index.max,
           html: '<select><option>Select Option:</option></select>',
         }));
       },
       'add-image': function() {
-        append(new ImgElement({
+        append(new Elements.ImgElement({
           index: ++self.index.max,
           css: { width: 100, height: 100},
-          attrs: {class: 'html image'},
           html: '<img src="" />',
         }));
       }
@@ -349,32 +348,22 @@ var Protoshop = function() {
 
       $canvas.html(localStorage.saved);
 
-      _.each($canvas.find('[data-type=block]'), function(obj) {
-        var index = parseInt($(obj).css('z-index'), 0);
-        if (index > self.index.max) {
-          self.index.max = index;
-        } else if (index < self.index.min) {
-          self.index.min = index;
+      _.each($canvas.find('div'), function(obj) {
+
+        var type = $(obj).data('type')
+
+        if (type) {
+
+          var index = parseInt($(obj).css('z-index'), 0);
+          if (index > self.index.max) {
+            self.index.max = index;
+          } else if (index < self.index.min) {
+            self.index.min = index;
+          }
+
+          new Elements[type]({index: index}, $(obj));
+
         }
-        new BlockElement({index: index}, $(obj));
-      });
-      _.each($canvas.find('[data-type=text]'), function(obj) {
-        var index = parseInt($(obj).css('z-index'), 0);
-        if (index > self.index.max) {
-          self.index.max = index;
-        } else if (index < self.index.min) {
-          self.index.min = index;
-        }
-        new TextElement({index: index}, $(obj));
-      });
-      _.each($canvas.find('[data-type=img]'), function(obj) {
-        var index = parseInt($(obj).css('z-index'), 0);
-        if (index > self.index.max) {
-          self.index.max = index;
-        } else if (index < self.index.min) {
-          self.index.min = index;
-        }
-        new ImgElement({index: index}, $(obj));
       });
 
       $canvas.find('.selected').each(function() {

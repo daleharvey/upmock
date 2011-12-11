@@ -1,9 +1,32 @@
+var Elements = {};
+
 var CoreElement = function() {
 
   var self = this;
 
   this.$handles = null;
   this.$dom = null;
+
+
+  this.init = function(opts, attributes, obj) {
+
+    var attrs = $.extend({}, attributes, opts.attrs);
+
+    this.$dom = obj || $('<div>', attrs);
+
+    if (opts.css) {
+      this.$dom.css(opts.css);
+    }
+
+    if (opts.html && this.$dom.children().length < 1) {
+      this.$dom.append(opts.html);
+    }
+
+    this.$dom.css('z-index', opts.index);
+    this.$dom.data('obj', this);
+
+  };
+
 
   CoreElement.prototype.select = function() {
 
@@ -31,7 +54,6 @@ var CoreElement = function() {
     return true;
   };
 
-  CoreElement.prototype.setImage = function() { };
 
   CoreElement.prototype.deselect = function() {
     this.$dom.removeClass('selected');
@@ -41,9 +63,11 @@ var CoreElement = function() {
     this.$handles = null;
   };
 
+
   this.css = function(obj) {
     this.$dom.css(obj);
   };
+
 
   CoreElement.prototype.move = function(y, x) {
     this.css({
@@ -51,6 +75,7 @@ var CoreElement = function() {
       top: this.$dom.position().top + y
     });
   };
+
 
   this.toggleBold = function() {
     if (this.$dom.css('font-weight') !== '700' &&
@@ -61,6 +86,7 @@ var CoreElement = function() {
     }
   };
 
+
   this.toggleItalic = function() {
     if (this.$dom.css('font-style') !== 'italic') {
       this.$dom.css('font-style', 'italic');
@@ -68,6 +94,7 @@ var CoreElement = function() {
       this.$dom.css('font-style', '');
     }
   };
+
 
   this.toggleUnderline = function() {
     if (this.$dom.css('text-decoration') !== 'underline') {
@@ -77,50 +104,28 @@ var CoreElement = function() {
     }
   };
 
+
   this.lock = function() {
     this.$dom.attr('data-lock', true);
   };
+
+
   this.unlock = function() {
     this.$dom.removeAttr('data-lock');
   };
 
 };
 
-var BlockElement = function(opts, obj) {
 
-  var attrs = $.extend({}, opts.attrs, {
-    'data-type': 'block',
-    'class': 'block'
-  });
-
-  this.$dom = obj || $('<div>', attrs);
-
-  if (opts.css) {
-    this.$dom.css(opts.css);
-  }
-
-  this.$dom.css('z-index', opts.index);
-  this.$dom.data('obj', this);
+Elements.BlockElement = function(opts, obj) {
+  this.init(opts, {'data-type': 'BlockElement', 'class': 'block'}, obj);
 };
-BlockElement.prototype = new CoreElement();
+Elements.BlockElement.prototype = new CoreElement();
 
 
-var ImgElement = function(opts, obj) {
+Elements.ImgElement = function(opts, obj) {
 
-  var attrs = $.extend({}, {
-    'data-type': 'img',
-    'class': 'block'
-  }, opts.attrs);
-
-  this.$dom = obj || $('<div>', attrs);
-  this.$dom.append(opts.html);
-
-  if (opts.css) {
-    this.$dom.css(opts.css);
-  }
-
-  this.$dom.css('z-index', opts.index);
-  this.$dom.data('obj', this);
+  this.init(opts, {'data-type': 'ImgElement', 'class': 'html image'}, obj);
 
   this.setImage = function(src) {
     this.$dom.find('img').attr('src', src);
@@ -128,50 +133,18 @@ var ImgElement = function(opts, obj) {
   };
 
 };
+Elements.ImgElement.prototype = new CoreElement();
 
-ImgElement.prototype = new CoreElement();
-
-
-
-var HTMLElement = function(opts, obj) {
-
-  var attrs = $.extend({}, {
-    'data-type': 'block',
-    'class': 'html'
-  }, opts.attrs);
-
-  this.$dom = obj || $('<div>', attrs);
-  this.$dom.append(opts.html);
-
-  if (opts.css) {
-    this.$dom.css(opts.css);
-  }
-
-  var handles = this.$dom.data('handles');
-  this.handles = typeof handles !== 'undefined' ? handles.split(',') :
-    ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
-
-  this.$dom.css('z-index', opts.index);
-  this.$dom.data('obj', this);
+Elements.HTMLElement = function(opts, obj) {
+  this.init(opts, {'data-type': 'HTMLElement', 'class': 'html'}, obj);
 };
-HTMLElement.prototype = new CoreElement();
+Elements.HTMLElement.prototype = new CoreElement();
 
 
-var TextElement = function(opts, obj) {
+Elements.TextElement = function(opts, obj) {
 
-  this.$dom = obj || $('<div>', {
-    'data-type': 'text',
-    'class': 'text'
-  }).append('<span>' + (opts.text || 'text') + '</span>');
-
-  this.handles = ['nw', 'ne', 'sw', 'se', 'n', 'e', 's', 'w'];
-
-  if (opts.css) {
-    this.$dom.css(opts.css);
-  }
-
-  this.$dom.css('z-index', opts.index);
-  this.$dom.data('obj', this);
+  opts.html = '<span>' + (opts.text || 'text') + '</span>';
+  this.init(opts, {'data-type': 'TextElement', 'class': 'text'}, obj);
 
   this.startEditing = function() {
     var text = this.$dom.find('span').text();
@@ -191,5 +164,4 @@ var TextElement = function(opts, obj) {
   };
 
 };
-
-TextElement.prototype = new CoreElement();
+Elements.TextElement.prototype = new CoreElement();

@@ -233,15 +233,15 @@ Protoshop.Toolbar = function(protoshop) {
       return self.render(['global'], data);
     }
 
-    if (_.all(data.selected, function(x) { return x instanceof ImgElement; })) {
+    if (_.all(data.selected, function(x) { return x instanceof Elements.ImgElement; })) {
       return self.render(['global', 'img'], data);
     }
 
-    if (_.all(data.selected, function(x) { return x instanceof TextElement; })) {
+    if (_.all(data.selected, function(x) { return x instanceof Elements.TextElement; })) {
       return self.render(['global', 'text'], data);
     }
 
-    if (_.all(data.selected, function(x) { return x instanceof BlockElement; })) {
+    if (_.all(data.selected, function(x) { return x instanceof Elements.BlockElement; })) {
       return self.render(['global', 'element'], data);
     }
 
