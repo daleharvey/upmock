@@ -12,6 +12,20 @@ var Protoshop = function() {
   this.$canvas_wrapper = $canvas_wrapper;
   this.index = {min: 2000, max: 2000};
 
+  this.snap = {
+    left: [],
+    y: []
+  };
+
+  (function() {
+    var x = 10;
+    while (x < 1024) {
+      self.snap.left.push(x);
+      self.snap.left.push(x + 40);
+      x += 60;
+    }
+  })();
+
   this.selectElement = function(el) {
 
     $('input').blur();
@@ -41,14 +55,34 @@ var Protoshop = function() {
   function bindMouseMove(e) {
 
     var start = e, orig = {}, diff = {};
+    var startBounds = self.calculateSelectionBounds();
+
+    var $guidex = $('#snapx');
 
     $canvas_wrapper.bind('mousemove.editing', function(e) {
+
       diff = {x: e.clientX - start.clientX, y: e.clientY - start.clientY};
+
+      $guidex.hide();
+
+      if (!e.metaKey) {
+        var tmpx = startBounds.nw.x + diff.x;
+        _.each(self.snap.left, function(x) {
+          if (tmpx > (x - 5) && tmpx < (x + 5)) {
+            diff.x += x - tmpx;
+            $guidex.css({
+              left: (startBounds.nw.x + diff.x + $canvas[0].offsetLeft)
+            }).show();
+          }
+        });
+      }
+
       self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
       orig = diff;
     });
 
     $canvas_wrapper.bind('mouseup.moving', function(e) {
+      $guidex.hide();
       $canvas_wrapper.unbind('.editing');
     });
 
@@ -231,6 +265,24 @@ var Protoshop = function() {
       bindMouseResize($el.parent().parent(), e, $el.data('handle'));
    }
 
+  };
+
+
+  this.calculateSelectionBounds = function() {
+
+    var min = function(a, b) { return a === null ? b : Math.min(a, b); };
+    var max = function(a, b) { return a === null ? b : Math.max(a, b); };
+    var bounds = {nw: { x: null, y: null}, se: { x: null, y: null}};
+
+    _.each(self.selected, function(obj) {
+      var pos = obj.$dom.position();
+      bounds.nw.x = min(bounds.nw.x, pos.left);
+      bounds.nw.y = min(bounds.nw.y, pos.top);
+      bounds.se.x = max(bounds.se.x, pos.left + obj.$dom.width());
+      bounds.se.y = max(bounds.se.y, pos.top + obj.$dom.height());
+    });
+
+    return bounds;
   };
 
   $canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
