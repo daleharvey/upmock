@@ -67,7 +67,7 @@ header {
     background: #DDD;
     height: 19px;
     padding: 5px;
-    z-index: 1000;
+    z-index: 7000;
     border-bottom: 1px solid #CCC;
 }
 
@@ -315,7 +315,7 @@ header {
     width: 100%;
     background: url(../img/16_col.png);
     opacity: 0.5;
-    z-index: 500;
+    z-index: 5000;
     top: 0;
 }
 
