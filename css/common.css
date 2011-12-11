@@ -53,6 +53,7 @@ html, body {
 #add-checkbox { background: url(../img/fague/ui-check-box.png); }
 #add-button { background: url(../img/fague/ui-button.png); }
 #add-select { background: url(../img/fague/ui-combo-box.png); }
+#add-image { background: url(../img/fague/image.png); }
 
 
 /*
@@ -232,6 +233,10 @@ header {
     height: auto;
 }
 
+#canvas div.image {
+    background: #EEE url(../img/fague/image.png) no-repeat center center;
+}
+
 #canvas div.html input, #canvas div.html select {
     pointer-events: none;
     -moz-user-select: -moz-none;
@@ -261,7 +266,10 @@ header {
     width: 200px;
 }
 
-#canvas span {
+#canvas span, #canvas img {
+    display: block;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     -moz-user-select: -moz-none;
 }

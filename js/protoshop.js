@@ -31,6 +31,8 @@ var CoreElement = function() {
     return true;
   };
 
+  CoreElement.prototype.setImage = function() { };
+
   CoreElement.prototype.deselect = function() {
     this.$dom.removeClass('selected');
     if (this.$handles) {
@@ -103,12 +105,40 @@ var BlockElement = function(opts, obj) {
 BlockElement.prototype = new CoreElement();
 
 
+var ImgElement = function(opts, obj) {
+
+  var attrs = $.extend({}, {
+    'data-type': 'img',
+    'class': 'block'
+  }, opts.attrs);
+
+  this.$dom = obj || $('<div>', attrs);
+  this.$dom.append(opts.html);
+
+  if (opts.css) {
+    this.$dom.css(opts.css);
+  }
+
+  this.$dom.css('z-index', opts.index);
+  this.$dom.data('obj', this);
+
+  this.setImage = function(src) {
+    this.$dom.find('img').attr('src', src);
+    this.$dom.css({width: 'auto', 'height': 'auto'});
+  };
+
+};
+
+ImgElement.prototype = new CoreElement();
+
+
+
 var HTMLElement = function(opts, obj) {
 
-  var attrs = $.extend({}, opts.attrs, {
+  var attrs = $.extend({}, {
     'data-type': 'block',
     'class': 'html'
-  });
+  }, opts.attrs);
 
   this.$dom = obj || $('<div>', attrs);
   this.$dom.append(opts.html);
@@ -197,8 +227,10 @@ var Protoshop = function() {
   };
 
   this.onSelected = function(callback) {
+    console.log(callback);
     var params = _.toArray(arguments).slice(1);
     return _.map(self.selected, function(obj) {
+      console.log(typeof obj, obj);
       obj[callback].apply(obj, params);
     });
   };
@@ -353,6 +385,8 @@ var Protoshop = function() {
 
   this.globalMouseDown = function(e) {
 
+    console.log(e.target);
+
     if (e.target === this || e.target === $canvas[0]) {
       e.preventDefault();
       e.stopPropagation();
@@ -361,12 +395,16 @@ var Protoshop = function() {
       return true;
     }
 
+    console.log('wtf2');
+
     var $el = $(e.target);
     var obj = $el.data('obj');
 
     if ($el.data('lock') === true && e.altKey) {
       obj.unlock();
     }
+
+    console.log('wtf');
 
     if (obj instanceof CoreElement) {
 
@@ -491,8 +529,18 @@ var Protoshop = function() {
         el.$dom.appendTo($canvas);
         self.selectElement(null);
         self.selectElement(el);
+      },
+      'add-image': function() {
+        var el = new ImgElement({
+          index: ++self.index.max,
+          css: { width: 100, height: 100},
+          attrs: {class: 'html image'},
+          html: '<img src="" />',
+        });
+        el.$dom.appendTo($canvas);
+        self.selectElement(null);
+        self.selectElement(el);
       }
-
     };
 
     var $panel = $('<div id="panel"></div>');
@@ -521,7 +569,7 @@ var Protoshop = function() {
 
     var autoSave = setInterval(function() {
       var toSave = $canvas.clone();
-      toSave.find('.handles').remove();
+      toSave.find('.handles, #selection').remove();
       localStorage.saved = toSave.html();
     }, 5000);
 
@@ -535,7 +583,7 @@ var Protoshop = function() {
         } else if (index < self.index.min) {
           self.index.min = index;
         }
-        new BlockElement(index, $(obj));
+        new BlockElement({index: index}, $(obj));
       });
       _.each($canvas.find('[data-type=text]'), function(obj) {
         var index = parseInt($(obj).css('z-index'), 0);
@@ -545,6 +593,16 @@ var Protoshop = function() {
           self.index.min = index;
         }
         new TextElement({index: index}, $(obj));
+      });
+      _.each($canvas.find('[data-type=img]'), function(obj) {
+        console.log('hello');
+        var index = parseInt($(obj).css('z-index'), 0);
+        if (index > self.index.max) {
+          self.index.max = index;
+        } else if (index < self.index.min) {
+          self.index.min = index;
+        }
+        new ImgElement({index: index}, $(obj));
       });
 
       $canvas.find('.selected').each(function() {
@@ -580,11 +638,21 @@ Protoshop.Toolbar = function(protoshop) {
   this.tpls = {
     'global': Handlebars.compile($('#global-toolbar-tpl').html()),
     'text': Handlebars.compile($('#text-toolbar-tpl').html()),
-    'element': Handlebars.compile($('#textandblock-toolbar-tpl').html())
+    'element': Handlebars.compile($('#textandblock-toolbar-tpl').html()),
+    'img': Handlebars.compile($('#img-toolbar-tpl').html())
   };
 
   this.events = {};
   this.data = {};
+
+  this.events.img = function() {
+    $('#set-image-src').bind('submit', function(e) {
+      e.preventDefault();
+      console.log($('#image-src').val());
+      self.protoshop.onSelected('setImage', $('#image-src').val());
+    });
+  };
+
 
   this.events.global = function() {
     $('#toggle-grid').bind('mousedown', function(e) {
@@ -699,6 +767,11 @@ Protoshop.Toolbar = function(protoshop) {
     };
   }
 
+  this.data.img = function(obj) {
+    return {'backgroundImage': obj.$dom.find('img').attr('src')};
+  };
+
+
   this.data.global = function(obj) {
     return {isOverlay: $('#grid-overlay').is(':visible')};
   };
@@ -776,6 +849,10 @@ Protoshop.Toolbar = function(protoshop) {
 
     if (data.selected.length < 1) {
       return self.render(['global'], data);
+    }
+
+    if (_.all(data.selected, function(x) { return x instanceof ImgElement; })) {
+      return self.render(['global', 'img'], data);
     }
 
     if (_.all(data.selected, function(x) { return x instanceof TextElement; })) {
