@@ -177,7 +177,7 @@ var Protoshop = function() {
     var $targ = $(e.target);
     var obj = $targ.data('obj');
 
-    if (obj instanceof TextElement) {
+    if (obj instanceof Elements.TextElement) {
       self.selectElement(null);
       self.selectElement(obj);
       obj.startEditing();
