@@ -13,18 +13,50 @@ var Protoshop = function() {
   this.index = {min: 2000, max: 2000};
 
   this.snap = {
-    left: [],
+    x: [],
+    xcenter: [],
+    ycenter: [],
     y: []
   };
 
-  (function() {
-    var x = 10;
-    while (x < 1024) {
-      self.snap.left.push(x);
-      self.snap.left.push(x + 40);
-      x += 60;
+  function collectSnapPoints(arr) {
+
+    var x = [], y = [], xcenter = [], ycenter = [];
+
+    xcenter.push(Math.round($canvas.width() / 2));
+    ycenter.push(Math.round($canvas.height() / 2));
+
+    // Snap to 960gs grid if visible
+    if ($('#grid-overlay').is(":visible")) {
+      var g = 10;
+      while (g < 1024) {
+        x.push(g);
+        x.push(g + 40);
+        g += 60;
+      }
     }
-  })();
+
+    var objects = _.filter($canvas.find('div'), function(obj) {
+
+      var $obj = $(obj);
+      var el = $obj.data('obj');
+
+      if (typeof el !== 'undefined' && $.inArray(el, arr) === -1) {
+        var left = parseInt($obj.css('left'), 10);
+        var top = parseInt($obj.css('top'), 10);
+        var width = parseInt($obj.css('width'), 10);
+        var height = parseInt($obj.css('height'), 10);
+        x.push(left);
+        x.push(left + width);
+        y.push(top);
+        y.push(top + height);
+        xcenter.push(Math.round(left + (width / 2)));
+        ycenter.push(Math.round(top + (height / 2)));
+      }
+    });
+
+    return {x: x, y: y, xcenter: xcenter, ycenter: ycenter};
+  }
 
   this.selectElement = function(el) {
 
@@ -58,20 +90,73 @@ var Protoshop = function() {
     var startBounds = self.calculateSelectionBounds();
 
     var $guidex = $('#snapx');
+    var $guidey = $('#snapy');
+
+    self.snap = collectSnapPoints(self.selected);
 
     $canvas_wrapper.bind('mousemove.editing', function(e) {
 
       diff = {x: e.clientX - start.clientX, y: e.clientY - start.clientY};
 
       $guidex.hide();
+      $guidey.hide();
 
       if (!e.metaKey) {
-        var tmpx = startBounds.nw.x + diff.x;
-        _.each(self.snap.left, function(x) {
-          if (tmpx > (x - 5) && tmpx < (x + 5)) {
-            diff.x += x - tmpx;
+
+        var snapRadius = 4;
+        var tmpleft = startBounds.nw.x + diff.x;
+        var tmpright = startBounds.se.x + diff.x;
+        var tmptop = startBounds.nw.y + diff.y;
+        var tmpbottom = startBounds.se.y + diff.y;
+        var tmpxmiddle = Math.round((tmpleft + tmpright) / 2);
+        var tmpymiddle = Math.round((tmptop + tmpbottom) / 2);
+
+        _.each(self.snap.x, function(x) {
+
+          if (tmpleft > (x - snapRadius) && tmpleft < (x + snapRadius)) {
+            diff.x += x - tmpleft;
             $guidex.css({
               left: (startBounds.nw.x + diff.x + $canvas[0].offsetLeft)
+            }).show();
+          } else if (tmpright > (x - snapRadius) && tmpright < (x + snapRadius)) {
+            diff.x += x - tmpright;
+            $guidex.css({
+              left: (startBounds.se.x + diff.x + $canvas[0].offsetLeft)
+            }).show();
+          }
+
+        });
+
+        _.each(self.snap.xcenter, function(x) {
+          if (tmpxmiddle > (x - snapRadius) && tmpxmiddle < (x + snapRadius)) {
+            diff.x += x - tmpxmiddle;
+            $guidex.css({
+              left: (((startBounds.nw.x + startBounds.se.x) / 2) + diff.x + $canvas[0].offsetLeft)
+            }).show();
+          }
+        });
+
+        _.each(self.snap.y, function(y) {
+
+          if (tmptop > (y - snapRadius) && tmptop < (y + snapRadius)) {
+            diff.y += y - tmptop;
+            $guidey.css({
+              top: (startBounds.nw.y + diff.y + $canvas[0].offsetTop)
+            }).show();
+          } else if (tmpbottom > (y - snapRadius) && tmpbottom < (y + snapRadius)) {
+            diff.y += y - tmptop;
+            $guidey.css({
+              top: (startBounds.se.y + diff.y + $canvas[0].offsetTop)
+            }).show();
+          }
+
+        });
+
+        _.each(self.snap.ycenter, function(y) {
+          if (tmpymiddle > (y - snapRadius) && tmpymiddle < (y + snapRadius)) {
+            diff.y += y - tmpymiddle;
+            $guidey.css({
+              top: (((startBounds.nw.y + startBounds.se.y) / 2) + diff.y + $canvas[0].offsetTop)
             }).show();
           }
         });
@@ -83,6 +168,7 @@ var Protoshop = function() {
 
     $canvas_wrapper.bind('mouseup.moving', function(e) {
       $guidex.hide();
+      $guidey.hide();
       $canvas_wrapper.unbind('.editing');
     });
 
@@ -416,7 +502,7 @@ var Protoshop = function() {
         self.selectElement($(this).data('obj'));
       });
 
-      if (localStorage.overlay) {
+      if (localStorage.overlay === true) {
         $('#grid-overlay').show();
         $('#toggle-grid').addClass('active');
       }
