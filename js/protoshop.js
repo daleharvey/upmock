@@ -9,6 +9,7 @@ var Protoshop = function() {
   this.$selection = $selection;
   this.selected = [];
   this.$canvas = $canvas;
+  this.$canvas_wrapper = $canvas_wrapper;
   this.index = {min: 2000, max: 2000};
 
   this.selectElement = function(el) {
