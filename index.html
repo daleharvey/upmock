@@ -34,11 +34,11 @@
         <input id="border-picker" data-css="border-color" value="{{borderColor}}"
                class="toolbar-icon picker" />
 
-        <input type="number" id="border-width" data-css="border-width" value="{{borderWidth}}"
-               class="toolbar-label-icon" min="0" />
+        <input type="number" id="border-width" data-css="border-width"
+               value="{{borderWidth}}" class="toolbar-label-icon" min="0" />
 
-        <input type="number" id="border-radius" data-css="border-radius" value="{{borderRadius}}"
-               class="toolbar-label-icon" min="0" />
+        <input type="number" id="border-radius" data-css="border-radius"
+               value="{{borderRadius}}" class="toolbar-label-icon" min="0" />
 
         <input type="number" id="opacity" data-css="opacity" value="{{opacity}}"
                class="toolbar-label-icon" min="0" max="1" step="0.05" />
@@ -81,7 +81,8 @@
     <script type="text/html" id="img-toolbar-tpl">
       <div class="section" id="img">
         <form id="set-image-src">
-          <input type="text" placeholder="Image Source" id="image-src" value="{{backgroundImage}}" />
+          <input type="text" placeholder="Image Source" id="image-src"
+                 value="{{backgroundImage}}" />
           <input type="submit" value="Update" />
         </form>
       </div>
@@ -90,7 +91,8 @@
     <script type="text/html" id="text-toolbar-tpl">
       <div class="section" id="text">
 
-        <input id="fg-picker" data-css="color" class="toolbar-icon picker" value="{{color}}" />
+        <input id="fg-picker" data-css="color" class="toolbar-icon picker"
+               value="{{color}}" />
 
         <select id="font-family" class="toolbar-select">
           <option {{#family-helvetica}}selected="selected"{{/family-helvetica}}
@@ -114,11 +116,12 @@
         <input type="number" id="font-size" data-css="font-size" value="{{fontSize}}"
                class="toolbar-label-icon" min="0" max="400" />
 
-        <input type="number" id="line-height" data-css="line-height" value="{{lineHeight}}"
-               class="toolbar-label-icon" max="200" />
+        <input type="number" id="line-height" data-css="line-height"
+               value="{{lineHeight}}" class="toolbar-label-icon" max="200" />
 
         <input type="number" id="letter-spacing" data-css="letter-spacing"
-               value="{{letterSpacing}}" class="toolbar-label-icon" max="10" min="-10" />
+               value="{{letterSpacing}}" class="toolbar-label-icon"
+               max="10" min="-10" />
 
         <a id="bold" title="Bold"
            class="toolbar-icon {{#isBold}}active{{/isBold}}"></a>
@@ -139,7 +142,9 @@
           <table class="inner">
             <tr>
               <td>width:</td>
-              <td><input id="text-shadow-size" type="range" value="{{shadow.size}}" /></td>
+              <td>
+                <input id="text-shadow-size" type="range" value="{{shadow.size}}" />
+              </td>
             </tr>
             <tr>
               <td>y:</td>
@@ -151,7 +156,8 @@
             </tr>
             <tr>
               <td>colour:</td>
-              <td><input id="text-shadow-color" type="text" class="color" value="{{shadow.colour}}" /></td>
+              <td><input id="text-shadow-color" type="text" class="color"
+                         value="{{shadow.colour}}" /></td>
             </tr>
           </table>
         </div>
@@ -181,6 +187,13 @@
   <script src="./js/libs/jscolor/jscolor.js"></script>
 
   <script src="./js/shortcuts.js"></script>
+  <script src="./js/protoshop.elements.js"></script>
   <script src="./js/protoshop.js"></script>
+  <script src="./js/protoshop.toolbar.js"></script>
+
+  <script>
+    var protoshop = new Protoshop();
+    var toolbar = new Protoshop.Toolbar(protoshop);
+  </script>
 
 </html>
