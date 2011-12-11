@@ -5,6 +5,8 @@ html, body {
     overflow: hidden;
     line-height: 1;
     font: 13.34px/1.4 helvetica,arial,freesans,clean,sans-serif;
+    padding: 0px;
+    margin: 0px;
 }
 
 /*
@@ -310,13 +312,15 @@ header {
 
 
 #grid-overlay {
-    position: absolute;
     height: 100%;
-    width: 100%;
+    width: 1024px;
+    margin: 0px auto;
     background: url(../img/16_col.png);
     opacity: 0.5;
     z-index: 5000;
     top: 0;
+    position: relative;
+    left: -6px;
 }
 
 #selection {

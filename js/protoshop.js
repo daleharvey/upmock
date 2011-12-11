@@ -303,7 +303,7 @@ var Protoshop = function() {
         append(new Elements.ImgElement({
           index: ++self.index.max,
           css: { width: 100, height: 100},
-          html: '<img src="" />',
+          html: '<img src="" />'
         }));
       }
     };
@@ -344,7 +344,7 @@ var Protoshop = function() {
 
       _.each($canvas.find('div'), function(obj) {
 
-        var type = $(obj).data('type')
+        var type = $(obj).data('type');
 
         if (type) {
 
@@ -363,6 +363,11 @@ var Protoshop = function() {
       $canvas.find('.selected').each(function() {
         self.selectElement($(this).data('obj'));
       });
+
+      if (localStorage.overlay) {
+        $('#grid-overlay').show();
+        $('#toggle-grid').addClass('active');
+      }
 
     }
 
