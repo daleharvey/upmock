@@ -31,7 +31,6 @@ Protoshop.Toolbar = function(protoshop) {
   this.events.img = function() {
     $('#set-image-src').bind('submit', function(e) {
       e.preventDefault();
-      console.log($('#image-src').val());
       self.protoshop.onSelected('setImage', $('#image-src').val());
     });
   };

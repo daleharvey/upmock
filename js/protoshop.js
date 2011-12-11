@@ -31,10 +31,8 @@ var Protoshop = function() {
   };
 
   this.onSelected = function(callback) {
-    console.log(callback);
     var params = _.toArray(arguments).slice(1);
     return _.map(self.selected, function(obj) {
-      console.log(typeof obj, obj);
       obj[callback].apply(obj, params);
     });
   };
@@ -189,8 +187,6 @@ var Protoshop = function() {
 
   this.globalMouseDown = function(e) {
 
-    console.log(e.target);
-
     if (e.target === this || e.target === $canvas[0]) {
       e.preventDefault();
       e.stopPropagation();
@@ -199,16 +195,12 @@ var Protoshop = function() {
       return true;
     }
 
-    console.log('wtf2');
-
     var $el = $(e.target);
     var obj = $el.data('obj');
 
     if ($el.data('lock') === true && e.altKey) {
       obj.unlock();
     }
-
-    console.log('wtf');
 
     if (obj instanceof CoreElement) {
 
@@ -399,7 +391,6 @@ var Protoshop = function() {
         new TextElement({index: index}, $(obj));
       });
       _.each($canvas.find('[data-type=img]'), function(obj) {
-        console.log('hello');
         var index = parseInt($(obj).css('z-index'), 0);
         if (index > self.index.max) {
           self.index.max = index;
