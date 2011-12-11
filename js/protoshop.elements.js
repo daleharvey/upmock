@@ -123,6 +123,32 @@ Elements.BlockElement = function(opts, obj) {
 Elements.BlockElement.prototype = new CoreElement();
 
 
+Elements.ButtonElement = function(opts, obj) {
+
+  opts.html = '<input type="button" value="Submit" />';
+  this.init(opts, {'data-type': 'ButtonElement', 'class': 'html'}, obj);
+
+  this.setButtonText = function(text) {
+    this.$dom.find('input').val(text);
+  };
+
+};
+Elements.ButtonElement.prototype = new CoreElement();
+
+
+Elements.SelectElement = function(opts, obj) {
+
+  opts.html = '<select><option>Select Option:</option></select>';
+  this.init(opts, {'data-type': 'SelectElement', 'class': 'html'}, obj);
+
+  this.setSelectText = function(text) {
+    this.$dom.find('option').text(text);
+  };
+
+};
+Elements.SelectElement.prototype = new CoreElement();
+
+
 Elements.ImgElement = function(opts, obj) {
 
   this.init(opts, {'data-type': 'ImgElement', 'class': 'html image'}, obj);

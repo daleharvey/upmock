@@ -22,11 +22,27 @@ Protoshop.Toolbar = function(protoshop) {
     'global': Handlebars.compile($('#global-toolbar-tpl').html()),
     'text': Handlebars.compile($('#text-toolbar-tpl').html()),
     'element': Handlebars.compile($('#textandblock-toolbar-tpl').html()),
-    'img': Handlebars.compile($('#img-toolbar-tpl').html())
+    'img': Handlebars.compile($('#img-toolbar-tpl').html()),
+    'button': Handlebars.compile($('#button-toolbar-tpl').html()),
+    'select': Handlebars.compile($('#select-toolbar-tpl').html())
   };
 
   this.events = {};
   this.data = {};
+
+  this.events.select = function() {
+    $('#set-select-text').bind('submit', function(e) {
+      e.preventDefault();
+      self.protoshop.onSelected('setSelectText', $('#select-text').val());
+    });
+  };
+
+  this.events.button = function() {
+    $('#set-button-text').bind('submit', function(e) {
+      e.preventDefault();
+      self.protoshop.onSelected('setButtonText', $('#button-text').val());
+    });
+  };
 
   this.events.img = function() {
     $('#set-image-src').bind('submit', function(e) {
@@ -149,6 +165,16 @@ Protoshop.Toolbar = function(protoshop) {
     };
   }
 
+  this.data.button = function(obj) {
+    return {'buttonText': obj.$dom.find('input').val()};
+  };
+
+
+  this.data.select = function(obj) {
+    return {'selectText': obj.$dom.find('option').text()};
+  };
+
+
   this.data.img = function(obj) {
     return {'backgroundImage': obj.$dom.find('img').attr('src')};
   };
@@ -231,6 +257,14 @@ Protoshop.Toolbar = function(protoshop) {
 
     if (data.selected.length < 1) {
       return self.render(['global'], data);
+    }
+
+    if (_.all(data.selected, function(x) { return x instanceof Elements.SelectElement; })) {
+      return self.render(['global', 'select'], data);
+    }
+
+    if (_.all(data.selected, function(x) { return x instanceof Elements.ButtonElement; })) {
+      return self.render(['global', 'button'], data);
     }
 
     if (_.all(data.selected, function(x) { return x instanceof Elements.ImgElement; })) {

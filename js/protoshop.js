@@ -294,16 +294,10 @@ var Protoshop = function() {
         }));
       },
       'add-button': function() {
-        append(new Elements.HTMLElement({
-          index: ++self.index.max,
-          html: '<input type="button" value="Submit" />',
-        }));
+        append(new Elements.ButtonElement({index: ++self.index.max}));
       },
       'add-select': function() {
-        append(new Elements.HTMLElement({
-          index: ++self.index.max,
-          html: '<select><option>Select Option:</option></select>',
-        }));
+        append(new Elements.SelectElement({index: ++self.index.max}));
       },
       'add-image': function() {
         append(new Elements.ImgElement({
