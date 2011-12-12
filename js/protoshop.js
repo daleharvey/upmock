@@ -14,9 +14,9 @@ var Protoshop = function() {
 
   this.snap = {
     x: [],
+    y: [],
     xcenter: [],
-    ycenter: [],
-    y: []
+    ycenter: []
   };
 
   function collectSnapPoints(arr) {
@@ -84,13 +84,75 @@ var Protoshop = function() {
     });
   };
 
+
+  var snap = 4;
+  var $guide = {
+    x: $('#snapx'),
+    y: $('#snapy')
+  };
+
+
+  function within(a, b) {
+    return (a > (b - snap)) && (a < (b + snap));
+  }
+
+  function snapPlane(start, end, position, plane, points, centerPoints, diff) {
+
+    var i, len;
+    var attr = plane === 'x' ? 'left' : 'top';
+    var offset = {
+      x: $canvas[0].offsetLeft,
+      y: $canvas[0].offsetTop
+    };
+
+    for (i = 0, len = points.length; i < len; i++) {
+      if (within(start, points[i])) {
+        diff[plane] = points[i] - position.nw[plane];
+        $guide[plane].css(attr, points[i] + offset[plane]).show();
+        return diff;
+      }
+      if (within(end, points[i])) {
+        diff[plane] = points[i] - position.se[plane];
+        $guide[plane].css(attr, points[i] + offset[plane]).show();
+        return diff;
+      }
+    }
+
+    for (i = 0, len = centerPoints.length; i < len; i++) {
+      if (within((start + end) / 2, centerPoints[i])) {
+        diff[plane] = centerPoints[i] - ((position.nw[plane] + position.se[plane]) / 2);
+        $guide[plane].css(attr, centerPoints[i] + offset[plane]).show();
+        return diff;
+      }
+    }
+    return diff;
+  }
+
+  function offsetSnap(bounds, diff) {
+
+    var i, len;
+
+    var left = bounds.nw.x + diff.x;
+    var right = bounds.se.x + diff.x;
+    var top = bounds.nw.y + diff.y;
+    var bottom = bounds.se.y + diff.y;
+    var xmiddle = Math.round((left + right) / 2);
+    var ymiddle = Math.round((top + bottom) / 2);
+    var offset = {
+      x: $canvas[0].offsetLeft,
+      y: $canvas[0].offsetTop
+    };
+
+    diff = snapPlane(left, right, bounds, 'x', self.snap.x, self.snap.xcenter, diff);
+    diff = snapPlane(top, bottom, bounds, 'y', self.snap.y, self.snap.ycenter, diff);
+    return diff;
+  }
+
+
   function bindMouseMove(e) {
 
     var start = e, orig = {}, diff = {};
     var startBounds = self.calculateSelectionBounds();
-
-    var $guidex = $('#snapx');
-    var $guidey = $('#snapy');
 
     self.snap = collectSnapPoints(self.selected);
 
@@ -98,68 +160,11 @@ var Protoshop = function() {
 
       diff = {x: e.clientX - start.clientX, y: e.clientY - start.clientY};
 
-      $guidex.hide();
-      $guidey.hide();
+      $guide.x.hide();
+      $guide.y.hide();
 
       if (!e.metaKey) {
-
-        var snapRadius = 4;
-        var tmpleft = startBounds.nw.x + diff.x;
-        var tmpright = startBounds.se.x + diff.x;
-        var tmptop = startBounds.nw.y + diff.y;
-        var tmpbottom = startBounds.se.y + diff.y;
-        var tmpxmiddle = Math.round((tmpleft + tmpright) / 2);
-        var tmpymiddle = Math.round((tmptop + tmpbottom) / 2);
-
-        _.each(self.snap.x, function(x) {
-
-          if (tmpleft > (x - snapRadius) && tmpleft < (x + snapRadius)) {
-            diff.x += x - tmpleft;
-            $guidex.css({
-              left: (startBounds.nw.x + diff.x + $canvas[0].offsetLeft)
-            }).show();
-          } else if (tmpright > (x - snapRadius) && tmpright < (x + snapRadius)) {
-            diff.x += x - tmpright;
-            $guidex.css({
-              left: (startBounds.se.x + diff.x + $canvas[0].offsetLeft)
-            }).show();
-          }
-
-        });
-
-        _.each(self.snap.xcenter, function(x) {
-          if (tmpxmiddle > (x - snapRadius) && tmpxmiddle < (x + snapRadius)) {
-            diff.x += x - tmpxmiddle;
-            $guidex.css({
-              left: (((startBounds.nw.x + startBounds.se.x) / 2) + diff.x + $canvas[0].offsetLeft)
-            }).show();
-          }
-        });
-
-        _.each(self.snap.y, function(y) {
-
-          if (tmptop > (y - snapRadius) && tmptop < (y + snapRadius)) {
-            diff.y += y - tmptop;
-            $guidey.css({
-              top: (startBounds.nw.y + diff.y + $canvas[0].offsetTop)
-            }).show();
-          } else if (tmpbottom > (y - snapRadius) && tmpbottom < (y + snapRadius)) {
-            diff.y += y - tmptop;
-            $guidey.css({
-              top: (startBounds.se.y + diff.y + $canvas[0].offsetTop)
-            }).show();
-          }
-
-        });
-
-        _.each(self.snap.ycenter, function(y) {
-          if (tmpymiddle > (y - snapRadius) && tmpymiddle < (y + snapRadius)) {
-            diff.y += y - tmpymiddle;
-            $guidey.css({
-              top: (((startBounds.nw.y + startBounds.se.y) / 2) + diff.y + $canvas[0].offsetTop)
-            }).show();
-          }
-        });
+        diff = offsetSnap(startBounds, diff);
       }
 
       self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
@@ -167,8 +172,8 @@ var Protoshop = function() {
     });
 
     $canvas_wrapper.bind('mouseup.moving', function(e) {
-      $guidex.hide();
-      $guidey.hide();
+      $guide.x.hide();
+      $guide.y.hide();
       $canvas_wrapper.unbind('.editing');
     });
 
