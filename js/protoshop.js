@@ -96,63 +96,89 @@ var Protoshop = function() {
     return (a > (b - snap)) && (a < (b + snap));
   }
 
-  function snapPlane(start, end, position, plane, points, centerPoints, diff) {
 
-    var i, len;
-    var attr = plane === 'x' ? 'left' : 'top';
-    var offset = {
-      x: $canvas[0].offsetLeft,
-      y: $canvas[0].offsetTop
-    };
+  function snapPlane(position, size, points, centerPoints) {
 
     for (i = 0, len = points.length; i < len; i++) {
-      if (within(start, points[i])) {
-        diff[plane] = points[i] - position.nw[plane];
-        $guide[plane].css(attr, points[i] + offset[plane]).show();
-        return diff;
+      if (within(position, points[i])) {
+        return {point: 'start', value: points[i]};
       }
-      if (within(end, points[i])) {
-        diff[plane] = points[i] - position.se[plane];
-        $guide[plane].css(attr, points[i] + offset[plane]).show();
-        return diff;
+      if (within(position + size, points[i])) {
+        return {point: 'end', value: points[i]};
       }
     }
 
     for (i = 0, len = centerPoints.length; i < len; i++) {
-      if (within((start + end) / 2, centerPoints[i])) {
-        diff[plane] = centerPoints[i] - ((position.nw[plane] + position.se[plane]) / 2);
-        $guide[plane].css(attr, centerPoints[i] + offset[plane]).show();
-        return diff;
+      if (within(Math.round((position + (size / 2))), centerPoints[i])) {
+        return {point: 'middle', value: centerPoints[i]};
       }
     }
-    return diff;
+
+    return false;
   }
 
-  function offsetSnap(bounds, diff) {
 
-    var i, len;
+  function offsetSnap(bounds) {
 
-    var left = bounds.nw.x + diff.x;
-    var right = bounds.se.x + diff.x;
-    var top = bounds.nw.y + diff.y;
-    var bottom = bounds.se.y + diff.y;
-    var xmiddle = Math.round((left + right) / 2);
-    var ymiddle = Math.round((top + bottom) / 2);
+    var snap = {};
+
     var offset = {
       x: $canvas[0].offsetLeft,
       y: $canvas[0].offsetTop
     };
 
-    diff = snapPlane(left, right, bounds, 'x', self.snap.x, self.snap.xcenter, diff);
-    diff = snapPlane(top, bottom, bounds, 'y', self.snap.y, self.snap.ycenter, diff);
-    return diff;
+    var snapX = snapPlane(bounds.left, bounds.width, self.snap.x, self.snap.xcenter);
+    var snapY = snapPlane(bounds.top, bounds.height, self.snap.y, self.snap.ycenter);
+
+    if (snapX !== false) {
+      $guide.x.css('left', snapX.value + offset.x).show();
+      snap.x = snapX;
+    }
+
+    if (snapY !== false) {
+      $guide.y.css('top', snapY.value + offset.y).show();
+      snap.y = snapY;
+    }
+
+    return snap;
+  }
+
+  function calculateResizeBounds(bounds, snap) {
+    if (snap.x) {
+      if (snap.x.point === 'start') {
+        bounds.width += bounds.left - snap.x.value;
+        bounds.left = snap.x.value;
+      } else if (snap.x.point === 'end') {
+        bounds.width = snap.x.value - bounds.left;
+      } else if (snap.x.point === 'middle') {
+        bounds.width = ((bounds.left + bounds.width) - snap.x.value * 2);
+      }
+    }
+
+    if (snap.y) {
+      if (snap.y.point === 'start') {
+        bounds.height += bounds.top - snap.y.value;
+        bounds.top = snap.y.value;
+      } else if (snap.y.point === 'end') {
+        bounds.height = snap.y.value - bounds.top;
+      } else if (snap.y.point === 'middle') {
+        bounds.height = ((bounds.top + bounds.height) - snap.y.value * 2);
+      }
+    }
+
+    return bounds;
   }
 
 
   function bindMouseMove(e) {
 
-    var start = e, orig = {}, diff = {};
+    var start = e, orig = {}, diff = {}, bounds = {};
     var startBounds = self.calculateSelectionBounds();
+
+    var size = {
+      width: startBounds.se.x - startBounds.nw.x,
+      height: startBounds.se.y - startBounds.nw.y
+    };
 
     self.snap = collectSnapPoints(self.selected);
 
@@ -164,7 +190,31 @@ var Protoshop = function() {
       $guide.y.hide();
 
       if (!e.metaKey) {
-        diff = offsetSnap(startBounds, diff);
+
+        var snap = offsetSnap({
+          top: startBounds.nw.y + diff.y,
+          left: startBounds.nw.x + diff.x,
+          height: size.height,
+          width: size.width
+        });
+
+        if (snap.x) {
+          if (snap.x.point === 'middle') {
+            snap.x.value -= Math.round(size.width / 2);
+          } else if (snap.x.point === 'end') {
+            snap.x.value -= size.width;
+          }
+          diff.x = snap.x.value - startBounds.nw.x;
+        }
+
+        if (snap.y) {
+          if (snap.y.point === 'middle') {
+            snap.y.value -= Math.round(size.height / 2);
+          } else if (snap.y.point === 'end') {
+            snap.y.value -= size.height;
+          }
+          diff.y = snap.y.value - startBounds.nw.y;
+        }
       }
 
       self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
@@ -191,6 +241,7 @@ var Protoshop = function() {
       top: self.selected[0].$dom.position().top
     };
 
+    var diff = {};
     var start = e;
     var len = type.length;
 
@@ -211,15 +262,31 @@ var Protoshop = function() {
       }
     };
 
+    var startBounds = self.calculateSelectionBounds();
+    self.snap = collectSnapPoints(self.selected);
+
     $canvas_wrapper.bind('mousemove.resize', function(e) {
+
+      $guide.x.hide();
+      $guide.y.hide();
+
       var obj = {}, i;
       for(i = 0; i < len; i++) {
         resize[type[i]](e, obj);
       }
+
+      if (!e.metaKey) {
+        var tmp = $.extend({}, size, offset, obj);
+        var snap = offsetSnap(tmp);
+        obj = calculateResizeBounds(tmp, snap);
+      }
+
       self.selected[0].css(obj);
     });
 
     $canvas_wrapper.bind('mouseup.moving', function(e) {
+      $guide.x.hide();
+      $guide.y.hide();
       $canvas_wrapper.unbind('.resize');
     });
 
