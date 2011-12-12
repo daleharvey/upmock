@@ -574,7 +574,7 @@ var Protoshop = function() {
         self.selectElement($(this).data('obj'));
       });
 
-      if (localStorage.overlay === true) {
+      if (localStorage.overlay === "true") {
         $('#grid-overlay').show();
         $('#toggle-grid').addClass('active');
       }
