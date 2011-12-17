@@ -325,7 +325,6 @@ var jscolor = {
 
   color : function(target, prop) {
 
-
     this.required = true; // refuse empty values?
     this.adjust = true; // adjust value to uniform notation?
     this.hash = false; // prefix color with # symbol?
@@ -352,6 +351,10 @@ var jscolor = {
     this.pickerInset = 1; // px
     this.pickerInsetColor = 'ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow'; // CSS color
     this.pickerZIndex = 10000;
+
+    this.absolute = this.singleton = typeof prop.pickerParent === 'undefined';
+
+    this.pickerParent = document.getElementsByTagName('body')[0];
 
 
     for(var p in prop) {
@@ -422,7 +425,7 @@ var jscolor = {
 	  this.exportColor(leaveValue | leaveStyle);
 
 	} else if(this.fromString(valueElement.value)) {
-	  // OK
+
 	} else {
 	  this.exportColor();
 	}
@@ -431,13 +434,17 @@ var jscolor = {
 
 
     this.exportColor = function(flags) {
-      if(!(flags & leaveValue) && valueElement) {
+
+      if (true) { //(!(flags & leaveValue) && valueElement) {
 	var value = this.toString();
 	if(this.caps) { value = value.toUpperCase(); }
 	if(this.hash) { value = '#'+value; }
 	valueElement.value = value;
+        jscolor.fireEvent(valueElement,'change');
       }
+
       if(!(flags & leaveStyle) && styleElement) {
+
 	styleElement.style.backgroundColor =
 	  '#'+this.toString();
 	styleElement.style.color =
@@ -446,11 +453,11 @@ var jscolor = {
 	  0.072 * this.rgb[2]
 	  < 0.5 ? '#FFF' : '#000';
       }
-      if(!(flags & leavePad) && isPickerOwner()) {
-	redrawPad();
+      if(!(flags & leavePad)) { // && isPickerOwner()) {
+	redrawPad(this);
       }
-      if(!(flags & leaveSld) && isPickerOwner()) {
-	redrawSld();
+      if(!(flags & leaveSld)) { // && isPickerOwner()) {
+	redrawSld(this);
       }
     };
 
@@ -551,14 +558,20 @@ var jscolor = {
 
 
     function removePicker() {
-      delete jscolor.picker.owner;
-      document.getElementsByTagName('body')[0].removeChild(jscolor.picker.boxB);
+      if (jscolor.picker.owner) {
+        jscolor.picker.owner.pickerParent.removeChild(jscolor.picker.boxB);
+        delete jscolor.picker.owner;
+      }
     }
 
 
     function drawPicker(x, y) {
-      if(!jscolor.picker) {
-	jscolor.picker = {
+      if (!THIS.singleton && jscolor.picker) {
+        return;
+      }
+
+      //if(!jscolor.picker) {
+	var picker = THIS.picker = {
 	  box : document.createElement('div'),
 	  boxB : document.createElement('div'),
 	  pad : document.createElement('div'),
@@ -576,21 +589,25 @@ var jscolor = {
 	  seg.style.height = segSize+'px';
 	  seg.style.fontSize = '1px';
 	  seg.style.lineHeight = '0';
-	  jscolor.picker.sld.appendChild(seg);
+	  picker.sld.appendChild(seg);
 	}
-	jscolor.picker.sldB.appendChild(jscolor.picker.sld);
-	jscolor.picker.box.appendChild(jscolor.picker.sldB);
-	jscolor.picker.box.appendChild(jscolor.picker.sldM);
-	jscolor.picker.padB.appendChild(jscolor.picker.pad);
-	jscolor.picker.box.appendChild(jscolor.picker.padB);
-	jscolor.picker.box.appendChild(jscolor.picker.padM);
-	jscolor.picker.btnS.appendChild(jscolor.picker.btnT);
-	jscolor.picker.btn.appendChild(jscolor.picker.btnS);
-	jscolor.picker.box.appendChild(jscolor.picker.btn);
-	jscolor.picker.boxB.appendChild(jscolor.picker.box);
+	picker.sldB.appendChild(picker.sld);
+	picker.box.appendChild(picker.sldB);
+	picker.box.appendChild(picker.sldM);
+	picker.padB.appendChild(picker.pad);
+	picker.box.appendChild(picker.padB);
+	picker.box.appendChild(picker.padM);
+	picker.btnS.appendChild(picker.btnT);
+	picker.btn.appendChild(picker.btnS);
+	picker.box.appendChild(picker.btn);
+	picker.boxB.appendChild(picker.box);
+      //}
+
+      if (THIS.singleton) {
+        jscolor.picker = picker;
       }
 
-      var p = jscolor.picker;
+      var p = picker;
 
       // controls interaction
       p.box.className = 'jscolor';
@@ -609,8 +626,12 @@ var jscolor = {
 	  dispatchImmediateChange();
 	}
       };
-      p.padM.onmouseup =
-	p.padM.onmouseout = function() { if(holdPad) { holdPad=false; jscolor.fireEvent(valueElement,'change'); } };
+      p.padM.onmouseup = p.padM.onmouseout = function() {
+        if(holdPad) {
+          holdPad=false;
+          jscolor.fireEvent(valueElement,'change');
+        }
+      };
       p.padM.onmousedown = function(e) {
 	holdPad=true;
 	setPad(e);
@@ -630,10 +651,15 @@ var jscolor = {
       p.box.style.height = dims[1] + 'px';
 
       // picker border
-      p.boxB.style.position = 'absolute';
-      p.boxB.style.clear = 'both';
-      p.boxB.style.left = x+'px';
-      p.boxB.style.top = y+'px';
+      if (THIS.absolute) {
+        p.boxB.style.position = 'absolute';
+        p.boxB.style.clear = 'both';
+        p.boxB.style.left = x+'px';
+        p.boxB.style.top = y+'px';
+      } else {
+        p.boxB.style.position = 'relative';
+      }
+
       p.boxB.style.zIndex = THIS.pickerZIndex;
       p.boxB.style.border = THIS.pickerBorder+'px solid';
       p.boxB.style.borderColor = THIS.pickerBorderColor;
@@ -691,6 +717,7 @@ var jscolor = {
 	p.btn.style.borderColor = pickerOutsetColor;
       }
       p.btn.style.display = THIS.pickerClosable ? 'block' : 'none';
+
       p.btn.style.position = 'absolute';
       p.btn.style.left = THIS.pickerFace + 'px';
       p.btn.style.bottom = THIS.pickerFace + 'px';
@@ -728,8 +755,11 @@ var jscolor = {
       redrawPad();
       redrawSld();
 
-      jscolor.picker.owner = THIS;
-      document.getElementsByTagName('body')[0].appendChild(p.boxB);
+      if (THIS.singleton) {
+        jscolor.picker.owner = THIS;
+      }
+      THIS.picker.owner = THIS;
+      THIS.pickerParent.appendChild(p.boxB);
     }
 
 
@@ -745,7 +775,10 @@ var jscolor = {
     }
 
 
-    function redrawPad() {
+    function redrawPad(wtf) {
+      if (!THIS.picker) {
+        return;
+      }
       // redraw the pad pointer
       switch(modeID) {
       case 0: var yComponent = 1; break;
@@ -753,12 +786,12 @@ var jscolor = {
       }
       var x = Math.round((THIS.hsv[0]/6) * (jscolor.images.pad[0]-1));
       var y = Math.round((1-THIS.hsv[yComponent]) * (jscolor.images.pad[1]-1));
-      jscolor.picker.padM.style.backgroundPosition =
+      THIS.picker.padM.style.backgroundPosition =
 	(THIS.pickerFace+THIS.pickerInset+x - Math.floor(jscolor.images.cross[0]/2)) + 'px ' +
 	(THIS.pickerFace+THIS.pickerInset+y - Math.floor(jscolor.images.cross[1]/2)) + 'px';
 
       // redraw the slider image
-      var seg = jscolor.picker.sld.childNodes;
+      var seg = THIS.picker.sld.childNodes;
 
       switch(modeID) {
       case 0:
@@ -798,19 +831,26 @@ var jscolor = {
 
 
     function redrawSld() {
+      if (!THIS.picker) {
+        return;
+      }
       // redraw the slider pointer
       switch(modeID) {
       case 0: var yComponent = 2; break;
       case 1: var yComponent = 1; break;
       }
       var y = Math.round((1-THIS.hsv[yComponent]) * (jscolor.images.sld[1]-1));
-      jscolor.picker.sldM.style.backgroundPosition =
+      THIS.picker.sldM.style.backgroundPosition =
 	'0 ' + (THIS.pickerFace+THIS.pickerInset+y - Math.floor(jscolor.images.arrow[1]/2)) + 'px';
     }
 
 
     function isPickerOwner() {
-      return jscolor.picker && jscolor.picker.owner === THIS;
+      if (THIS.singleton) {
+        return true;
+      } else {
+        return jscolor.picker && jscolor.picker.owner === THIS;
+      }
     }
 
 
@@ -889,6 +929,7 @@ var jscolor = {
 	abortBlur = false;
       }
     });
+
 
     // valueElement
     if(valueElement) {

@@ -363,7 +363,6 @@ var Protoshop = function() {
     });
   }
 
-
   $canvas_wrapper.bind('dblclick', function(e) {
 
     var $targ = $(e.target);

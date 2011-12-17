@@ -33,10 +33,24 @@
 
       <div class="section" id="textandblock">
 
-        <input id="bg-picker" data-css="background-color" value="{{backgroundColor}}"
-               class="toolbar-icon picker" />
-        <input id="border-picker" data-css="border-color" value="{{borderColor}}"
-               class="toolbar-icon picker" />
+        <div class="dropdown toolbar-icon picker" id="bg-picker">
+          <div class="picker-preview"></div>
+          <input class="picker-value" value="{{backgroundColor}}"
+                 data-css="background-color" />
+          <div class="inner triangle-isosceles top">
+            <div class="picker-placeholder"></div>
+          </div>
+        </div>
+
+
+        <div class="dropdown toolbar-icon picker" id="border-picker">
+          <div class="picker-preview"></div>
+          <input class="picker-value" value="{{borderColor}}" data-css="border-color" />
+          <div class="inner triangle-isosceles top">
+            <div class="picker-placeholder"></div>
+          </div>
+        </div>
+
 
         <input type="number" id="border-width" data-css="border-width"
                value="{{borderWidth}}" class="toolbar-label-icon" min="0" />
@@ -115,8 +129,14 @@
     <script type="text/html" id="text-toolbar-tpl">
       <div class="section" id="text">
 
-        <input id="fg-picker" data-css="color" class="toolbar-icon picker"
-               value="{{color}}" />
+        <div class="dropdown toolbar-icon picker" id="fg-picker">
+          <div class="picker-preview"></div>
+          <input class="picker-value" value="{{color}}" data-css="color" />
+          <div class="inner triangle-isosceles top">
+            <div class="picker-placeholder"></div>
+          </div>
+        </div>
+
 
         <select id="font-family" class="toolbar-select">
           <option {{#family-helvetica}}selected="selected"{{/family-helvetica}}
