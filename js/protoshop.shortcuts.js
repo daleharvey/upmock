@@ -7,7 +7,7 @@ var shortcuts = {
         e: 'keydown',
         callback: function() {
           this.selectElement(null);
-          $('#panel, #top-bar').toggle();
+          $('#panel, header').toggle();
           $('#canvas_wrapper').css({'top': $('#panel').is(':visible') ? 30 : 0});
         },
         description: 'Preview Design'
