@@ -321,7 +321,6 @@ header {
     z-index: 5000;
     top: 0;
     position: relative;
-    left: -6px;
 }
 
 #selection {
