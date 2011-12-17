@@ -327,7 +327,7 @@ Protoshop.Toolbar = function(protoshop) {
   function bindColour() {
 
     var $value = $(this).find('.picker-value');
-    var $preview = $(this).find('.picker-picker');
+    var $preview = $(this).find('.picker-preview');
 
     $preview.css('background-color', '#' + $value.val());
 
