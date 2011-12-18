@@ -89,7 +89,7 @@ Protoshop.Toolbar = function(protoshop) {
       var y = $('#shadow-y').val();
       var size = $('#shadow-size').val();
       var color = $('#shadow-color').val();
-      var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
+      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
       self.protoshop.onSelected('css',{'box-shadow': css});
     });
 
@@ -139,7 +139,7 @@ Protoshop.Toolbar = function(protoshop) {
       var y = $('#text-shadow-y').val();
       var size = $('#text-shadow-size').val();
       var color = $('#text-shadow-color').val();
-      var css = x + 'px ' + y + 'px ' + size + 'px #' + color;
+      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
       self.protoshop.onSelected('css',{'text-shadow': css});
     });
 
@@ -321,7 +321,7 @@ Protoshop.Toolbar = function(protoshop) {
   }
 
   function bindPlainColour() {
-    new jscolor.color(this, {pickerClosable:true});
+    new jscolour.picker({$domValue: $(this), $domStyle: $(this)});
   }
 
   function bindColour() {
@@ -331,21 +331,15 @@ Protoshop.Toolbar = function(protoshop) {
 
     $preview.css('background-color', '#' + $value.val());
 
-    var picker = new jscolor.color(this, {
-      pickerParent: $(this).find('.picker-placeholder')[0],
-      styleElement: $preview[0],
-      valueElement: $value[0],
-      pickerBorder: 0,
-      pickerInset: 0,
-      pickerFaceColor: 'transparent',
-      pickerOnfocus: false
+    var picker = new jscolour.picker({
+      $wrapper: $(this).find('.picker-placeholder'),
+      $domStyle: $preview,
+      $domValue: $value
     });
-
-    picker.showPicker();
 
     $value.bind('change', function() {
       var obj = {};
-      obj[$(this).data('css')] = '#' + picker.toString();
+      obj[$(this).data('css')] = $value.val();
       self.protoshop.onSelected('css', obj);
     });
 
@@ -375,7 +369,8 @@ Protoshop.Toolbar = function(protoshop) {
         setTimeout(function() {
           $(document).bind('mousedown.range', function(e) {
             if (!(is_inside(e.target, $el[0]) ||
-                  $(e.target).parent().hasClass('jscolor'))) {
+                  $(e.target).parents().hasClass('jscolour'))) {
+              jscolour.hide();
               $(document).unbind('mousedown.range');
               $el.removeClass('active');
               self.protoshop.$canvas_wrapper.bind('mousedown.global',

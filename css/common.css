@@ -484,3 +484,9 @@ triangle-isosceles {
     position: absolute;
     width: 0;
 }
+
+.inner .jscolour {
+    background: transparent;
+    border: 0px;
+    padding: 0px;
+}

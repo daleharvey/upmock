@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>jscolor demo</title>
+  </head>
+  <body>
+
+    Plain Colour Input: <input type="color" value=""><br /><br />
+    Plain Colour Input: <input type="color" value="green"><br /><br />
+    Persistent picker, output is <input type="text" id="preview" value="green" /><br />
+    <div id="wrapper"></div>
+
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+    Plain Colour Input: <input type="color" value=""><br /><br />
+    Plain Colour Input: <input type="color" value=""><br /><br />
+    Persistent picker, output is <input type="text" id="preview2" /><br />
+    <div id="wrapper2"></div>
+
+    <script src="./jquery-1.7.1.min.js"></script>
+    <script src="./jscolour.js"></script>
+    <script>
+
+      jscolour.bindAll();
+
+      new jscolour.picker({
+        $wrapper: $('#wrapper'),
+        $domStyle: $('#preview'),
+        $domValue: $('#preview')
+      });
+
+      new jscolour.picker({
+        $wrapper: $('#wrapper2'),
+        $domStyle: $('#preview2'),
+        $domValue: $('#preview2')
+      });
+
+    </script>
+  </body>
+</html>
