@@ -71,7 +71,6 @@ var jscolour = (function() {
     var opts = $.extend({}, defaultOpts, pickerOpts);
     var standalone = typeof opts.$wrapper !== 'undefined';
     var $dom = standalone ? opts.$wrapper : $globalPicker;
-    var offset = {left: 0, top: 0};
     var yVal = 0;
 
     function bound(x, y, width, height) {
@@ -105,14 +104,12 @@ var jscolour = (function() {
     this.show = function() {
       activePicker = self;
       var position = opts.$domValue.offset();
-      console.log(position);
       $globalPicker.css({
         left: position.left,
         top: position.top + opts.$domValue.height() + 10
       });
 
       $globalPicker.show();
-      offset = $globalPicker.find('.hs').offset();
     };
 
     this.hide = function() {
@@ -154,7 +151,6 @@ var jscolour = (function() {
       $clone.find('.hs').bind('mousedown', self.hsMouseDown);
       $clone.find('.hv').bind('mousedown', self.hvMouseDown);
       opts.$wrapper.append($clone.show());
-      offset = $clone.find('.hs').offset();
     } else {
       opts.$domValue.bind('focus', self.show);
     }
