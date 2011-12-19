@@ -308,9 +308,11 @@ Protoshop.Toolbar = function(protoshop) {
       }
     });
 
+    $('.tabs').each(bindTabs);
     $('.dropdown').each(bindDropDown);
     $('.picker').each(bindColour);
     $('.color').each(bindPlainColour);
+    $('.gradient').each(bindGradient);
 
   };
 
@@ -340,6 +342,22 @@ Protoshop.Toolbar = function(protoshop) {
     $value.bind('change', function() {
       var obj = {};
       obj[$(this).data('css')] = $value.val();
+      self.protoshop.onSelected('css', obj);
+    });
+
+  }
+
+
+  function bindGradient() {
+
+    new jscolour.gradientPicker({
+      $domValue: $(this).find('.gradient-value'),
+      $domStyle: $(this).find('.gradient-dom')
+    });
+
+    $(this).find('.gradient-value').bind('change', function() {
+      var obj = {};
+      obj[$(this).data('css')] = this.value;
       self.protoshop.onSelected('css', obj);
     });
 
@@ -394,6 +412,31 @@ Protoshop.Toolbar = function(protoshop) {
       $label.text(tmp[key]);
       self.protoshop.onSelected('css', tmp);
     });
+  }
+
+
+  function bindTabs(dom) {
+
+    var $dom = $(this);
+    var selected = null;
+
+    function select(tab) {
+
+      $dom.find('.tab-link').removeClass('selected');
+      $dom.find('.tab-link[data-target=' + tab + ']').addClass('selected');
+
+      if (selected) {
+        selected.hide();
+      }
+      selected = $dom.find('.' + tab);
+      selected.show();
+    }
+
+    $dom.find('.tab-link').bind('mousedown', function() {
+      select($(this).data('target'));
+    });
+
+    select($dom.find('.tab-link:first').data('target'));
   }
 
   protoshop.$selection.trigger('change', {selected: protoshop.selected});

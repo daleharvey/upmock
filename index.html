@@ -37,8 +37,20 @@
           <div class="picker-preview"></div>
           <input class="picker-value" value="{{backgroundColor}}"
                  data-css="background-color" />
-          <div class="inner triangle-isosceles top">
-            <div class="picker-placeholder"></div>
+          <div class="inner triangle-isosceles top tabs">
+            <table style="width:100%" cellspacing="0"><tr>
+                <td><a class="tab-link" data-target="picker-placeholder">
+                    Solid Colour</a></td>
+                <td><a class="tab-link" data-target="gradient-placeholder">
+                    Gradient</a></td>
+            </tr></table>
+            <div class="picker-placeholder page"></div>
+            <div class="gradient-placeholder page">
+              <div class="gradient">
+                <div class="gradient-value" data-css="background"></div>
+                <div class="gradient-dom" style="height: 20px;"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -228,6 +240,7 @@
   <script src="./js/libs/jquery.hotkeys.js"></script>
 
   <script src="./js/libs/jscolour/jscolour.js"></script>
+  <script src="./js/libs/jscolour/jscolour.gradient.js"></script>
 
   <script src="./js/protoshop.js"></script>
   <script src="./js/protoshop.shortcuts.js"></script>

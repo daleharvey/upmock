@@ -116,9 +116,9 @@ header {
     background-color: #CDCDCD;
 }
 
-.toolbar-icon.picker {
-    text-indent: -999px;
-}
+/* .toolbar-icon.picker { */
+/*     text-indent: -999px; */
+/* } */
 
 .toolbar-select {
     float: left;
@@ -142,12 +142,16 @@ header {
     width: 240px;
 }
 
-.inner table td:first-child {
+.inner table.values td:first-child {
     text-align: right;
 }
 
-.inner td {
+.inner .values td {
     padding: 0 5px;
+}
+
+.inner td {
+    text-align: center;
 }
 
 .dropdown.active .inner {
@@ -490,3 +494,24 @@ triangle-isosceles {
     border: 0px;
     padding: 0px;
 }
+
+.picker-value {
+    display:none;
+}
+
+.tabs .page {
+    display:none;
+}
+
+.tabs table td { width: 5%;  }
+.tabs table {  margin-bottom: 10px; }
+.tabs td a { display: block;  border-bottom:1px solid #AAA; height: 25px;  box-sizing: border-box; }
+.tabs .selected { border-bottom:3px solid #AAA; }
+
+
+.gradientBox { height: 100%; width: 100%; }
+.color-stop { width: 8px; height: 8px; border: 1px solid #999; }
+.stops { position: relative; left: -5px; }
+.stop-input { visibility: hidden; }
+
+.gradient { margin-bottom: 10px; }

@@ -1,23 +1,27 @@
 <html>
   <head>
     <title>jscolor demo</title>
+    <style>
+      .gradientBox { height: 100%; width: 100%; }
+      .color-stop { width: 8px; height: 8px; border: 1px solid #999; }
+      .stops { position: relative; left: -5px; }
+      .stop-input { visibility: hidden; }
+    </style>
   </head>
   <body>
 
     Plain Colour Input: <input type="color" value=""><br /><br />
-    Plain Colour Input: <input type="color" value="green"><br /><br />
     Persistent picker, output is <input type="text" id="preview" value="green" /><br />
     <div id="wrapper"></div>
 
-    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br />
 
-    Plain Colour Input: <input type="color" value=""><br /><br />
-    Plain Colour Input: <input type="color" value=""><br /><br />
-    Persistent picker, output is <input type="text" id="preview2" /><br />
-    <div id="wrapper2"></div>
+    Gradients! <input type="text" id="gradient-value" />
+    <div id="gradient" style="height: 20px; width: 200px; margin-top: 20px;"></div>
 
     <script src="./jquery-1.7.1.min.js"></script>
     <script src="./jscolour.js"></script>
+    <script src="./jscolour.gradient.js"></script>
     <script>
 
       jscolour.bindAll();
@@ -28,10 +32,10 @@
         $domValue: $('#preview')
       });
 
-      new jscolour.picker({
-        $wrapper: $('#wrapper2'),
-        $domStyle: $('#preview2'),
-        $domValue: $('#preview2')
+
+      new jscolour.gradientPicker({
+        $domStyle: $('#gradient'),
+        $domValue: $('#gradient-value')
       });
 
     </script>
