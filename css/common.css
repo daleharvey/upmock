@@ -19,6 +19,7 @@ html, body {
     background: #DDD;
     border: 1px solid #CCC;
     border-width: 1px 1px 1px 0;
+    z-index: 9000;
 }
 
 #panel ul {
