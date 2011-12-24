@@ -23,6 +23,12 @@ var Protoshop = function() {
 
     var x = [], y = [], xcenter = [], ycenter = [];
 
+    x.push(0);
+    x.push($canvas.width());
+
+    y.push(0);
+    y.push($canvas.height());
+
     xcenter.push(Math.round($canvas.width() / 2));
     ycenter.push(Math.round($canvas.height() / 2));
 
