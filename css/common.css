@@ -231,7 +231,7 @@ header {
 }
 
 #canvas_copy {
-    width: 800px;
+    width: 1024px;
     margin: 20px auto;
 }
 
@@ -516,3 +516,15 @@ triangle-isosceles {
 .stop-input { visibility: hidden; }
 
 .gradient { margin-bottom: 10px; }
+
+#info {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    background: yellow;
+    z-index: 9000;
+    font-family: monospace;
+    font-size: 11px;
+    padding: 2px;
+    border: 1px solid orange;
+}

@@ -6,6 +6,8 @@ var Protoshop = function() {
   var $selection = $('#selection');
   var $canvas_wrapper = $('#canvas_wrapper');
 
+  var $info = $('<div id="info">info</div>');
+
   this.$selection = $selection;
   this.selected = [];
   this.$canvas = $canvas;
@@ -18,6 +20,14 @@ var Protoshop = function() {
     xcenter: [],
     ycenter: []
   };
+
+  function updateInfo() {
+    var bnd = self.calculateSelectionBounds();
+    var text = bnd.nw.x + 'x' + bnd.nw.y + ' ' + (bnd.se.x - bnd.nw.x) + 'px ' +
+      (bnd.se.y - bnd.nw.y) + 'px'
+    $info.css({left: bnd.nw.x, top: bnd.se.y + 10}).text(text);
+  }
+
 
   function collectSnapPoints(arr) {
 
@@ -77,6 +87,15 @@ var Protoshop = function() {
       $(document).unbind('.editing');
       _.each(self.selected, function(obj) { obj.deselect.apply(obj); });
       self.selected = [];
+    }
+
+    var bounds = self.calculateSelectionBounds();
+
+    if (el === null) {
+      $info.remove();
+    } else if (bounds.se.x !== null) {
+      $canvas.append($info);
+      updateInfo();
     }
 
     self.$selection.trigger('change', {selected: self.selected});
@@ -155,6 +174,7 @@ var Protoshop = function() {
   }
 
   function calculateResizeBounds(bounds, snap) {
+
     if (snap.x) {
       if (snap.x.point === 'start') {
         bounds.width += bounds.left - snap.x.value;
@@ -229,6 +249,9 @@ var Protoshop = function() {
       }
 
       self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
+
+      updateInfo();
+
       orig = diff;
     });
 
@@ -293,6 +316,9 @@ var Protoshop = function() {
       }
 
       self.selected[0].css(obj);
+
+      updateInfo();
+
     });
 
     $canvas_wrapper.bind('mouseup.moving', function(e) {
@@ -545,16 +571,14 @@ var Protoshop = function() {
   })();
 
   var template = Handlebars.compile($('#shortcut-section-tpl').html());
-  var html = _.map(shortcuts, function(data) {
-    return template(data);
-  });
+  var html = _.map(shortcuts, function(data) { return template(data); });
   $('#keyboard-placer').html(html.join(''));
 
   (function() {
 
     var autoSave = setInterval(function() {
       var toSave = $canvas.clone();
-      toSave.find('.handles, #selection').remove();
+      toSave.find('#info, .handles, #selection').remove();
       localStorage.saved = toSave.html();
     }, 5000);
 
@@ -576,7 +600,6 @@ var Protoshop = function() {
           }
 
           new Elements[type]({index: index}, $(obj));
-
         }
       });
 
