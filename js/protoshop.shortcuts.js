@@ -26,25 +26,25 @@ var shortcuts = {
       {
         key: 'left',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 0, -1); },
+        callback: function() { this.onSelected('move', 0, -1); this.updateInfo(); },
         description: 'Move Left'
       },
       {
         key: 'right',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 0, 1); },
+        callback: function() { this.onSelected('move', 0, 1); this.updateInfo(); },
         description: 'Move Right'
       },
       {
         key: 'up',
         e: 'keydown',
-        callback: function() { this.onSelected('move', -1, 0); },
+        callback: function() { this.onSelected('move', -1, 0); this.updateInfo(); },
         description: 'Move Up'
       },
       {
         key: 'down',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 1, 0); },
+        callback: function() { this.onSelected('move', 1, 0); this.updateInfo(); },
         description: 'Move Down'
       },
       {

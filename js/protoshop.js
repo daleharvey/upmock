@@ -21,7 +21,7 @@ var Protoshop = function() {
     ycenter: []
   };
 
-  function updateInfo() {
+  this.updateInfo = function() {
     var bnd = self.calculateSelectionBounds();
     var text = bnd.nw.x + 'x' + bnd.nw.y + ' ' + (bnd.se.x - bnd.nw.x) + 'px ' +
       (bnd.se.y - bnd.nw.y) + 'px'
@@ -95,7 +95,7 @@ var Protoshop = function() {
       $info.remove();
     } else if (bounds.se.x !== null) {
       $canvas.append($info);
-      updateInfo();
+      self.updateInfo();
     }
 
     self.$selection.trigger('change', {selected: self.selected});
@@ -250,7 +250,7 @@ var Protoshop = function() {
 
       self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
 
-      updateInfo();
+      self.updateInfo();
 
       orig = diff;
     });
@@ -317,7 +317,7 @@ var Protoshop = function() {
 
       self.selected[0].css(obj);
 
-      updateInfo();
+      self.updateInfo();
 
     });
 
