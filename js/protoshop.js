@@ -103,10 +103,10 @@ var Protoshop = function() {
   }
 
 
-  function snapPlane(position, size, points, centerPoints) {
+  function snapPlane(position, size, points, centerPoints, type) {
 
     for (i = 0, len = points.length; i < len; i++) {
-      if (within(position, points[i])) {
+      if (within(position, points[i]) && !/(s|e)*/.test(type)) {
         return {point: 'start', value: points[i]};
       }
       if (within(position + size, points[i])) {
@@ -115,7 +115,7 @@ var Protoshop = function() {
     }
 
     for (i = 0, len = centerPoints.length; i < len; i++) {
-      if (within(Math.round((position + (size / 2))), centerPoints[i])) {
+      if (within(Math.round((position + (size / 2))), centerPoints[i])  && !/(n|w)*/.test(type)) {
         return {point: 'middle', value: centerPoints[i]};
       }
     }
@@ -124,7 +124,7 @@ var Protoshop = function() {
   }
 
 
-  function offsetSnap(bounds) {
+  function offsetSnap(bounds, type) {
 
     var snap = {};
 
@@ -133,8 +133,8 @@ var Protoshop = function() {
       y: $canvas[0].offsetTop
     };
 
-    var snapX = snapPlane(bounds.left, bounds.width, self.snap.x, self.snap.xcenter);
-    var snapY = snapPlane(bounds.top, bounds.height, self.snap.y, self.snap.ycenter);
+    var snapX = snapPlane(bounds.left, bounds.width, self.snap.x, self.snap.xcenter, type);
+    var snapY = snapPlane(bounds.top, bounds.height, self.snap.y, self.snap.ycenter, type);
 
     if (snapX !== false) {
       $guide.x.css('left', snapX.value + offset.x).show();
@@ -283,7 +283,7 @@ var Protoshop = function() {
 
       if (!e.metaKey) {
         var tmp = $.extend({}, size, offset, obj);
-        var snap = offsetSnap(tmp);
+        var snap = offsetSnap(tmp, type);
         obj = calculateResizeBounds(tmp, snap);
       }
 
