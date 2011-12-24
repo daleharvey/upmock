@@ -528,3 +528,23 @@ triangle-isosceles {
     padding: 2px;
     border: 1px solid orange;
 }
+
+.colour-placeholder h3 {
+    margin-top: 5px;
+    font-weight: normal;
+    font-size: inherit;
+    border-bottom: 1px solid #AAA;
+    text-align: center;
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+
+.used-colour {
+    height: 20px;
+    width: 20px;
+    float:left;
+    margin-right: 10px;
+}
