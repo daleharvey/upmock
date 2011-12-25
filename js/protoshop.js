@@ -14,6 +14,7 @@ var Protoshop = function() {
   this.$canvas_wrapper = $canvas_wrapper;
   this.index = {min: 2000, max: 2000};
   this.usedColours = [];
+  this.bgColour = null;
 
   this.snap = {
     x: [],
@@ -21,6 +22,10 @@ var Protoshop = function() {
     xcenter: [],
     ycenter: []
   };
+
+  this.redraw = function() {
+    $canvas_wrapper.css('background', localJSON.get('bgColour', 'white'));
+  }
 
   this.updateInfo = function() {
     var bnd = self.calculateSelectionBounds();
@@ -484,6 +489,8 @@ var Protoshop = function() {
 
     var html = "", colours = {};
 
+    colours[localJSON.get('bgColour', 'white')] = true;
+
     $.each($('.block, .text'), function(i, obj) {
       colours[$(obj).css('color')] = true;
       colours[$(obj).css('background-color')] = true;
@@ -628,6 +635,8 @@ var Protoshop = function() {
         $('#grid-overlay').show();
         $('#toggle-grid').addClass('active');
       }
+
+      self.redraw();
 
     }
 

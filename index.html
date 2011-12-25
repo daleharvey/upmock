@@ -29,6 +29,34 @@
       </div>
     </div>
 
+    <script type="text/html" id="background-toolbar-tpl">
+      <div class="dropdown toolbar-icon picker" id="background-picker">
+
+        <div class="picker-preview"></div>
+        <input class="picker-value" value="{{backgroundColor}}" />
+
+        <div class="inner triangle-isosceles top tabs">
+          <table style="width:100%" cellspacing="0"><tr>
+              <td><a class="tab-link" data-target="colour-placeholder">
+                  Solid Colour</a></td>
+              <td><a class="tab-link" data-target="gradient-placeholder">
+                  Gradient</a></td>
+          </tr></table>
+          <div class="colour-placeholder page">
+            <div class="picker-placeholder"></div>
+            <h3>Used Colours</h3>
+            <div id="used-colours" class="overflow"></div>
+          </div>
+          <div class="gradient-placeholder page">
+            <div class="gradient">
+              <div class="gradient-value" data-css="background"></div>
+              <div class="gradient-dom" style=""></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
     <script type="text/html" id="textandblock-toolbar-tpl">
 
       <div class="section" id="textandblock">

@@ -184,7 +184,7 @@ header {
 #text-shadow    { background-image: url(../img/fague/edit-shadow.png); }
 #send-to-back   { background-image: url(../img/famfam/shape_move_back.png); }
 #bring-to-front { background-image: url(../img/famfam/shape_move_front.png); }
-#bg-picker      { background-image: url(../img/famfam/paintcan.png); }
+#bg-picker, #background-picker { background-image: url(../img/famfam/paintcan.png); }
 #fg-picker      { background-image: url(../img/fague/edit-color.png); }
 
 .text-preview {

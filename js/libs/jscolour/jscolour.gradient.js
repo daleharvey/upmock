@@ -92,7 +92,6 @@ jscolour.gradientPicker = function(opts) {
     var width = box.width();
     var start = {left: box.offset().left};
 
-    //opts.domStyle
     colourDiv.css('background', colour);
 
     $(document.body).bind('mousemove.moving', function(e) {

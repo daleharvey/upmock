@@ -24,11 +24,36 @@ Protoshop.Toolbar = function(protoshop) {
     'element': Handlebars.compile($('#textandblock-toolbar-tpl').html()),
     'img': Handlebars.compile($('#img-toolbar-tpl').html()),
     'button': Handlebars.compile($('#button-toolbar-tpl').html()),
-    'select': Handlebars.compile($('#select-toolbar-tpl').html())
+    'select': Handlebars.compile($('#select-toolbar-tpl').html()),
+    'background': Handlebars.compile($('#background-toolbar-tpl').html())
   };
 
   this.events = {};
   this.data = {};
+
+  this.events.background = function() {
+    $('#used-colours').bind('mousedown', function(e) {
+      if ($(e.target).is('.used-colour')) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.protoshop.updateUsedColours();
+        localJSON.set('bgColour', $(e.target).data('background'));
+        self.protoshop.redraw();
+      }
+    });
+    $('.picker-value').bind('change', function() {
+      localJSON.set('bgColour', this.value);
+      self.protoshop.redraw();
+    });
+    setTimeout(function() {
+      $('.gradient-value').bind('change', function() {
+        localJSON.set('bgColour', this.value);
+        self.protoshop.redraw();
+      });
+    }, 0);
+
+
+  };
 
   this.events.select = function() {
     $('#set-select-text').bind('submit', function(e) {
@@ -242,6 +267,12 @@ Protoshop.Toolbar = function(protoshop) {
   };
 
 
+  this.data.background = function(obj) {
+    return {
+      backgroundColor: localJSON.get('bgColour', 'white')
+    };
+  };
+
   function rgbToHex(R,G,B) {
     return toHex(R)+toHex(G)+toHex(B);
   }
@@ -270,7 +301,7 @@ Protoshop.Toolbar = function(protoshop) {
   this.protoshop.$selection.bind('change', function(evt, data) {
 
     if (data.selected.length < 1) {
-      return self.render(['global'], data);
+      return self.render(['global', 'background'], data);
     }
 
     if (_.all(data.selected, function(x) { return x instanceof Elements.SelectElement; })) {
