@@ -97,23 +97,10 @@ Protoshop.Toolbar = function(protoshop) {
       if ($(e.target).is('.used-colour')) {
         e.preventDefault();
         e.stopPropagation();
+        self.protoshop.updateUsedColours();
         self.protoshop.onSelected('css', {'background': $(e.target).data('background')});
       }
     });
-
-    $('#bg-picker').bind('mousedown', function(e) {
-      var html = "", colours = {};
-      $.each($('.block, .text'), function(i, obj) {
-        colours[$(obj).css('color')] = true;
-        colours[$(obj).css('background-color')] = true;
-      });
-      $.each(colours, function(key) {
-        html += '<div class="used-colour" data-background="' + key + '" ' +
-          'style="background: ' + key + '"></div>';
-      });
-      $('#used-colours').html(html);
-    });
-
   };
 
 
@@ -334,6 +321,7 @@ Protoshop.Toolbar = function(protoshop) {
     $('.picker').each(bindColour);
     $('.color').each(bindPlainColour);
     $('.gradient').each(bindGradient);
+    self.protoshop.updateUsedColours();
 
   };
 
@@ -363,6 +351,7 @@ Protoshop.Toolbar = function(protoshop) {
     $value.bind('change', function() {
       var obj = {};
       obj[$(this).data('css')] = $value.val();
+      self.protoshop.updateUsedColours();
       self.protoshop.onSelected('css', obj);
     });
 

@@ -13,6 +13,7 @@ var Protoshop = function() {
   this.$canvas = $canvas;
   this.$canvas_wrapper = $canvas_wrapper;
   this.index = {min: 2000, max: 2000};
+  this.usedColours = [];
 
   this.snap = {
     x: [],
@@ -477,6 +478,22 @@ var Protoshop = function() {
     });
 
     return bounds;
+  };
+
+  this.updateUsedColours = function() {
+
+    var html = "", colours = {};
+
+    $.each($('.block, .text'), function(i, obj) {
+      colours[$(obj).css('color')] = true;
+      colours[$(obj).css('background-color')] = true;
+    });
+
+    $.each(colours, function(key) {
+      html += '<div class="used-colour" data-background="' + key + '" ' +
+        'style="background: ' + key + '"></div>';
+    });
+    $('#used-colours').html(html);
   };
 
   $canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
