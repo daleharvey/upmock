@@ -80,11 +80,16 @@ var jscolour = (function() {
       };
     }
 
-    function bindMove(e, callback) {
+    function bindMove(e, callback, obj) {
       e.preventDefault();
-      $(document.body).bind('mousemove', self[callback]);
+      var f = function(e) {
+        if (e.target === obj) {
+          self[callback](e);
+        }
+      };
+      $(document.body).bind('mousemove', f);
       $(document.body).bind('mouseup', function() {
-        $(document.body).unbind('mousemove', self[callback]);
+        $(document.body).unbind('mousemove', f);
       });
       self[callback](e);
     }
@@ -139,10 +144,10 @@ var jscolour = (function() {
     };
 
     this.hsMouseDown = function(e) {
-      bindMove(e, 'hsMouseMove');
+      bindMove(e, 'hsMouseMove', this);
     };
     this.hvMouseDown = function(e) {
-      bindMove(e, 'hvMouseMove');
+      bindMove(e, 'hvMouseMove', this);
     };
 
     if (standalone) {
