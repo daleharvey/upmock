@@ -5,9 +5,13 @@ var Protoshop = function() {
   var $canvas = $('#canvas');
   var $selection = $('#selection');
   var $canvas_wrapper = $('#canvas_wrapper');
-
   var $info = $('<div id="info">info</div>');
 
+  if (localJSON.get('site_prefix', false) === false) {
+    localJSON.set('site_prefix', 'default');
+  }
+
+  this.site_prefix = localJSON.get('site_prefix');
   this.$selection = $selection;
   this.selected = [];
   this.$canvas = $canvas;
@@ -24,7 +28,7 @@ var Protoshop = function() {
   };
 
   this.redraw = function() {
-    $canvas_wrapper.css('background', localJSON.get('bgColour', 'white'));
+    $canvas_wrapper.css('background', localJSON.get(self.site_prefix + '-bgColour', 'white'));
   };
 
   this.updateInfo = function() {
@@ -489,7 +493,7 @@ var Protoshop = function() {
 
     var html = "", colours = {};
 
-    colours[localJSON.get('bgColour', 'white')] = true;
+    colours[localJSON.get(self.site_prefix + '-bgColour', 'white')] = true;
 
     $.each($('.block, .text'), function(i, obj) {
       colours[$(obj).css('color')] = true;
@@ -606,12 +610,12 @@ var Protoshop = function() {
     var autoSave = setInterval(function() {
       var toSave = $canvas.clone();
       toSave.find('#info, .handles, #selection').remove();
-      localStorage.saved = toSave.html();
+      localStorage[self.site_prefix + '-saved'] = toSave.html();
     }, 5000);
 
-    if (localStorage.saved) {
+    if (localStorage[self.site_prefix + '-saved']) {
 
-      $canvas.html(localStorage.saved);
+      $canvas.html(localStorage[self.site_prefix + '-saved']);
 
       _.each($canvas.find('div'), function(obj) {
 
@@ -634,7 +638,7 @@ var Protoshop = function() {
         self.selectElement($(this).data('obj'));
       });
 
-      if (localStorage.overlay === "true") {
+      if (localStorage[self.site_prefix + '-overlay'] === "true") {
         $('#grid-overlay').show();
         $('#toggle-grid').addClass('active');
       }

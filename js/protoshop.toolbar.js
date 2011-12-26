@@ -37,17 +37,17 @@ Protoshop.Toolbar = function(protoshop) {
         e.preventDefault();
         e.stopPropagation();
         self.protoshop.updateUsedColours();
-        localJSON.set('bgColour', $(e.target).data('background'));
+        localJSON.set(self.protoshop.site_prefix + '-bgColour', $(e.target).data('background'));
         self.protoshop.redraw();
       }
     });
     $('.picker-value').bind('change', function() {
-      localJSON.set('bgColour', this.value);
+      localJSON.set(self.protoshop.site_prefix + '-bgColour', this.value);
       self.protoshop.redraw();
     });
     setTimeout(function() {
       $('.gradient-value').bind('change', function() {
-        localJSON.set('bgColour', this.value);
+        localJSON.set(self.protoshop.site_prefix + '-bgColour', this.value);
         self.protoshop.redraw();
       });
     }, 0);
@@ -80,10 +80,10 @@ Protoshop.Toolbar = function(protoshop) {
   this.events.global = function() {
     $('#toggle-grid').bind('mousedown', function(e) {
       if ($('#grid-overlay').is(":visible")) {
-        localStorage.overlay = false;
+        localStorage[self.protoshop.site_prefix + '-overlay'] = false;
         $('#grid-overlay').slideUp();
       } else {
-        localStorage.overlay = true;
+        localStorage[self.protoshop.site_prefix + '-overlay'] = true;
         $('#grid-overlay').slideDown();
       }
       $(this).toggleClass('active');
@@ -269,7 +269,7 @@ Protoshop.Toolbar = function(protoshop) {
 
   this.data.background = function(obj) {
     return {
-      backgroundColor: localJSON.get('bgColour', 'white')
+      backgroundColor: localJSON.get(self.protoshop.site_prefix + '-bgColour', 'white')
     };
   };
 

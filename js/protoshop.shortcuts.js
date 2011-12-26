@@ -23,7 +23,7 @@ var shortcuts = {
         key: 'ctrl+c',
         e: 'keydown',
         callback: function() {
-          localJSON.set('clipboard', _.map(this.selected, function(obj) {
+          localJSON.set(this.site_prefix + '-clipboard', _.map(this.selected, function(obj) {
             var tmp = obj.$dom.clone().removeClass('selected');
             tmp.find('.handles').remove();
             return tmp.wrap('<div>').parent().html();
@@ -37,7 +37,7 @@ var shortcuts = {
         callback: function() {
           var self = this;
           self.selectElement(null);
-          var arr = _.map(localJSON.get('clipboard'), function(html) {
+          var arr = _.map(localJSON.get(this.site_prefix + '-clipboard'), function(html) {
             var $obj = $(html);
             $obj.css({
               left: parseInt($obj.css('left'), 10) + 50,
