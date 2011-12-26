@@ -41,7 +41,6 @@ jscolour.gradientPicker = function(opts) {
 
     if (!opts.initial) {
       stops.push({position: 0, colour: '#FFF'});
-      stops.push({position: 50, colour: 'green'});
       stops.push({position: 100, colour: '#000'});
     }
 
