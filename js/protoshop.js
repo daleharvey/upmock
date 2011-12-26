@@ -25,14 +25,14 @@ var Protoshop = function() {
 
   this.redraw = function() {
     $canvas_wrapper.css('background', localJSON.get('bgColour', 'white'));
-  }
+  };
 
   this.updateInfo = function() {
     var bnd = self.calculateSelectionBounds();
     var text = bnd.nw.x + 'x' + bnd.nw.y + ' ' + (bnd.se.x - bnd.nw.x) + 'px ' +
-      (bnd.se.y - bnd.nw.y) + 'px'
+      (bnd.se.y - bnd.nw.y) + 'px';
     $info.css({left: bnd.nw.x, top: bnd.se.y + 10}).text(text);
-  }
+  };
 
 
   function collectSnapPoints(arr) {
@@ -646,5 +646,3 @@ var Protoshop = function() {
   })();
 
 };
-
-
