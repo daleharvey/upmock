@@ -2,7 +2,7 @@
 jscolour.gradientPicker = function(opts) {
 
   var CSS = '<style>' +
-    '.colour-input { margin-top: 5px; border:1px solid black; height: 20px; width:30px; float: left; }' +
+    '.colour-input { margin-top: 5px; border:1px solid black; height: 20px; width:30px; float: left; background: white; }' +
     '.gradientBox { height: 20px; border: 1px solid #000; }' +
     '.angle-picker { float: right; }' +
     '</style>';
@@ -11,7 +11,7 @@ jscolour.gradientPicker = function(opts) {
 
   var box = $('<div>', {'class': 'gradientBox'});
   var domStops = $('<div>', {'class': 'stops'});
-  var colourDiv = $('<div>', {'class': 'colour-input'});
+  var colourDiv = $('<div>', {'class': 'colour-input', 'disabled': 'disabled'});
 
   var wrapper = $('<div>', {style:'padding-top: 20px;'});
 
@@ -54,7 +54,11 @@ jscolour.gradientPicker = function(opts) {
     });
 
     colourDiv.bind('mousedown', function(e) {
-      colourInput.trigger('focus');
+      e.preventDefault();
+      e.stopPropagation();
+      if ($(e.target).attr('disabled') !== 'disabled') {
+        colourInput.trigger('focus');
+      }
     });
 
     colourInput.bind('change', function(e) {
@@ -98,6 +102,7 @@ jscolour.gradientPicker = function(opts) {
     e.preventDefault();
 
     selected = $obj.data('index');
+    colourDiv.removeAttr('disabled');
 
     var colour = $obj.css('background-color');
     var width = box.width();

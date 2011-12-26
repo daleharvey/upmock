@@ -9,6 +9,10 @@ html, body {
     margin: 0px;
 }
 
+[disabled=disabled] {
+    opacity: 0.5;
+}
+
 /*
  * LEFT PANEL
  */
