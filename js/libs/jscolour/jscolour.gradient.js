@@ -11,7 +11,8 @@ jscolour.gradientPicker = function(opts) {
   var box = $('<div>', {'class': 'gradientBox'});
   var domStops = $('<div>', {'class': 'stops'});
   var colourDiv = $('<div>', {'class': 'colour-input'});
-  var angleInput = $('<input type="number" min="0" max="360" />').val(90);
+
+  var angleInput = $('<input type="number" />');//.val(90);
   var angle = 90;
 
   var colourInput = $('<input>', {
@@ -42,8 +43,12 @@ jscolour.gradientPicker = function(opts) {
       $domValue: colourInput
     });
 
+    var anglePicker = new jscolour.anglePicker({
+      $domValue: angleInput
+    });
+
     colourDiv.bind('mousedown', function(e) {
-      colourInput.trigger('focus')
+      colourInput.trigger('focus');
     });
 
     colourInput.bind('change', function(e) {
@@ -54,8 +59,8 @@ jscolour.gradientPicker = function(opts) {
       }
     });
 
-    angleInput.bind('change input', function() {
-      angle = angleInput.val();
+    anglePicker.input.bind('change input', function() {
+      angle = this.value;
       drawBox();
     });
 
@@ -133,7 +138,12 @@ jscolour.gradientPicker = function(opts) {
       stopsHtml.push(x.colour + ' ' + x.position + '%');
     });
 
-    var css = '-webkit-linear-gradient(' + angle + 'deg, ' + stopsHtml.join(',') + ')';
+    var x = parseInt(angle, 10) + 90;
+    if (x > 360) {
+      x -= 360;
+    }
+
+    var css = '-webkit-linear-gradient(' + x + 'deg, ' + stopsHtml.join(',') + ')';
     box.css('background', '-webkit-linear-gradient(0deg, ' + stopsHtml.join(',') + ')');
 
     opts.$domValue.val(css).trigger('change');

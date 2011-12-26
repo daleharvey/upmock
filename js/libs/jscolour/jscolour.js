@@ -159,7 +159,7 @@ var jscolour = (function() {
     self.pointer = $dom.find('.pointer');
     self.pointer.css('top', self.y - 5);
 
-    var initColour = /rgb/.test(opts.$domValue.val()) ? opts.$domValue.val() : 'white';
+    var initColour = 'white';///gradient/.test(opts.$domValue.val()) ? 'white' : opts.$domValue.val();
     drawGradient(self.slideCtx, initColour);
   };
 

@@ -21,9 +21,12 @@
 
     <br /><br /><br />
 
+    <input type="number" type="angle" id="angle" />
+
     <script src="./jquery-1.7.1.min.js"></script>
     <script src="./jscolour.js"></script>
     <script src="./jscolour.gradient.js"></script>
+    <script src="./jscolour.angle.js"></script>
     <script>
 
       jscolour.bindAll();
@@ -38,6 +41,10 @@
       new jscolour.gradientPicker({
         $domStyle: $('#gradient'),
         $domValue: $('#gradient'),
+      });
+
+      new jscolour.anglePicker({
+        $domValue: $('#angle')
       });
 
     </script>
