@@ -642,10 +642,9 @@ var Protoshop = function() {
         $('#grid-overlay').show();
         $('#toggle-grid').addClass('active');
       }
-
-      self.redraw();
-
     }
+
+    self.redraw();
 
   })();
 
