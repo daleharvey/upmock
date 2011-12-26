@@ -16,7 +16,7 @@ jscolour.gradientPicker = function(opts) {
   var wrapper = $('<div>', {style:'padding-top: 20px;'});
 
   var angleInput = $('<input type="number" />');
-  var angle = 90;
+  var angle = 0;
 
   var colourInput = $('<input>', {
     'type': 'color',
@@ -24,6 +24,7 @@ jscolour.gradientPicker = function(opts) {
   });
 
   var selected = null;
+  var selectedObj = null;
   var stops = [];
 
   function init() {
@@ -101,7 +102,12 @@ jscolour.gradientPicker = function(opts) {
 
     e.preventDefault();
 
+    if (selectedObj) {
+      selectedObj.removeClass('selected');
+    }
+    selectedObj = $obj;
     selected = $obj.data('index');
+    $obj.addClass('selected');
     colourDiv.removeAttr('disabled');
 
     var colour = $obj.css('background-color');

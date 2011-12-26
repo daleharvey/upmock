@@ -511,7 +511,7 @@ triangle-isosceles {
 .tabs table td { width: 5%;  }
 .tabs table {  margin-bottom: 10px; }
 .tabs td a { display: block;  border-bottom:1px solid #AAA; height: 25px;  box-sizing: border-box; }
-.tabs .selected { border-bottom:3px solid #AAA; }
+.tab-link.selected { border-bottom:3px solid #AAA; }
 
 
 .gradientBox { height: 100%; width: 100%; }
@@ -551,4 +551,26 @@ triangle-isosceles {
     width: 20px;
     float:left;
     margin-right: 10px;
+}
+
+
+.color-stop {
+    margin-top: 8px;
+}
+
+.color-stop:after {
+    border-color: #999 transparent;
+    border-width: 0 6px 6px;
+    bottom: auto;
+    left: 50%;
+    margin-left: -2px;
+    top: -10px;
+    content: "";
+    border-style: solid;
+    display:block;
+    margin-top: -9px;
+}
+
+.color-stop.selected:after {
+    border-color: black transparent;
 }
