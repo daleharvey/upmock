@@ -217,6 +217,10 @@ header {
     z-index: 30000;
 }
 
+#fg-picker .picker-value, #border-picker .picker-value {
+    display:none;
+}
+
 /*
  * MAIN CANVAS
  */
@@ -503,7 +507,12 @@ triangle-isosceles {
 }
 
 .picker-value {
-    display:none;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    resize: none;
+    background: #333;
+    color: #AAA;
 }
 
 .tabs .page {
@@ -553,6 +562,7 @@ triangle-isosceles {
     width: 20px;
     float:left;
     margin-right: 10px;
+    border: 1px solid #000;
 }
 
 

@@ -31,53 +31,46 @@ Protoshop.Toolbar = function(protoshop) {
   this.events = {};
   this.data = {};
 
-  this.events.background = function() {
-    $('#used-colours').bind('mousedown', function(e) {
+  this.events.background = function(dom) {
+
+    $('#used-colours', dom).bind('mousedown', function(e) {
       if ($(e.target).is('.used-colour')) {
         e.preventDefault();
         e.stopPropagation();
-        self.protoshop.updateUsedColours();
-        localJSON.set(self.protoshop.site_prefix + '-bgColour', $(e.target).data('background'));
-        self.protoshop.redraw();
+        $('.picker-value', dom).val($(e.target).data('background')).trigger('change');
       }
     });
-    $('.picker-value').bind('change', function() {
+    $('.picker-value', dom).bind('change', function() {
+      $('.picker-preview', dom).css('background', this.value);
       localJSON.set(self.protoshop.site_prefix + '-bgColour', this.value);
+      self.protoshop.updateUsedColours();
       self.protoshop.redraw();
     });
-    setTimeout(function() {
-      $('.gradient-value').bind('change', function() {
-        localJSON.set(self.protoshop.site_prefix + '-bgColour', this.value);
-        self.protoshop.redraw();
-      });
-    }, 0);
-
-
   };
 
-  this.events.select = function() {
-    $('#set-select-text').bind('submit', function(e) {
+  this.events.select = function(dom) {
+    $('#set-select-text', dom).bind('submit', function(e) {
       e.preventDefault();
       self.protoshop.onSelected('setSelectText', $('#select-text').val());
     });
   };
 
-  this.events.button = function() {
-    $('#set-button-text').bind('submit', function(e) {
+  this.events.button = function(dom) {
+    $('#set-button-text', dom).bind('submit', function(e) {
       e.preventDefault();
-      self.protoshop.onSelected('setButtonText', $('#button-text').val());
+      self.protoshop.onSelected('setButtonText', $('#button-text', dom).val());
     });
   };
 
-  this.events.img = function() {
-    $('#set-image-src').bind('submit', function(e) {
+  this.events.img = function(dom) {
+    $('#set-image-src', dom).bind('submit', function(e) {
       e.preventDefault();
       self.protoshop.onSelected('setImage', $('#image-src').val());
     });
   };
 
 
-  this.events.global = function() {
+  this.events.global = function(dom) {
     $('#toggle-grid').bind('mousedown', function(e) {
       if ($('#grid-overlay').is(":visible")) {
         localStorage[self.protoshop.site_prefix + '-overlay'] = false;
@@ -91,34 +84,34 @@ Protoshop.Toolbar = function(protoshop) {
   };
 
 
-  this.events.element = function() {
+  this.events.element = function(dom) {
 
-    $('#bring-to-front').bind('mousedown', function() {
+    $('#bring-to-front', dom).bind('mousedown', function() {
       self.protoshop.onSelected('css', {'z-index': ++self.index.max});
     });
-    $('#send-to-back').bind('mousedown', function() {
+    $('#send-to-back', dom).bind('mousedown', function() {
       self.protoshop.onSelected('css', {'z-index': --self.index.min});
     });
 
-    $('#lock').bind('mousedown', function() {
+    $('#lock', dom).bind('mousedown', function() {
       self.protoshop.onSelected('lock');
       self.protoshop.selectElement(null);
     });
 
-    bindChange($('#border-width'));
-    bindChange($('#border-radius'));
-    bindChange($('#opacity'));
+    bindChange($('#border-width', dom));
+    bindChange($('#border-radius', dom));
+    bindChange($('#opacity', dom));
 
-    $('#shadow').bind('change keyup', function() {
-      var x = $('#shadow-x').val();
-      var y = $('#shadow-y').val();
-      var size = $('#shadow-size').val();
-      var color = $('#shadow-color').val();
+    $('#shadow', dom).bind('change keyup', function() {
+      var x = $('#shadow-x', dom).val();
+      var y = $('#shadow-y', dom).val();
+      var size = $('#shadow-size', dom).val();
+      var color = $('#shadow-color', dom).val();
       var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
       self.protoshop.onSelected('css',{'box-shadow': css});
     });
 
-    $('#used-colours').bind('mousedown', function(e) {
+    $('#used-colours', dom).bind('mousedown', function(e) {
       if ($(e.target).is('.used-colour')) {
         e.preventDefault();
         e.stopPropagation();
@@ -129,45 +122,45 @@ Protoshop.Toolbar = function(protoshop) {
   };
 
 
-  this.events.text = function() {
+  this.events.text = function(dom) {
 
-    $('#font-family').bind('change', function() {
+    $('#font-family', dom).bind('change', function() {
       self.protoshop.onSelected('css',{'font-family': fonts[$(this).val()]});
     });
-    $('#bold').bind('mousedown', function() {
+    $('#bold', dom).bind('mousedown', function() {
       $(this).toggleClass('active');
       self.protoshop.onSelected('toggleBold');
     });
-    $('#italic').bind('mousedown', function() {
+    $('#italic', dom).bind('mousedown', function() {
       $(this).toggleClass('active');
       self.protoshop.onSelected('toggleItalic');
     });
-    $('#underline').bind('mousedown', function() {
+    $('#underline', dom).bind('mousedown', function() {
       $(this).toggleClass('active');
       self.protoshop.onSelected('toggleUnderline');
     });
-    $('#align-left').bind('mousedown', function() {
+    $('#align-left', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'left'});
     });
-    $('#align-center').bind('mousedown', function() {
+    $('#align-center', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'center'});
     });
-    $('#align-right').bind('mousedown', function() {
+    $('#align-right', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'right'});
     });
-    $('#align-justify').bind('mousedown', function() {
+    $('#align-justify', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
       self.protoshop.onSelected('css',{'text-align': 'justify'});
     });
 
-    $('#text-shadow').bind('change keyup', function() {
+    $('#text-shadow', dom).bind('change keyup', function() {
       var x = $('#text-shadow-x').val();
       var y = $('#text-shadow-y').val();
       var size = $('#text-shadow-size').val();
@@ -176,9 +169,9 @@ Protoshop.Toolbar = function(protoshop) {
       self.protoshop.onSelected('css',{'text-shadow': css});
     });
 
-    bindChange($('#font-size'));
-    bindChange($('#line-height'));
-    bindChange($('#letter-spacing'));
+    bindChange($('#font-size', dom));
+    bindChange($('#line-height', dom));
+    bindChange($('#letter-spacing', dom));
 
   };
 
@@ -339,19 +332,21 @@ Protoshop.Toolbar = function(protoshop) {
       return self.tpls[section](data);
     });
 
-    $root.html(html.join(""));
+    var $dom = $(html.join(""));
 
     _.each(sections, function(section) {
       if (self.events[section]) {
-        self.events[section]();
+        self.events[section]($dom);
       }
     });
+
+    $root.empty().append($dom);
 
     $('.tabs').each(bindTabs);
     $('.dropdown').each(bindDropDown);
     $('.picker').each(bindColour);
     $('.color').each(bindPlainColour);
-    $('.gradient').each(bindGradient);
+    //$('.gradient').each(bindGradient);
     self.protoshop.updateUsedColours();
 
   };
@@ -377,6 +372,11 @@ Protoshop.Toolbar = function(protoshop) {
       $wrapper: $(this).find('.picker-placeholder'),
       $domStyle: $preview,
       $domValue: $value
+    });
+
+    new jscolour.gradientPicker({
+      $domValue: $value,
+      $domStyle: $(this).find('.gradient-dom')
     });
 
     $value.bind('change', function() {

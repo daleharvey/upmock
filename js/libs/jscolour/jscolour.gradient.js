@@ -65,28 +65,28 @@ jscolour.gradientPicker = function(opts) {
     colourInput.bind('change', function(e) {
       if (selected !== null) {
         stops[selected].colour = e.target.value;
-        drawBox();
+        drawBox(true);
         drawStops();
       }
     });
 
     anglePicker.input.bind('change input', function() {
       angle = this.value;
-      drawBox();
+      drawBox(true);
     });
 
 
     opts.$domStyle.bind('mousedown', mouseDown);
     box.bind('dblclick', doubleClick);
 
-    drawBox();
+    drawBox(false);
     drawStops();
   }
 
 
   function doubleClick(e) {
     stops.push({position: Math.round((e.offsetX / box.width()) * 100), colour: '#666'});
-    drawBox();
+    drawBox(true);
     drawStops();
   }
 
@@ -128,7 +128,7 @@ jscolour.gradientPicker = function(opts) {
 
       stops[selected].position = Math.round(x / width * 100);
       $obj.css({left: x + 'px'});
-      drawBox();
+      drawBox(true);
     });
 
     $(document.body).bind('mouseup.moving', function(e) {
@@ -139,10 +139,10 @@ jscolour.gradientPicker = function(opts) {
 
   function stopColorChanged(e) {
     stops[$(e.target).data('index')].colour = e.target.value;
-    drawBox();
+    drawBox(true);
   }
 
-  function drawBox() {
+  function drawBox(update) {
 
     var stopsHtml = [];
 
@@ -163,7 +163,9 @@ jscolour.gradientPicker = function(opts) {
     var css = '-webkit-linear-gradient(' + x + 'deg, ' + stopsHtml.join(',') + ')';
     box.css('background', '-webkit-linear-gradient(0deg, ' + stopsHtml.join(',') + ')');
 
-    opts.$domValue.val(css).trigger('change');
+    if (update) {
+      opts.$domValue.val(css).trigger('change');
+    }
   }
 
   function drawStops() {

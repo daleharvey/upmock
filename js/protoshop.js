@@ -500,7 +500,10 @@ var Protoshop = function() {
       colours[$(obj).css('background-color')] = true;
     });
 
-    $.each(colours, function(key) {
+    colours = _.keys(colours);
+    colours.sort();
+
+    $.each(colours, function(i, key) {
       html += '<div class="used-colour" data-background="' + key + '" ' +
         'style="background: ' + key + '"></div>';
     });
