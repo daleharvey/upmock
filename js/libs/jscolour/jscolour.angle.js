@@ -4,7 +4,12 @@ jscolour.anglePicker = function(opts) {
   var angle = parseInt(opts.$domValue.val(), 10) || 0;
 
   var $canvas = $('<canvas />', {'style': 'float:left'});
-  var $wrapper = $('<div />', {'style': 'height: ' + opts.size + 'px; overflow: auto;'});
+
+  var $wrapper = $('<div />', {
+    'class': 'angle-picker',
+    'style': 'height: ' + opts.size + 'px; overflow: auto;'
+  });
+
   var $input = $('<input />', {
     type: 'number',
     min: 0,

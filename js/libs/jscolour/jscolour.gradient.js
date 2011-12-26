@@ -2,8 +2,9 @@
 jscolour.gradientPicker = function(opts) {
 
   var CSS = '<style>' +
-    '.colour-input { margin-top: 20px; border:1px solid black; height: 20px; width:30px; }' +
+    '.colour-input { margin-top: 5px; border:1px solid black; height: 20px; width:30px; float: left; }' +
     '.gradientBox { height: 20px; border: 1px solid #000; }' +
+    '.angle-picker { float: right; }' +
     '</style>';
 
   $(document.body).append(CSS);
@@ -12,7 +13,9 @@ jscolour.gradientPicker = function(opts) {
   var domStops = $('<div>', {'class': 'stops'});
   var colourDiv = $('<div>', {'class': 'colour-input'});
 
-  var angleInput = $('<input type="number" />');//.val(90);
+  var wrapper = $('<div>', {style:'padding-top: 20px;'});
+
+  var angleInput = $('<input type="number" />');
   var angle = 90;
 
   var colourInput = $('<input>', {
@@ -28,9 +31,12 @@ jscolour.gradientPicker = function(opts) {
     opts.$domStyle.css('position', 'relative');
     opts.$domStyle.append(box);
     opts.$domStyle.append(domStops);
-    opts.$domStyle.append(colourInput);
-    opts.$domStyle.append(colourDiv);
-    opts.$domStyle.append(angleInput);
+
+    wrapper.append(colourDiv);
+    wrapper.append(colourInput);
+    wrapper.append(angleInput);
+
+    opts.$domStyle.append(wrapper);
 
     if (!opts.initial) {
       stops.push({position: 0, colour: '#FFF'});
