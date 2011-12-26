@@ -575,6 +575,9 @@ var Protoshop = function() {
           css: { width: 100, height: 100},
           html: '<img src="" />'
         }));
+      },
+      'help': function() {
+        $('#keyboard-help').toggle();
       }
     };
 

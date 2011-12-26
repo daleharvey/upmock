@@ -44,6 +44,7 @@ html, body {
     width: 16px;
     height: 16px;
     border: 1px solid #DDD;
+    cursor: pointer;
 }
 
 #panel li a:hover, #panel li a.active {
@@ -61,6 +62,7 @@ html, body {
 #add-button { background: url(../img/fague/ui-button.png); }
 #add-select { background: url(../img/fague/ui-combo-box.png); }
 #add-image { background: url(../img/fague/image.png); }
+#help { background: url(../img/famfam/help.png); }
 
 
 /*
@@ -362,8 +364,8 @@ header {
     left: 0;
     bottom: 0;
     right: 0;
-    background: rgba(0,0,0,0.2);
-    z-index: 5000;
+    background: rgba(0,0,0,0.5);
+    z-index: 9500;
     display: none;
 }
 
