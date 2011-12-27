@@ -375,6 +375,7 @@ var Protoshop = function() {
     $selection.show();
 
     $canvas_wrapper.bind('mousemove.selecting', function(e) {
+
       e.clientY += yOffset;
       e.clientX -= xOffset;
 

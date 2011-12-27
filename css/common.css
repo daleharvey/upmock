@@ -235,9 +235,11 @@ header {
 
 #canvas {
     width: 1024px;
-    height: 800px;
-    margin: 20px auto;
-    position:relative;
+    position: absolute;
+    left: 50%;
+    margin-left: -512px;
+    height: 1000px;
+    top: 0px;
 }
 
 #canvas_copy {
