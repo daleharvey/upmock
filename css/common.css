@@ -337,13 +337,13 @@ header {
 #grid-overlay {
     height: 100%;
     width: 1024px;
-    margin: 0px auto;
     background: url(../img/16_col.png);
     opacity: 0.5;
     z-index: 5000;
     bottom: 0;
     top: 0;
-    position: fixed;
+    position: absolute;
+    pointer-events: none;
 }
 
 #selection {

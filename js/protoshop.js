@@ -172,7 +172,7 @@ var Protoshop = function() {
     var snapY = snapPlane(bounds.top, bounds.height, self.snap.y, self.snap.ycenter, y);
 
     if (snapX !== false) {
-      $guide.x.css('left', snapX.value + offset.x).show();
+      $guide.x.css('left', snapX.value + offset.x - $canvas_wrapper[0].scrollLeft).show();
       snap.x = snapX;
     }
 
@@ -358,7 +358,7 @@ var Protoshop = function() {
   function bindMouseSelection(e) {
 
     var yOffset = $canvas_wrapper[0].scrollTop - $canvas_wrapper[0].offsetTop;
-    var xOffset = $('#grid-overlay')[0].offsetLeft;
+    var xOffset = $('#canvas_copy')[0].offsetLeft - $canvas_wrapper[0].scrollLeft;
     var start = e;
     var selected = [];
 
