@@ -59,10 +59,10 @@ var jscolour = (function() {
   });
 
   $globalPicker.find('.hs').bind('mousedown', function(e) {
-    activePicker.hsMouseDown(e);
+    activePicker.hsMouseDown(e, $globalPicker.find('.hs')[0]);
   });
   $globalPicker.find('.hv').bind('mousedown', function(e) {
-    activePicker.hvMouseDown(e);
+    activePicker.hvMouseDown(e, $globalPicker.find('.hv')[0]);
   });
 
   var picker = function(pickerOpts) {
@@ -143,18 +143,22 @@ var jscolour = (function() {
       opts.$domValue.trigger('change');
     };
 
-    this.hsMouseDown = function(e) {
-      bindMove(e, 'hsMouseMove', this);
+    this.hsMouseDown = function(e, obj) {
+      bindMove(e, 'hsMouseMove', obj);
     };
-    this.hvMouseDown = function(e) {
-      bindMove(e, 'hvMouseMove', this);
+    this.hvMouseDown = function(e, obj) {
+      bindMove(e, 'hvMouseMove', obj);
     };
 
     if (standalone) {
       var $clone = $globalPicker.clone().css({position: 'relative', top: 0, left: 0});
       $clone.find('.close').remove();
-      $clone.find('.hs').bind('mousedown', self.hsMouseDown);
-      $clone.find('.hv').bind('mousedown', self.hvMouseDown);
+      $clone.find('.hs').bind('mousedown', function(e) {
+        self.hsMouseDown(e, $clone.find('.hs')[0]);
+      });
+      $clone.find('.hv').bind('mousedown', function(e) {
+        self.hvMouseDown(e, $clone.find('.hv')[0]);
+      });
       opts.$wrapper.append($clone.show());
     } else {
       opts.$domValue.bind('focus', self.show);
