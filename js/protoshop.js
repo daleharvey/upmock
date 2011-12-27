@@ -92,6 +92,7 @@ var Protoshop = function() {
       if (el.select()) {
         self.selected.push(el);
       }
+      $(document).unbind('.editing');
       bindKeyMove();
     } else {
       $(document).unbind('.editing');
