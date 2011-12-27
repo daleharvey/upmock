@@ -176,7 +176,7 @@ var Protoshop = function() {
     }
 
     if (snapY !== false) {
-      $guide.y.css('top', snapY.value + offset.y).show();
+      $guide.y.css('top', snapY.value + offset.y + 30 - $canvas_wrapper[0].scrollTop).show();
       snap.y = snapY;
     }
 

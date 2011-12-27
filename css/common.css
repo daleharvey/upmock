@@ -441,9 +441,9 @@ h3 {
     border-width: 0 0 0 1px;
     height: 400px;
     background: transparent;
-    position: absolute;
+    position: fixed;
     left: 200px;
-    top: 0px;
+    top: 30px;
     height: 100%;
     bottom: 0px;
     z-index: 8000;
@@ -456,7 +456,7 @@ h3 {
     border-width: 0 0 1px 0;
     width: 400px;
     background: transparent;
-    position: absolute;
+    position: fixed;
     left: 0px;
     width: 100%;
     z-index: 8000;
