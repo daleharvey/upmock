@@ -107,7 +107,12 @@ Protoshop.Toolbar = function(protoshop) {
       var y = $('#shadow-y', dom).val();
       var size = $('#shadow-size', dom).val();
       var color = $('#shadow-color', dom).val();
+
+      if (/^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/.test(color)) {
+        color = '#' + color;
+      }
       var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
+
       self.protoshop.onSelected('css',{'box-shadow': css});
     });
 
