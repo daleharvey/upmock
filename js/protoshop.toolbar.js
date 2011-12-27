@@ -87,10 +87,10 @@ Protoshop.Toolbar = function(protoshop) {
   this.events.element = function(dom) {
 
     $('#bring-to-front', dom).bind('mousedown', function() {
-      self.protoshop.onSelected('css', {'z-index': ++self.index.max});
+      self.protoshop.onSelected('css', {'z-index': ++self.protoshop.index.max});
     });
     $('#send-to-back', dom).bind('mousedown', function() {
-      self.protoshop.onSelected('css', {'z-index': --self.index.min});
+      self.protoshop.onSelected('css', {'z-index': --self.protoshop.index.min});
     });
 
     $('#lock', dom).bind('mousedown', function() {
