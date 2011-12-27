@@ -151,9 +151,10 @@ Elements.SelectElement.prototype = new CoreElement();
 
 Elements.ImgElement = function(opts, obj) {
 
-  this.init(opts, {'data-type': 'ImgElement', 'class': 'html image'}, obj);
+  this.init(opts, {'data-type': 'ImgElement', 'class': 'html image empty'}, obj);
 
   this.setImage = function(src) {
+    this.$dom.removeClass('empty');
     this.$dom.find('img').attr('src', src);
     this.$dom.css({width: 'auto', 'height': 'auto'});
   };

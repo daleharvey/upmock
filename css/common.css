@@ -251,7 +251,7 @@ header {
     height: auto;
 }
 
-#canvas div.image {
+#canvas div.image.empty {
     background: #EEE url(../img/fague/image.png) no-repeat center center;
 }
 
