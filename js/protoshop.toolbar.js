@@ -71,7 +71,7 @@ Protoshop.Toolbar = function(protoshop) {
 
 
   this.events.global = function(dom) {
-    $('#toggle-grid').bind('mousedown', function(e) {
+    $('#toggle-grid', dom).bind('mousedown', function(e) {
       if ($('#grid-overlay').is(":visible")) {
         localStorage[self.protoshop.site_prefix + '-overlay'] = false;
         $('#grid-overlay').slideUp();
