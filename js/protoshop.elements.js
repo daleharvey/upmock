@@ -154,9 +154,12 @@ Elements.ImgElement = function(opts, obj) {
   this.init(opts, {'data-type': 'ImgElement', 'class': 'html image empty'}, obj);
 
   this.setImage = function(src) {
-    this.$dom.removeClass('empty');
-    this.$dom.find('img').attr('src', src);
-    this.$dom.css({width: 'auto', 'height': 'auto'});
+    var self = this, img = this.$dom.find('img');
+    img.load(function() {
+      self.$dom.removeClass('empty');
+      self.$dom.css({'width': this.naturalWidth, 'height': this.naturalHeight});
+    });
+    img.attr('src', src);
   };
 
 };
