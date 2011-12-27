@@ -358,10 +358,12 @@ var Protoshop = function() {
   function bindMouseSelection(e) {
 
     var yOffset = $canvas_wrapper[0].scrollTop - $canvas_wrapper[0].offsetTop;
+    var xOffset = $('#grid-overlay')[0].offsetLeft;
     var start = e;
     var selected = [];
 
     start.clientY += yOffset;
+    start.clientX -= xOffset;
 
     var objects = _.filter($canvas.find('div'), function(obj) {
       return typeof $(obj).data('obj') !== 'undefined';
@@ -369,11 +371,12 @@ var Protoshop = function() {
 
     objects = _.map(objects, function(obj) { return $(obj); });
 
-    $selection.css({top: start.clientY, left: start.clientX, height: 1, width: 1});
+    $selection.css({top: start.clientY, left: 0, height: 1, width: 1});
     $selection.show();
 
     $canvas_wrapper.bind('mousemove.selecting', function(e) {
       e.clientY += yOffset;
+      e.clientX -= xOffset;
 
       var bounds = {
         top: Math.min(start.clientY, e.clientY),
@@ -388,7 +391,6 @@ var Protoshop = function() {
       _.each(selected, function(obj) { obj.removeClass('soft-select'); });
       selected = _.filter(objects, function(obj) {
         var pos = obj.position();
-        pos.left += $canvas[0].offsetLeft;
         var inside =  !(pos.left > (bounds.left + bounds.width) ||
                         (pos.left + obj.width()) < bounds.left ||
                         pos.top > (bounds.top + bounds.height) ||

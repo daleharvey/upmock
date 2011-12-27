@@ -242,7 +242,12 @@ header {
 
 #canvas_copy {
     width: 1024px;
-    margin: 20px auto;
+    position: absolute;
+    left: 50%;
+    margin-left: -512px;
+    height: 1000px;
+    top: 0px;
+    pointer-events: none;
 }
 
 #canvas div.html {
@@ -334,8 +339,9 @@ header {
     background: url(../img/16_col.png);
     opacity: 0.5;
     z-index: 5000;
+    bottom: 0;
     top: 0;
-    position: relative;
+    position: fixed;
 }
 
 #selection {
