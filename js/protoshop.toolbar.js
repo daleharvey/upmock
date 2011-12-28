@@ -31,6 +31,33 @@ Protoshop.Toolbar = function(protoshop) {
   this.events = {};
   this.data = {};
 
+  function bindImagePlaceholder(dom) {
+
+    $('.image-placeholder a', dom).bind('click', function(e) {
+      var el = $(e.target);
+      el.parent().find('input').val(el.text()).trigger('change');
+    });
+
+    $('.image-placeholder', dom).bind('change', function() {
+
+      var url = 'url(' + $('#img-url').val() + ') ' +
+        ($('#img-top').val() || 0) + ' ' + ($('#img-left').val() || 0);
+
+      var repeatx = $('#repeat-x').is(':checked');
+      var repeaty = $('#repeat-y').is(':checked');
+
+      if (!repeatx && !repeaty) {
+        url += ' no-repeat';
+      } else if (repeatx && !repeaty) {
+        url += ' repeat-x';
+      } else if (repeaty && !repeatx) {
+        url += ' repeat-y';
+      }
+
+      $('.picker-value', dom).val(url).trigger('change');
+    });
+  }
+
   this.events.background = function(dom) {
 
     $('#used-colours', dom).bind('mousedown', function(e) {
@@ -40,12 +67,15 @@ Protoshop.Toolbar = function(protoshop) {
         $('.picker-value', dom).val($(e.target).data('background')).trigger('change');
       }
     });
+
     $('.picker-value', dom).bind('change', function() {
       $('.picker-preview', dom).css('background', this.value);
       localJSON.set(self.protoshop.site_prefix + '-bgColour', this.value);
       self.protoshop.updateUsedColours();
       self.protoshop.redraw();
     });
+
+    bindImagePlaceholder(dom);
   };
 
   this.events.select = function(dom) {
@@ -124,6 +154,8 @@ Protoshop.Toolbar = function(protoshop) {
         self.protoshop.onSelected('css', {'background': $(e.target).data('background')});
       }
     });
+
+    bindImagePlaceholder(dom);
   };
 
 

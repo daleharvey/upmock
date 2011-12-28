@@ -560,6 +560,14 @@ triangle-isosceles {
     text-align: center;
 }
 
+.image-placeholder a {
+    color: #999;
+    font-size: 11px;
+}
+.image-placeholder a:hover {
+    text-decoration: underline;
+}
+
 .clearfix {
     overflow: auto;
 }

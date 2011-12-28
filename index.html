@@ -41,6 +41,7 @@
           <table style="width:100%" cellspacing="0"><tr>
               <td><a class="tab-link" data-target="colour-placeholder">Solid Colour</a></td>
               <td><a class="tab-link" data-target="gradient-placeholder">Gradient</a></td>
+              <td><a class="tab-link" data-target="image-placeholder">Image</a></td>
           </tr></table>
 
           <div class="colour-placeholder page">
@@ -54,6 +55,25 @@
               <div class="gradient-value"></div>
               <div class="gradient-dom" style=""></div>
             </div>
+          </div>
+
+          <div class="image-placeholder page">
+            <p>
+              url <input type="text" id="img-url" style="width: 200px;" />
+            </p>
+            <p>
+              <div>top <input type="text" size="6" id="img-top" />
+              <a>center</a> <a>top</a> <a>bottom</a></div>
+              <div>left <input type="text" size="6" id="img-left" />
+              <a>center</a> <a>left</a> <a>right</a></div>
+            </p>
+
+            <label for="repeat-x">repeat-x</label>
+            <input type="checkbox" id="repeat-x" />
+            <label for="repeat-y">repeat-y</label>
+            <input type="checkbox" id="repeat-y" />
+
+            <input type="button" style="float:right" value="Save" />
           </div>
 
         </div>
@@ -73,6 +93,8 @@
                     Solid Colour</a></td>
                 <td><a class="tab-link" data-target="gradient-placeholder">
                     Gradient</a></td>
+                <td><a class="tab-link" data-target="image-placeholder">
+                    Image</a></td>
             </tr></table>
             <div class="colour-placeholder page">
               <div class="picker-placeholder"></div>
@@ -85,6 +107,25 @@
                 <div class="gradient-dom" style=""></div>
               </div>
             </div>
+            <div class="image-placeholder page">
+              <p>
+                url <input type="text" id="img-url" style="width: 200px;" />
+              </p>
+              <p>
+                <div>top <input type="text" size="6" id="img-top" />
+                  <a>center</a> <a>top</a> <a>bottom</a></div>
+                <div>left <input type="text" size="6" id="img-left" />
+                  <a>center</a> <a>left</a> <a>right</a></div>
+              </p>
+
+              <label for="repeat-x">repeat-x</label>
+              <input type="checkbox" id="repeat-x" />
+              <label for="repeat-y">repeat-y</label>
+              <input type="checkbox" id="repeat-y" />
+
+              <input type="button" style="float:right" value="Save" />
+            </div>
+
           </div>
         </div>
 
