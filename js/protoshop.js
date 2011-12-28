@@ -5,6 +5,7 @@ var Protoshop = function() {
   var $canvas = $('#canvas');
   var $selection = $('#selection');
   var $canvas_wrapper = $('#canvas_wrapper');
+  var $canvas_copy = $('#canvas_copy');
   var $info = $('<div id="info">info</div>');
 
   if (localJSON.get('site_prefix', false) === false) {
@@ -113,11 +114,25 @@ var Protoshop = function() {
 
   };
 
+  this.recalcHeight = function() {
+    var max = 0;
+    var objects = _.each($canvas.find('div'), function(obj) {
+      var top = parseInt($(obj).css('top'), 10);
+      var height = parseInt($(obj).css('height'), 10);
+      if (!isNaN(top) && !isNaN(height)) {
+        max = Math.max(max, top + height);
+      }
+    });
+    $canvas_copy.height(max);
+  };
+
   this.onSelected = function(callback) {
     var params = _.toArray(arguments).slice(1);
-    return _.map(self.selected, function(obj) {
+    var ret = _.map(self.selected, function(obj) {
       obj[callback].apply(obj, params);
     });
+    self.recalcHeight();
+    return ret;
   };
 
 
@@ -651,6 +666,7 @@ var Protoshop = function() {
       }
     }
 
+    self.recalcHeight();
     self.redraw();
 
   })();
