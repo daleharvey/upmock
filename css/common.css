@@ -514,6 +514,10 @@ triangle-isosceles {
     padding: 0px;
 }
 
+.jscolour {
+    margin: 0 10px;
+}
+
 .picker-value {
     width: 100%;
     box-sizing: border-box;
