@@ -115,7 +115,7 @@ var Protoshop = function() {
   };
 
   this.recalcHeight = function() {
-    var max = 0;
+    var max = 1000;
     var objects = _.each($canvas.find('div'), function(obj) {
       var top = parseInt($(obj).css('top'), 10);
       var height = parseInt($(obj).css('height'), 10);
