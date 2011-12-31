@@ -1,3 +1,6 @@
 [submodule "js/libs/jscolour"]
 	path = js/libs/jscolour
 	url = git@github.com:daleharvey/jscolour.js.git
+[submodule "js/libs/trail"]
+	path = js/libs/trail
+	url = git@github.com:daleharvey/trail.js.git
