@@ -30,7 +30,12 @@
     </div>
 
     <script type="text/html" id="background-toolbar-tpl">
-      <div class="dropdown toolbar-icon picker" id="background-picker">
+      <div id="picker-placeholder"></div>
+    </script>
+
+    <script type="text/html" id="picker-tpl">
+
+      <div class="dropdown toolbar-icon picker" id="{{pickerId}}">
 
         <div class="picker-preview" style="background: {{backgroundColor}}"></div>
 
@@ -84,51 +89,7 @@
 
       <div class="section" id="textandblock">
 
-        <div class="dropdown toolbar-icon picker" id="bg-picker">
-          <div class="picker-preview"></div>
-          <div class="inner triangle-isosceles top tabs">
-          <textarea class="picker-value" data-css="background">{{backgroundColor}}</textarea>
-            <table style="width:100%" cellspacing="0"><tr>
-                <td><a class="tab-link" data-target="colour-placeholder">
-                    Solid Colour</a></td>
-                <td><a class="tab-link" data-target="gradient-placeholder">
-                    Gradient</a></td>
-                <td><a class="tab-link" data-target="image-placeholder">
-                    Image</a></td>
-            </tr></table>
-            <div class="colour-placeholder page">
-              <div class="picker-placeholder"></div>
-              <h3>Used Colours</h3>
-              <div id="used-colours" class="overflow"></div>
-            </div>
-            <div class="gradient-placeholder page">
-              <div class="gradient">
-                <div class="gradient-value" data-css="background"></div>
-                <div class="gradient-dom" style=""></div>
-              </div>
-            </div>
-            <div class="image-placeholder page">
-              <p>
-                url <input type="text" id="img-url" style="width: 200px;" />
-              </p>
-              <p>
-                <div>top <input type="text" size="6" id="img-top" />
-                  <a>center</a> <a>top</a> <a>bottom</a></div>
-                <div>left <input type="text" size="6" id="img-left" />
-                  <a>center</a> <a>left</a> <a>right</a></div>
-              </p>
-
-              <label for="repeat-x">repeat-x</label>
-              <input type="checkbox" id="repeat-x" />
-              <label for="repeat-y">repeat-y</label>
-              <input type="checkbox" id="repeat-y" />
-
-              <input type="button" style="float:right" value="Save" />
-            </div>
-
-          </div>
-        </div>
-
+        <div id="bg-picker-placeholder" data-background="{{backgroundColor}}"></div>
 
         <div class="dropdown toolbar-icon picker" id="border-picker">
           <div class="picker-preview"></div>
@@ -318,6 +279,8 @@
   <script src="./js/libs/jscolour/jscolour.gradient.js"></script>
   <script src="./js/libs/jscolour/jscolour.angle.js"></script>
 
+  <script src="./js/libs/trail/trail.js"></script>
+
   <script src="./js/protoshop.utils.js"></script>
   <script src="./js/protoshop.js"></script>
   <script src="./js/protoshop.shortcuts.js"></script>
@@ -325,7 +288,7 @@
   <script src="./js/protoshop.toolbar.js"></script>
 
   <script>
-    var protoshop = new Protoshop();
+    window.protoshop = new Protoshop();
     var toolbar = new Protoshop.Toolbar(protoshop);
   </script>
 

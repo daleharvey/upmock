@@ -1,37 +1,122 @@
-Protoshop.Toolbar = function(protoshop) {
+$.fn.findAll = function(selector) {
+  return this.find(selector).add(this.filter(selector));
+};
 
-  var self = this;
-  var $root = $('#top-bar-inner');
+// This shouldnt be a monolithic function, its just the ability to add a global
+// shim function to all rendered templates
+Trail.View.shim = function(dom) {
 
-  var fonts = {
-    'tnr': "Cambria, 'Hoefler Text', 'Times New Roman', serif",
-    'georgia': "Constantia, 'Lucida Bright', 'Bitstream Vera Serif', " +
-      "'Liberation Serif', Georgia, serif",
-    'garamond': "'Palatino Linotype', Baskerville, 'Bookman Old Style', " +
-      "'Bitstream Charter', Garamond, Georgia, serif",
-    'helvetica': "Frutiger, Univers, Helvetica, Arial, sans-serif",
-    'verdana': "Corbel, 'Bitstream Vera Sans', Verdana, sans-serif",
-    'trebuchet': "'Segoe UI', 'Trebuchet MS', Verdana, sans-serif",
-    'impact': "Impact, 'Franklin Gothic Bold', 'Arial Black', sans-serif",
-    'monospace': "Consolas, 'DejaVu Sans Mono', Monaco, Courier, monospace"
-  };
+  dom.findAll('.color').each(function() {
 
-  this.protoshop = protoshop;
+    if ($(this).data('processed-color')) {
+      return;
+    }
+    $(this).data('processed-color', true);
+    new jscolour.picker({$domValue: $(this), $domStyle: $(this)});
+  });
 
-  this.tpls = {
-    'global': Handlebars.compile($('#global-toolbar-tpl').html()),
-    'text': Handlebars.compile($('#text-toolbar-tpl').html()),
-    'element': Handlebars.compile($('#textandblock-toolbar-tpl').html()),
-    'img': Handlebars.compile($('#img-toolbar-tpl').html()),
-    'button': Handlebars.compile($('#button-toolbar-tpl').html()),
-    'select': Handlebars.compile($('#select-toolbar-tpl').html()),
-    'background': Handlebars.compile($('#background-toolbar-tpl').html())
-  };
+  dom.findAll('.dropdown').each(function() {
 
-  this.events = {};
-  this.data = {};
+    if ($(this).data('processed-dropdown')) {
+      return;
+    }
+    $(this).data('processed-dropdown', true);
 
-  function bindImagePlaceholder(dom) {
+    var $el = $(this);
+    var $inner = $el.find('.inner');
+    $(this).bind('mousedown', function() {
+      if (!$inner.is(':visible')) {
+        $el.addClass('active');
+        window.protoshop.$canvas_wrapper.unbind('mousedown.global');
+        setTimeout(function() {
+          $(document).bind('mousedown.range', function(e) {
+            if (!(Utils.is_inside(e.target, $el[0]) ||
+                  $(e.target).parents().hasClass('jscolour'))) {
+              jscolour.hide();
+              $(document).unbind('mousedown.range');
+              $el.removeClass('active');
+              window.protoshop.$canvas_wrapper
+                .bind('mousedown.global', window.protoshop.globalMouseDown);
+            }
+          });
+        }, 0);
+      }
+    });
+  });
+
+  dom.findAll('.picker').each(function() {
+
+    if ($(this).data('processed-picker')) {
+      return;
+    }
+    $(this).data('processed-picker', true);
+
+    var $value = $(this).find('.picker-value');
+    var $preview = $(this).find('.picker-preview');
+
+    $preview.css('background-color', '#' + $value.val());
+
+    var picker = new jscolour.picker({
+      $wrapper: $(this).find('.picker-placeholder'),
+      $domStyle: $preview,
+      $domValue: $value
+    });
+
+    new jscolour.gradientPicker({
+      $domValue: $value,
+      $domStyle: $(this).find('.gradient-dom')
+    });
+
+    $value.bind('change', function() {
+      var obj = {};
+      obj[$(this).data('css')] = $value.val();
+      self.protoshop.updateUsedColours();
+      self.protoshop.onSelected('css', obj);
+    });
+  });
+
+  dom.findAll('.tabs').each(function() {
+
+    if ($(this).data('processed-tabs')) {
+      return;
+    }
+    $(this).data('processed-tabs', true);
+
+    var $dom = $(this);
+    var selected = null;
+
+    function select(tab) {
+      $dom.find('.tab-link').removeClass('selected');
+      $dom.find('.tab-link[data-target=' + tab + ']').addClass('selected');
+
+      if (selected) {
+        selected.hide();
+      }
+      selected = $dom.find('.' + tab);
+      selected.css('display', 'block');
+    }
+
+    $dom.find('.tab-link').bind('mousedown', function() {
+      select($(this).data('target'));
+    });
+
+    select($dom.find('.tab-link:first').data('target'));
+  });
+};
+
+
+PickerWidget = Trail.View.extend({
+
+  template: '#picker-tpl',
+  postRender: function(dom) {
+
+    $('#used-colours', dom).bind('mousedown', function(e) {
+      if ($(e.target).is('.used-colour')) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('.picker-value', dom).val($(e.target).data('background')).trigger('change');
+      }
+    });
 
     $('.image-placeholder a', dom).bind('click', function(e) {
       var el = $(e.target);
@@ -56,113 +141,136 @@ Protoshop.Toolbar = function(protoshop) {
 
       $('.picker-value', dom).val(url).trigger('change');
     });
+
+    return dom;
   }
+});
 
-  this.events.background = function(dom) {
 
-    $('#used-colours', dom).bind('mousedown', function(e) {
-      if ($(e.target).is('.used-colour')) {
-        e.preventDefault();
-        e.stopPropagation();
-        $('.picker-value', dom).val($(e.target).data('background')).trigger('change');
-      }
+GlobalView = Trail.View.extend({
+
+  template: '#global-toolbar-tpl',
+
+  updateOverlay: function(btn, visible) {
+    if (!visible) {
+      $('#grid-overlay').slideUp();
+    } else {
+      $('#grid-overlay').slideDown();
+    }
+    $(btn).toggleClass('active');
+  },
+
+  postRender: function($dom, opts) {
+    var self = this, prefix = window.protoshop.site_prefix + '-overlay';
+    $('#toggle-grid', $dom).bind('mousedown', function(e) {
+      localJSON.set(prefix, !localJSON.get(prefix));
+      self.updateOverlay(this, localJSON.get(prefix));
+    });
+    return $dom;
+  },
+
+  load: function() {
+    return this.render({data: {
+      isOverlay: $('#grid-overlay').is(':visible')
+    }});
+  }
+});
+
+
+BgView = Trail.View.extend({
+
+  template: '#background-toolbar-tpl',
+
+  postRender: function($dom) {
+
+    var picker = PickerWidget.render({data: {
+      pickerId: 'background-picker',
+      backgroundColor: localJSON.get(window.protoshop.site_prefix + '-bgColour', 'white')
+    }});
+
+    $('.picker-value', picker).bind('change', function() {
+      $('.picker-preview', picker).css('background', this.value);
+      localJSON.set(window.protoshop.site_prefix + '-bgColour', this.value);
+      window.protoshop.updateUsedColours();
+      window.protoshop.redraw();
     });
 
-    $('.picker-value', dom).bind('change', function() {
-      $('.picker-preview', dom).css('background', this.value);
-      localJSON.set(self.protoshop.site_prefix + '-bgColour', this.value);
-      self.protoshop.updateUsedColours();
-      self.protoshop.redraw();
-    });
+    return picker;
+  },
 
-    bindImagePlaceholder(dom);
-  };
+  load: function() {
+    return this.render();
+  }
+});
 
-  this.events.select = function(dom) {
+
+SelectView = Trail.View.extend({
+
+  template: '#select-toolbar-tpl',
+
+  postRender: function(dom) {
     $('#set-select-text', dom).bind('submit', function(e) {
       e.preventDefault();
-      self.protoshop.onSelected('setSelectText', $('#select-text').val());
+      window.protoshop.onSelected('setSelectText', $('#select-text').val());
     });
-  };
+    return dom;
+  },
 
-  this.events.button = function(dom) {
+  load: function(obj) {
+    return this.render({data: {
+      'selectText': obj.$dom.find('option').text()
+    }});
+  }
+});
+
+
+ButtonView = Trail.View.extend({
+
+  template: '#button-toolbar-tpl',
+
+  postRender: function(dom) {
     $('#set-button-text', dom).bind('submit', function(e) {
       e.preventDefault();
-      self.protoshop.onSelected('setButtonText', $('#button-text', dom).val());
+      window.protoshop.onSelected('setButtonText', $('#button-text', dom).val());
     });
-  };
+    return dom;
+  },
 
-  this.events.img = function(dom) {
+  load: function(obj) {
+    return this.render({data: {
+      'buttonText': obj.$dom.find('input').val()
+    }});
+  }
+});
+
+
+ImgView = Trail.View.extend({
+
+  template: '#img-toolbar-tpl',
+
+  postRender: function(dom) {
     $('#set-image-src', dom).bind('submit', function(e) {
       e.preventDefault();
-      self.protoshop.onSelected('setImage', $('#image-src').val());
+      window.protoshop.onSelected('setImage', $('#image-src').val());
     });
-  };
+    return dom;
+  },
+
+  load: function(obj) {
+    return this.render({data: {
+      'backgroundImage': obj.$dom.find('img').attr('src')
+    }});
+  }
+});
 
 
-  this.events.global = function(dom) {
-    $('#toggle-grid', dom).bind('mousedown', function(e) {
-      if ($('#grid-overlay').is(":visible")) {
-        localStorage[self.protoshop.site_prefix + '-overlay'] = false;
-        $('#grid-overlay').slideUp();
-      } else {
-        localStorage[self.protoshop.site_prefix + '-overlay'] = true;
-        $('#grid-overlay').slideDown();
-      }
-      $(this).toggleClass('active');
-    });
-  };
+TextView = Trail.View.extend({
 
+  template: '#text-toolbar-tpl',
 
-  this.events.element = function(dom) {
-
-    $('#bring-to-front', dom).bind('mousedown', function() {
-      self.protoshop.onSelected('css', {'z-index': ++self.protoshop.index.max});
-    });
-    $('#send-to-back', dom).bind('mousedown', function() {
-      self.protoshop.onSelected('css', {'z-index': --self.protoshop.index.min});
-    });
-
-    $('#lock', dom).bind('mousedown', function() {
-      self.protoshop.onSelected('lock');
-      self.protoshop.selectElement(null);
-    });
-
-    bindChange($('#border-width', dom));
-    bindChange($('#border-radius', dom));
-    bindChange($('#opacity', dom));
-
-    $('#shadow', dom).bind('change keyup', function() {
-      var x = $('#shadow-x', dom).val();
-      var y = $('#shadow-y', dom).val();
-      var size = $('#shadow-size', dom).val();
-      var color = $('#shadow-color', dom).val();
-
-      if (/^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/.test(color)) {
-        color = '#' + color;
-      }
-      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
-
-      self.protoshop.onSelected('css',{'box-shadow': css});
-    });
-
-    $('#used-colours', dom).bind('mousedown', function(e) {
-      if ($(e.target).is('.used-colour')) {
-        e.preventDefault();
-        e.stopPropagation();
-        self.protoshop.updateUsedColours();
-        self.protoshop.onSelected('css', {'background': $(e.target).data('background')});
-      }
-    });
-
-    bindImagePlaceholder(dom);
-  };
-
-
-  this.events.text = function(dom) {
-
+  postRender: function(dom) {
     $('#font-family', dom).bind('change', function() {
-      self.protoshop.onSelected('css',{'font-family': fonts[$(this).val()]});
+      self.protoshop.onSelected('css',{'font-family': Protoshop.Toolbar.fonts[$(this).val()]});
     });
     $('#bold', dom).bind('mousedown', function() {
       $(this).toggleClass('active');
@@ -206,157 +314,146 @@ Protoshop.Toolbar = function(protoshop) {
       self.protoshop.onSelected('css',{'text-shadow': css});
     });
 
-    bindChange($('#font-size', dom));
-    bindChange($('#line-height', dom));
-    bindChange($('#letter-spacing', dom));
+    Protoshop.Toolbar.bindChange($('#font-size', dom));
+    Protoshop.Toolbar.bindChange($('#line-height', dom));
+    Protoshop.Toolbar.bindChange($('#letter-spacing', dom));
+    return dom;
+  },
 
-  };
+  load: function(obj) {
 
-  function parseRBG(text) {
-    var parts = text.split(" ");
-    return rgbToHex(parts[0].slice(4), parseInt(parts[1], 10), parseInt(parts[2], 10));
-  }
-
-  // TODO: Major major ugly
-  function parseShadow(text) {
-
-    var parts = text.split(" ");
-
-    if (parts.length < 1) {
-      return false;
-    }
-
-    return {
-      x: parseInt(parts[3], 10) || 0,
-      y: parseInt(parts[4], 10) || 0,
-      size: parseInt(parts[5], 10) || 0,
-      colour: rgbToHex(parts[0].slice(4), parseInt(parts[1], 10), parseInt(parts[2], 10))
-    };
-  }
-
-  this.data.button = function(obj) {
-    return {'buttonText': obj.$dom.find('input').val()};
-  };
-
-
-  this.data.select = function(obj) {
-    return {'selectText': obj.$dom.find('option').text()};
-  };
-
-
-  this.data.img = function(obj) {
-    return {'backgroundImage': obj.$dom.find('img').attr('src')};
-  };
-
-
-  this.data.global = function(obj) {
-    return {isOverlay: $('#grid-overlay').is(':visible')};
-  };
-
-  this.data.element = function(obj) {
     var dom = obj.$dom;
-    var obj = {
-      borderRadius: parseInt(dom.css('borderTopLeftRadius'), 0),
-      borderWidth: parseInt(dom.css('border-top-width'), 0),
-      opacity: parseFloat(dom.css('opacity'), 0).toFixed(2),
-      shadow: parseShadow(dom.css('box-shadow')),
-      backgroundColor: parseRBG(dom.css('background-color')),
-      borderColor: 'transparent'
-    };
-
-    if (obj.borderWidth > 0) {
-      obj.borderColor = parseRBG(dom.css('borderTopColor'));
-    }
-
-    return obj;
-  };
-
-  this.data.text = function(obj) {
-    var dom = obj.$dom;
-    var family = findKey(fonts, dom.css('font-family')) || 'helvetica';
+    var family = Utils.findKey(Protoshop.Toolbar.fonts, dom.css('font-family')) || 'helvetica';
     var align = dom.css('text-align');
-    var obj = {
+    var data = {
       fontSize: parseInt(dom.css('font-size'), 0),
       lineHeight: parseInt(dom.css('line-height'), 0),
       letterSpacing: parseInt(dom.css('letter-spacing'), 0) || 0,
       isBold: /(bold|700)/.test(dom.css('font-weight')),
       isItalic: dom.css('font-style') === 'italic',
       isUnderline: dom.css('text-decoration') === 'underline',
-      shadow: parseShadow(dom.css('text-shadow')),
-      color: parseRBG(dom.css('color'))
+      shadow: Protoshop.Toolbar.parseShadow(dom.css('text-shadow')),
+      color: Protoshop.Toolbar.parseRBG(dom.css('color'))
     };
 
     if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {
       align = 'left';
     }
 
-    obj['family-' + family] = true;
-    obj['align-' + align] = true;
+    data['family-' + family] = true;
+    data['align-' + align] = true;
 
-    return obj;
-  };
-
-
-  this.data.background = function(obj) {
-    return {
-      backgroundColor: localJSON.get(self.protoshop.site_prefix + '-bgColour', 'white')
-    };
-  };
-
-  function rgbToHex(R,G,B) {
-    return toHex(R)+toHex(G)+toHex(B);
+    return this.render({data: data});
   }
-
-  function toHex(n) {
-    n = parseInt(n,10);
-    if (isNaN(n)) return "00";
-    n = Math.max(0,Math.min(n,255));
-    return "0123456789ABCDEF".charAt((n-n%16)/16) +
-      "0123456789ABCDEF".charAt(n%16);
-  }
+});
 
 
-  function findKey(obj, val) {
-    for (var prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
-        if (obj[prop] === val) {
-          return prop;
-        }
+ElementView = Trail.View.extend({
+
+  template: '#textandblock-toolbar-tpl',
+
+  postRender: function(dom) {
+
+    $('#bring-to-front', dom).bind('mousedown', function() {
+      window.protoshop.onSelected('css', {'z-index': ++window.protoshop.index.max});
+    });
+    $('#send-to-back', dom).bind('mousedown', function() {
+      window.protoshop.onSelected('css', {'z-index': --window.protoshop.index.min});
+    });
+
+    $('#lock', dom).bind('mousedown', function() {
+      window.protoshop.onSelected('lock');
+      window.protoshop.selectElement(null);
+    });
+
+    Protoshop.Toolbar.bindChange($('#border-width', dom));
+    Protoshop.Toolbar.bindChange($('#border-radius', dom));
+    Protoshop.Toolbar.bindChange($('#opacity', dom));
+
+    $('#shadow', dom).bind('change keyup', function() {
+      var x = $('#shadow-x', dom).val();
+      var y = $('#shadow-y', dom).val();
+      var size = $('#shadow-size', dom).val();
+      var color = $('#shadow-color', dom).val();
+
+      if (/^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/.test(color)) {
+        color = '#' + color;
       }
+      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
+
+      window.protoshop.onSelected('css',{'box-shadow': css});
+    });
+
+    var picker = PickerWidget.render({data: {
+      pickerId: 'bg-picker'
+    }});
+
+    var placeholder = $('#bg-picker-placeholder', dom);
+    placeholder.replaceWith(picker);
+
+    $('.picker-value', picker).bind('change', function() {
+      $('.picker-preview', picker).css('background', this.value);
+      window.protoshop.onSelected('css', {'background': this.value});
+      window.protoshop.updateUsedColours();
+    }).val(placeholder.data('background'));
+
+    return dom;
+  },
+
+  load: function(obj) {
+    var dom = obj.$dom;
+    var data = {
+      borderRadius: parseInt(dom.css('borderTopLeftRadius'), 0),
+      borderWidth: parseInt(dom.css('border-top-width'), 0),
+      opacity: parseFloat(dom.css('opacity'), 0).toFixed(2),
+      shadow: Protoshop.Toolbar.parseShadow(dom.css('box-shadow')),
+      backgroundColor: Protoshop.Toolbar.parseRBG(dom.css('background-color')),
+      borderColor: 'transparent'
+    };
+
+    if (obj.borderWidth > 0) {
+      obj.borderColor = Protoshop.Toolbar.parseRBG(dom.css('borderTopColor'));
     }
-    return false;
+
+    return this.render({data: data});
+  }
+});
+
+
+Protoshop.Toolbar = function(protoshop) {
+
+  var self = this;
+  this.protoshop = protoshop;
+
+
+  function areAll(arr, type) {
+    return _.all(arr, function(x) {
+      return x instanceof type;
+    });
   }
 
 
-  this.protoshop.$selection.bind('change', function(evt, data) {
-
-    if (data.selected.length < 1) {
-      return self.render(['global', 'background'], data);
+  function pickSections(arr) {
+    if (arr.length < 1) {
+      return [GlobalView, BgView];
     }
-
-    if (_.all(data.selected, function(x) { return x instanceof Elements.SelectElement; })) {
-      return self.render(['global', 'select'], data);
+    if (areAll(arr, Elements.SelectElement)) {
+      return [GlobalView, SelectView];
     }
-
-    if (_.all(data.selected, function(x) { return x instanceof Elements.ButtonElement; })) {
-      return self.render(['global', 'button'], data);
+    if (areAll(arr, Elements.ButtonElement)) {
+      return [GlobalView, ButtonView];
     }
-
-    if (_.all(data.selected, function(x) { return x instanceof Elements.ImgElement; })) {
-      return self.render(['global', 'img'], data);
+    if (areAll(arr, Elements.ImgElement)) {
+      return [GlobalView, ImgView];
     }
-
-    if (_.all(data.selected, function(x) { return x instanceof Elements.TextElement; })) {
-      return self.render(['global', 'text'], data);
+    if (areAll(arr, Elements.TextElement)) {
+      return [GlobalView, TextView];
     }
-
-    if (_.all(data.selected, function(x) { return x instanceof Elements.BlockElement; })) {
-      return self.render(['global', 'element'], data);
+    if (areAll(arr, Elements.BlockElement)) {
+      return [GlobalView, ElementView];
     }
-
-    self.render(['global', 'element'], data);
-
-  });
+    return [GlobalView, ElementView];
+  }
 
 
   this.render = function(sections, args) {
@@ -364,159 +461,69 @@ Protoshop.Toolbar = function(protoshop) {
     var picked = (args && args.selected && args.selected.length > 0) ?
       args.selected[0] : false;
 
-    var html = _.map(sections, function(section) {
-      var data = self.data[section](picked);
-      return self.tpls[section](data);
-    });
-
-    var $dom = $(html.join(""));
-
+    var $el = $('#top-bar-inner').empty();
     _.each(sections, function(section) {
-      if (self.events[section]) {
-        self.events[section]($dom);
-      }
+      $el.append(section.load(picked));
     });
-
-    $root.empty().append($dom);
-
-    $('.tabs').each(bindTabs);
-    $('.dropdown').each(bindDropDown);
-    $('.picker').each(bindColour);
-    $('.color').each(bindPlainColour);
-    //$('.gradient').each(bindGradient);
-    self.protoshop.updateUsedColours();
-
   };
 
 
-  function is_inside(obj, parent) {
-    return ( obj == parent ) ||
-      ( obj.parentNode !== null && is_inside(obj.parentNode, parent) );
-  }
+  this.protoshop.$selection.bind('change', function(evt, data) {
+    var sections = pickSections(data.selected);
+    self.render(sections, data);
+  });
 
-  function bindPlainColour() {
-    new jscolour.picker({$domValue: $(this), $domStyle: $(this)});
-  }
+  protoshop.$selection.trigger('change', {
+    selected: protoshop.selected
+  });
 
-  function bindColour() {
+};
 
-    var $value = $(this).find('.picker-value');
-    var $preview = $(this).find('.picker-preview');
-
-    $preview.css('background-color', '#' + $value.val());
-
-    var picker = new jscolour.picker({
-      $wrapper: $(this).find('.picker-placeholder'),
-      $domStyle: $preview,
-      $domValue: $value
-    });
-
-    new jscolour.gradientPicker({
-      $domValue: $value,
-      $domStyle: $(this).find('.gradient-dom')
-    });
-
-    $value.bind('change', function() {
-      var obj = {};
-      obj[$(this).data('css')] = $value.val();
-      self.protoshop.updateUsedColours();
-      self.protoshop.onSelected('css', obj);
-    });
-
-  }
-
-
-  function bindGradient() {
-
-    new jscolour.gradientPicker({
-      $domValue: $(this).find('.gradient-value'),
-      $domStyle: $(this).find('.gradient-dom')
-    });
-
-    $(this).find('.gradient-value').bind('change', function() {
-      var obj = {};
-      obj[$(this).data('css')] = this.value;
-      self.protoshop.onSelected('css', obj);
-    });
-
-  }
-
-
-  function bindChange($dom) {
-    var key = $dom.attr('data-css');
-    $dom.bind('change input', function() {
-      var obj = {};
-      obj[key] = this.value + 'px';
-      if (key === 'opacity') {
-        obj[key] = Number(parseFloat(obj[key], 10)).toFixed(2);
-      }
-      self.protoshop.onSelected('css', obj);
-    });
-  }
-
-
-  function bindDropDown() {
-    var $el = $(this);
-    var $inner = $el.find('.inner');
-    $(this).bind('mousedown', function() {
-      if (!$inner.is(':visible')) {
-        $el.addClass('active');
-        self.protoshop.$canvas_wrapper.unbind('mousedown.global');
-        setTimeout(function() {
-          $(document).bind('mousedown.range', function(e) {
-            if (!(is_inside(e.target, $el[0]) ||
-                  $(e.target).parents().hasClass('jscolour'))) {
-              jscolour.hide();
-              $(document).unbind('mousedown.range');
-              $el.removeClass('active');
-              self.protoshop.$canvas_wrapper.bind('mousedown.global',
-                                                  self.protoshop.globalMouseDown);
-            }
-          });
-        }, 0);
-      }
-    });
-  }
-
-
-  function bindRange($dom) {
-    var $label = $dom.find('.label');
-    $dom.bind('change keyup', function(e) {
-      var tmp = {}, key = $(e.target).attr('data-css');
-      tmp[key] = e.target.value + 'px';
-      if (key === 'opacity') {
-        tmp[key] = Number(parseFloat(tmp[key], 10)).toFixed(2);
-      }
-      $label.text(tmp[key]);
-      self.protoshop.onSelected('css', tmp);
-    });
-  }
-
-
-  function bindTabs(dom) {
-
-    var $dom = $(this);
-    var selected = null;
-
-    function select(tab) {
-
-      $dom.find('.tab-link').removeClass('selected');
-      $dom.find('.tab-link[data-target=' + tab + ']').addClass('selected');
-
-      if (selected) {
-        selected.hide();
-      }
-      selected = $dom.find('.' + tab);
-      selected.show();
+Protoshop.Toolbar.bindChange = function($dom) {
+  var key = $dom.attr('data-css');
+  $dom.bind('change input', function() {
+    var obj = {};
+    obj[key] = this.value + 'px';
+    if (key === 'opacity') {
+      obj[key] = Number(parseFloat(obj[key], 10)).toFixed(2);
     }
+    window.protoshop.onSelected('css', obj);
+  });
+}
 
-    $dom.find('.tab-link').bind('mousedown', function() {
-      select($(this).data('target'));
-    });
+// TODO: Major major ugly
+Protoshop.Toolbar.parseShadow = function(text) {
 
-    select($dom.find('.tab-link:first').data('target'));
+  var parts = text.split(" ");
+
+  if (parts.length < 1) {
+    return false;
   }
 
-  protoshop.$selection.trigger('change', {selected: protoshop.selected});
+  return {
+    x: parseInt(parts[3], 10) || 0,
+    y: parseInt(parts[4], 10) || 0,
+    size: parseInt(parts[5], 10) || 0,
+    colour: Utils.rgbToHex(parts[0].slice(4), parseInt(parts[1], 10),
+                           parseInt(parts[2], 10))
+  };
+}
 
+Protoshop.Toolbar.parseRBG = function(text) {
+  var parts = text.split(" ");
+  return Utils.rgbToHex(parts[0].slice(4), parseInt(parts[1], 10),
+                        parseInt(parts[2], 10));
+}
+
+Protoshop.Toolbar.fonts = {
+  'tnr': "Cambria, 'Hoefler Text', 'Times New Roman', serif",
+  'georgia': "Constantia, 'Lucida Bright', 'Bitstream Vera Serif', " +
+    "'Liberation Serif', Georgia, serif",
+  'garamond': "'Palatino Linotype', Baskerville, 'Bookman Old Style', " +
+    "'Bitstream Charter', Garamond, Georgia, serif",
+  'helvetica': "Frutiger, Univers, Helvetica, Arial, sans-serif",
+  'verdana': "Corbel, 'Bitstream Vera Sans', Verdana, sans-serif",
+  'trebuchet': "'Segoe UI', 'Trebuchet MS', Verdana, sans-serif",
+  'impact': "Impact, 'Franklin Gothic Bold', 'Arial Black', sans-serif",
+  'monospace': "Consolas, 'DejaVu Sans Mono', Monaco, Courier, monospace"
 };
