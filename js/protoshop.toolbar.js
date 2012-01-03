@@ -465,6 +465,8 @@ Protoshop.Toolbar = function(protoshop) {
     _.each(sections, function(section) {
       $el.append(section.load(picked));
     });
+
+    self.protoshop.updateUsedColours();
   };
 
 
