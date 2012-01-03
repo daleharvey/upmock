@@ -384,11 +384,13 @@ ElementView = Trail.View.extend({
       window.protoshop.onSelected('css',{'box-shadow': css});
     });
 
-    var picker = PickerWidget.render({data: {
-      pickerId: 'bg-picker'
-    }});
 
     var placeholder = $('#bg-picker-placeholder', dom);
+    var picker = PickerWidget.render({data: {
+      pickerId: 'bg-picker',
+      backgroundColor: placeholder.data('background')
+    }});
+
     placeholder.replaceWith(picker);
 
     $('.picker-value', picker).bind('change', function() {
@@ -407,7 +409,7 @@ ElementView = Trail.View.extend({
       borderWidth: parseInt(dom.css('border-top-width'), 0),
       opacity: parseFloat(dom.css('opacity'), 0).toFixed(2),
       shadow: Protoshop.Toolbar.parseShadow(dom.css('box-shadow')),
-      backgroundColor: Protoshop.Toolbar.parseRBG(dom.css('background-color')),
+      backgroundColor: Utils.readBackground(dom[0]),
       borderColor: 'transparent'
     };
 

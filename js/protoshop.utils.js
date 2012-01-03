@@ -46,3 +46,22 @@ Utils.toHex = function(n) {
   return "0123456789ABCDEF".charAt((n-n%16)/16) +
     "0123456789ABCDEF".charAt(n%16);
 };
+
+Utils.readBackground = function(el) {
+
+  var style = getComputedStyle(el,'');
+  var bg = style.getPropertyValue('background-image');
+
+  if (/^url/.test(bg)) {
+    return style.getPropertyValue('background-color') + ' ' +
+      style.getPropertyValue('background-image') + ' ' +
+      style.getPropertyValue('background-position') + ' ' +
+      style.getPropertyValue('background-repeat') + ' ';
+  }
+
+  if (/gradient/.test(bg)) {
+    return bg;
+  }
+
+  return getComputedStyle(el,'').getPropertyValue('background-color');
+};
