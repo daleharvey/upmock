@@ -607,3 +607,8 @@ triangle-isosceles {
 .color-stop.selected:after {
     border-color: black transparent;
 }
+
+#helphelp {
+    float:right;
+    margin: 12px;
+}
