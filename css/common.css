@@ -186,7 +186,7 @@ header {
 #border-radius  { background-image: url(../img/fague/layer-shape-round.png); }
 #border-picker  { background-image: url(../img/fague/border-color.png); }
 #lock           { background-image: url(../img/famfam/lock.png); }
-#shadow         { background-image: url(../img/famfam/contrast.png); }
+#shadow         { background-image: url(../img/proto-shadow-thevisibleshadow.png); }
 #text-shadow    { background-image: url(../img/fague/edit-shadow.png); }
 #send-to-back   { background-image: url(../img/famfam/shape_move_back.png); }
 #bring-to-front { background-image: url(../img/famfam/shape_move_front.png); }
