@@ -333,7 +333,7 @@ TextView = Trail.View.extend({
       isItalic: dom.css('font-style') === 'italic',
       isUnderline: dom.css('text-decoration') === 'underline',
       shadow: Protoshop.Toolbar.parseShadow(dom.css('text-shadow')),
-      color: Protoshop.Toolbar.parseRBG(dom.css('color'))
+      color: dom.css('color')
     };
 
     if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {
@@ -414,7 +414,7 @@ ElementView = Trail.View.extend({
     };
 
     if (obj.borderWidth > 0) {
-      obj.borderColor = Protoshop.Toolbar.parseRBG(dom.css('borderTopColor'));
+      obj.borderColor = dom.css('borderTopColor');
     }
 
     return this.render({data: data});
@@ -504,19 +504,14 @@ Protoshop.Toolbar.parseShadow = function(text) {
     return false;
   }
 
+  var colour = [parts[0], parts[1], parts[2]].join('');
+
   return {
     x: parseInt(parts[3], 10) || 0,
     y: parseInt(parts[4], 10) || 0,
     size: parseInt(parts[5], 10) || 0,
-    colour: Utils.rgbToHex(parts[0].slice(4), parseInt(parts[1], 10),
-                           parseInt(parts[2], 10))
+    colour: colour
   };
-}
-
-Protoshop.Toolbar.parseRBG = function(text) {
-  var parts = text.split(" ");
-  return Utils.rgbToHex(parts[0].slice(4), parseInt(parts[1], 10),
-                        parseInt(parts[2], 10));
 }
 
 Protoshop.Toolbar.fonts = {
