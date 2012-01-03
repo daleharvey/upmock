@@ -15,6 +15,16 @@ Trail.View.shim = function(dom) {
     new jscolour.picker({$domValue: $(this), $domStyle: $(this)});
   });
 
+  dom.findAll('[type=angle]').each(function() {
+
+    if ($(this).data('processed-angle')) {
+      return;
+    }
+    $(this).data('processed-angle', true);
+
+    new jscolour.anglePicker({$domValue: $(this)});
+  });
+
   dom.findAll('.dropdown').each(function() {
 
     if ($(this).data('processed-dropdown')) {
@@ -306,11 +316,23 @@ TextView = Trail.View.extend({
     });
 
     $('#text-shadow', dom).bind('change keyup', function() {
-      var x = $('#text-shadow-x').val();
-      var y = $('#text-shadow-y').val();
-      var size = $('#text-shadow-size').val();
-      var color = $('#text-shadow-color').val();
+      var distance = $('#text-shadow-distance', dom).val();
+      var size = $('#text-shadow-size', dom).val();
+      var angle = $('#text-shadow-angle', dom).val() - 90;
+      var color = $('#text-shadow-color', dom).val();
+
+      if (angle < 0) {
+        angle = 360 + angle;
+      }
+
+      var x = Math.round(distance * Math.cos(angle * (Math.PI/180)));
+      var y = Math.round(distance * Math.sin(angle * (Math.PI/180)));
+
+      if (/^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/.test(color)) {
+        color = '#' + color;
+      }
       var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
+      console.log(css);
       self.protoshop.onSelected('css',{'text-shadow': css});
     });
 
@@ -371,16 +393,24 @@ ElementView = Trail.View.extend({
     Protoshop.Toolbar.bindChange($('#opacity', dom));
 
     $('#shadow', dom).bind('change keyup', function() {
-      var x = $('#shadow-x', dom).val();
-      var y = $('#shadow-y', dom).val();
+
+      var distance = $('#shadow-distance', dom).val();
       var size = $('#shadow-size', dom).val();
+      var angle = $('#shadow-angle', dom).val() - 90;
       var color = $('#shadow-color', dom).val();
+
+      if (angle < 0) {
+        angle = 360 + angle;
+      }
+
+      var x = Math.round(distance * Math.cos(angle * (Math.PI/180)));
+      var y = Math.round(distance * Math.sin(angle * (Math.PI/180)));
 
       if (/^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/.test(color)) {
         color = '#' + color;
       }
-      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
 
+      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
       window.protoshop.onSelected('css',{'box-shadow': css});
     });
 
