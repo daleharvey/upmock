@@ -135,7 +135,8 @@ PickerWidget = Trail.View.extend({
 
     $('.image-placeholder', dom).bind('change', function() {
 
-      var url = 'url(' + $('#img-url').val() + ') ' +
+      var colour = $('#img-color', dom).val();
+      var url = colour + ' url(' + $('#img-url').val() + ') ' +
         ($('#img-top').val() || 0) + ' ' + ($('#img-left').val() || 0);
 
       var repeatx = $('#repeat-x').is(':checked');
