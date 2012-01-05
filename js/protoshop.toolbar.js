@@ -549,11 +549,21 @@ Protoshop.Toolbar.parseShadow = function(text) {
     return false;
   }
 
+  var x = parseInt(parts[3], 10) || 0;
+  var y = parseInt(parts[4], 10) || 0
   var colour = [parts[0], parts[1], parts[2]].join('');
+  var distance = Math.sqrt((x * x) + (y * y));
+  var angle = Math.round(Math.acos (y / distance) * (180 / Math.PI)) - 180;
+
+  if (angle < 0) {
+    angle = 360 + angle;
+  }
 
   return {
-    x: parseInt(parts[3], 10) || 0,
-    y: parseInt(parts[4], 10) || 0,
+    x: x,
+    y: y,
+    distance: distance,
+    angle: angle,
     size: parseInt(parts[5], 10) || 0,
     colour: colour
   };
