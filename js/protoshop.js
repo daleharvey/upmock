@@ -516,13 +516,18 @@ var Protoshop = function() {
 
     $.each($('.block, .text'), function(i, obj) {
       colours[$(obj).css('color')] = true;
-      colours[$(obj).css('background-color')] = true;
+      colours[Utils.readBackground(obj)] = true;
     });
 
     colours = _.keys(colours);
     colours.sort();
 
     $.each(colours, function(i, key) {
+
+      if (key === 'rgba(0, 0, 0, 0)') {
+        return;
+      }
+
       html += '<div class="used-colour" data-background="' + key + '" ' +
         'style="background: ' + key + '"></div>';
     });

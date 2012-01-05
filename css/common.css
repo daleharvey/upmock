@@ -530,7 +530,11 @@ triangle-isosceles {
 
 .tabs .page {
     display:none;
+    height: 135px;
 }
+
+
+ p { margin: 10px 0 0 0; }
 
 .tabs table td { width: 5%;  }
 .tabs table {  margin-bottom: 10px; }

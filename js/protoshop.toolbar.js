@@ -126,7 +126,7 @@ PickerWidget = Trail.View.extend({
       } else if (/image/.test(colour)) {
         $('[data-target=image-placeholder]', dom).trigger('select');
       } else {
-        $('[data-target=color-placeholder]', dom).trigger('select');
+        $('[data-target=colour-placeholder]', dom).trigger('select');
       }
     }
 
