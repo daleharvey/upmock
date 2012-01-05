@@ -588,6 +588,7 @@ triangle-isosceles {
     float:left;
     margin-right: 10px;
     border: 1px solid #000;
+    background-size: 100%;
 }
 
 
