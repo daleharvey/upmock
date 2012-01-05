@@ -64,7 +64,7 @@ Trail.View.shim = function(dom) {
     var $value = $(this).find('.picker-value');
     var $preview = $(this).find('.picker-preview');
 
-    $preview.css('background-color', '#' + $value.val());
+    //$preview.css('background-color', '#' + $value.val());
 
     var picker = new jscolour.picker({
       $wrapper: $(this).find('.picker-placeholder'),
@@ -437,8 +437,12 @@ ElementView = Trail.View.extend({
     });
 
     var placeholder = $('#bg-picker-placeholder', dom);
+
     var style = $('<div />')
       .css('background', placeholder.data('background'))[0].style;
+
+    console.log(placeholder.data('background'));
+
     var picker = PickerWidget.render({data: {
       pickerId: 'bg-picker',
       background: placeholder.data('background'),

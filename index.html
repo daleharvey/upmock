@@ -68,7 +68,7 @@
             </p>
             <p>
               color <input type="color" class="color" id="img-color"
-                           value="{{backgroundColor}}" />
+                           value="{{backgroundColor}}" style="background:{{backgroundColor}}" />
             </p>
             <p>
               <div>top <input type="text" size="6" id="img-top"
@@ -138,6 +138,7 @@
             <tr>
               <td>colour:</td>
               <td><input id="shadow-color" type="text" class="color"
+                         style="background:{{shadow.colour}}"
                          value="{{shadow.colour}}" /></td>
             </tr>
           </table>
@@ -257,6 +258,7 @@
             <tr>
               <td>colour:</td>
               <td><input id="text-shadow-color" type="text" class="color"
+                         style="background:{{shadow.colour}}"
                          value="{{shadow.colour}}" /></td>
             </tr>
           </table>
