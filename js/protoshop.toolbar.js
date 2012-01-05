@@ -441,8 +441,6 @@ ElementView = Trail.View.extend({
     var style = $('<div />')
       .css('background', placeholder.data('background'))[0].style;
 
-    console.log(placeholder.data('background'));
-
     var picker = PickerWidget.render({data: {
       pickerId: 'bg-picker',
       background: placeholder.data('background'),
