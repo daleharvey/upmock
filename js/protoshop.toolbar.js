@@ -194,9 +194,17 @@ BgView = Trail.View.extend({
 
   postRender: function($dom) {
 
+    var bg = localJSON.get(window.protoshop.site_prefix + '-bgColour', 'white');
+    var style = $('<div />').css('background', bg)[0].style;
     var picker = PickerWidget.render({data: {
       pickerId: 'background-picker',
-      backgroundColor: localJSON.get(window.protoshop.site_prefix + '-bgColour', 'white')
+      background: bg,
+      backgroundRepeatX: style['background-repeat-x'] === 'repeat',
+      backgroundRepeatY: style['background-repeat-y'] === 'repeat',
+      backgroundPosX: style['background-position-x'],
+      backgroundPosY: style['background-position-y'],
+      backgroundColor: style['background-color'],
+      backgroundUrl: style['background-image'].replace(/url\(/, '').replace(/\)/, '')
     }});
 
     $('.picker-value', picker).bind('change', function() {
@@ -414,11 +422,18 @@ ElementView = Trail.View.extend({
       window.protoshop.onSelected('css',{'box-shadow': css});
     });
 
-
     var placeholder = $('#bg-picker-placeholder', dom);
+    var style = $('<div />')
+      .css('background', placeholder.data('background'))[0].style;
     var picker = PickerWidget.render({data: {
       pickerId: 'bg-picker',
-      backgroundColor: placeholder.data('background')
+      background: placeholder.data('background'),
+      backgroundRepeatX: style['background-repeat-x'] === 'repeat',
+      backgroundRepeatY: style['background-repeat-y'] === 'repeat',
+      backgroundPosX: style['background-position-x'],
+      backgroundPosY: style['background-position-y'],
+      backgroundColor: style['background-color'],
+      backgroundUrl: style['background-image'].replace(/url\(/, '').replace(/\)/, '')
     }});
 
     placeholder.replaceWith(picker);

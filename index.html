@@ -38,11 +38,11 @@
 
       <div class="dropdown toolbar-icon picker" id="{{pickerId}}">
 
-        <div class="picker-preview" style="background: {{backgroundColor}}"></div>
+        <div class="picker-preview" style="background: {{background}}"></div>
 
         <div class="inner triangle-isosceles top tabs">
 
-          <textarea class="picker-value">{{backgroundColor}}</textarea>
+          <textarea class="picker-value">{{background}}</textarea>
 
           <table style="width:100%" cellspacing="0"><tr>
               <td><a class="tab-link" data-target="colour-placeholder">Solid Colour</a></td>
@@ -65,22 +65,26 @@
 
           <div class="image-placeholder page">
             <p>
-              url <input type="text" id="img-url" style="width: 200px;" />
+              url <input type="text" id="img-url" style="width: 200px;"
+                         value="{{backgroundUrl}}" />
             </p>
             <p>
-              color <input type="color" class="color" id="img-color" style="width: 200px;" />
+              color <input type="color" class="color" id="img-color"
+                           value="{{backgroundColor}}" />
             </p>
             <p>
-              <div>top <input type="text" size="6" id="img-top" />
+              <div>top <input type="text" size="6" id="img-top"
+                              value="{{backgroundPosY}}" />
               <a>center</a> <a>top</a> <a>bottom</a></div>
-              <div>left <input type="text" size="6" id="img-left" />
+              <div>left <input type="text" size="6" id="img-left"
+                               value="{{backgroundPosX}}" />
               <a>center</a> <a>left</a> <a>right</a></div>
             </p>
 
             <label for="repeat-x">repeat-x</label>
-            <input type="checkbox" id="repeat-x" />
+            <input type="checkbox" id="repeat-x" {{checkbox backgroundRepeatX}} />
             <label for="repeat-y">repeat-y</label>
-            <input type="checkbox" id="repeat-y" />
+            <input type="checkbox" id="repeat-y" {{checkbox backgroundRepeatY}} />
 
             <input type="button" style="float:right" value="Save" />
           </div>
@@ -284,6 +288,7 @@
   <script src="./js/libs/trail/trail.js"></script>
 
   <script src="./js/protoshop.utils.js"></script>
+  <script src="./js/protoshop.handlebars.helpers.js"></script>
   <script src="./js/protoshop.js"></script>
   <script src="./js/protoshop.shortcuts.js"></script>
   <script src="./js/protoshop.elements.js"></script>
