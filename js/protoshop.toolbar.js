@@ -120,11 +120,23 @@ PickerWidget = Trail.View.extend({
   template: '#picker-tpl',
   postRender: function(dom) {
 
+    function switchToTab(colour) {
+      if (/gradient/.test(colour)) {
+        $('[data-target=gradient-placeholder]', dom).trigger('select');
+      } else if (/image/.test(colour)) {
+        $('[data-target=image-placeholder]', dom).trigger('select');
+      } else {
+        $('[data-target=color-placeholder]', dom).trigger('select');
+      }
+    }
+
     $('#used-colours', dom).bind('mousedown', function(e) {
       if ($(e.target).is('.used-colour')) {
         e.preventDefault();
         e.stopPropagation();
-        $('.picker-value', dom).val($(e.target).data('background')).trigger('change');
+        var colour = $(e.target).data('background');
+        switchToTab(colour);
+        $('.picker-value', dom).val(colour).trigger('change');
       }
     });
 
@@ -153,12 +165,7 @@ PickerWidget = Trail.View.extend({
       $('.picker-value', dom).val(url).trigger('change');
     });
 
-    var colour = $('.picker-value', dom).val();
-    if (/gradient/.test(colour)) {
-      $('[data-target=gradient-placeholder]', dom).trigger('select');
-    } else if (/image/.test(colour)) {
-      $('[data-target=image-placeholder]', dom).trigger('select');
-    }
+    switchToTab($('.picker-value', dom).val());
 
     return dom;
   }
