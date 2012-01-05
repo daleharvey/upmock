@@ -106,7 +106,7 @@ Trail.View.shim = function(dom) {
       selected.css('display', 'block');
     }
 
-    $dom.find('.tab-link').bind('mousedown', function() {
+    $dom.find('.tab-link').bind('mousedown select', function() {
       select($(this).data('target'));
     });
 
@@ -152,6 +152,13 @@ PickerWidget = Trail.View.extend({
 
       $('.picker-value', dom).val(url).trigger('change');
     });
+
+    var colour = $('.picker-value', dom).val();
+    if (/gradient/.test(colour)) {
+      $('[data-target=gradient-placeholder]', dom).trigger('select');
+    } else if (/image/.test(colour)) {
+      $('[data-target=image-placeholder]', dom).trigger('select');
+    }
 
     return dom;
   }
