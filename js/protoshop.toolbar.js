@@ -333,7 +333,6 @@ TextView = Trail.View.extend({
         color = '#' + color;
       }
       var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
-      console.log(css);
       self.protoshop.onSelected('css',{'text-shadow': css});
     });
 
