@@ -148,6 +148,17 @@
       </div>
     </script>
 
+    <script type="text/html" id="single-toolbar-tpl">
+        <div class="dropdown toolbar-icon" id="css">
+          <div class="inner triangle-isosceles top">
+            <form id="css-form">
+              <textarea id="css-value">{{cssValue}}</textarea>
+              <input type="submit" value="Update CSS" />
+            </form>
+          </div>
+        </div>
+    </script>
+
     <script type="text/html" id="global-toolbar-tpl">
       <div class="section" id="global">
         <a id="toggle-grid" class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}"
@@ -157,7 +168,7 @@
 
     <script type="text/html" id="img-toolbar-tpl">
       <div class="section" id="img">
-        <form id="set-image-src">
+        <form id="set-image-src" class="toolbar-form">
           <input type="text" placeholder="Image Source" id="image-src"
                  value="{{backgroundImage}}" />
           <input type="submit" value="Update" />
@@ -167,7 +178,7 @@
 
     <script type="text/html" id="button-toolbar-tpl">
       <div class="section" id="button">
-        <form id="set-button-text">
+        <form id="set-button-text" class="toolbar-form">
           <input type="text" id="button-text" value="{{buttonText}}" />
           <input type="submit" value="Update" />
         </form>
@@ -177,7 +188,7 @@
 
     <script type="text/html" id="select-toolbar-tpl">
       <div class="section" id="select">
-        <form id="set-select-text">
+        <form id="set-select-text" class="toolbar-form">
           <input type="text" id="select-text" value="{{selectText}}" />
           <input type="submit" value="Update" />
         </form>

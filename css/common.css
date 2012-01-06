@@ -63,6 +63,7 @@ html, body {
 #add-select { background: url(../img/fague/ui-combo-box.png); }
 #add-image { background: url(../img/fague/image.png); }
 #help { background: url(../img/famfam/help.png); }
+#css { background: url(../img/famfam/css.png); }
 
 
 /*
@@ -522,7 +523,13 @@ triangle-isosceles {
     margin: 0 10px;
 }
 
-.picker-value {
+.toolbar-form {
+    display: inline;
+    float: left;
+    margin-right: 10px;
+}
+
+.dropdown textarea {
     width: 100%;
     box-sizing: border-box;
     resize: none;
@@ -530,6 +537,10 @@ triangle-isosceles {
     color: #AAA;
     border: 1px solid;
     margin-bottom: 10px;
+}
+
+#css-value {
+    height: 100px;
 }
 
 .tabs .page {

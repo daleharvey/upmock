@@ -391,6 +391,25 @@ TextView = Trail.View.extend({
   }
 });
 
+SingleElementView = Trail.View.extend({
+
+  template: '#single-toolbar-tpl',
+
+  postRender: function(dom) {
+    $('#css-form', dom).bind('submit', function(e) {
+      e.preventDefault();
+      window.protoshop.onSelected('attr', 'style', $('#css-value').val());
+    });
+    return dom;
+  },
+
+  load: function(obj) {
+    return this.render({data: {
+      cssValue: obj.$dom[0].style.cssText.split('; ').join(';\n')
+    }});
+  }
+
+});
 
 ElementView = Trail.View.extend({
 
@@ -497,25 +516,30 @@ Protoshop.Toolbar = function(protoshop) {
 
 
   function pickSections(arr) {
+
+    var sections;
+
     if (arr.length < 1) {
       return [GlobalView, BgView];
+    } else if (areAll(arr, Elements.SelectElement)) {
+      sections = [GlobalView, SelectView];
+    } else if (areAll(arr, Elements.ButtonElement)) {
+      sections = [GlobalView, ButtonView];
+    } else if (areAll(arr, Elements.ImgElement)) {
+      sections = [GlobalView, ImgView];
+    } else if (areAll(arr, Elements.TextElement)) {
+      sections = [GlobalView, TextView];
+    } else if (areAll(arr, Elements.BlockElement)) {
+      sections = [GlobalView, ElementView];
+    } else {
+      sections = [GlobalView, ElementView];
     }
-    if (areAll(arr, Elements.SelectElement)) {
-      return [GlobalView, SelectView];
+
+    if (arr.length === 1) {
+      sections.push(SingleElementView);
     }
-    if (areAll(arr, Elements.ButtonElement)) {
-      return [GlobalView, ButtonView];
-    }
-    if (areAll(arr, Elements.ImgElement)) {
-      return [GlobalView, ImgView];
-    }
-    if (areAll(arr, Elements.TextElement)) {
-      return [GlobalView, TextView];
-    }
-    if (areAll(arr, Elements.BlockElement)) {
-      return [GlobalView, ElementView];
-    }
-    return [GlobalView, ElementView];
+
+    return sections;
   }
 
 

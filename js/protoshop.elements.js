@@ -67,6 +67,9 @@ var CoreElement = function() {
   this.css = function(obj) {
     this.$dom.css(obj);
   };
+  this.attr = function(key, val) {
+    this.$dom.attr(key, val);
+  };
 
 
   CoreElement.prototype.move = function(y, x) {

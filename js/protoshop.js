@@ -345,7 +345,6 @@ var Protoshop = function() {
       }
 
       self.selected[0].css(obj);
-
       self.updateInfo();
 
     });
