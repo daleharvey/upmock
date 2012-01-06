@@ -160,7 +160,8 @@ var Protoshop = function() {
     }
 
     for (i = 0, len = centerPoints.length; i < len; i++) {
-      if (within(Math.round((position + (size / 2))), centerPoints[i]) && !/(n|w)/.test(type)) {
+      if (within(Math.round((position + (size / 2))), centerPoints[i]) &&
+          !/(n|w)/.test(type)) {
         return {point: 'middle', value: centerPoints[i]};
       }
     }
@@ -187,12 +188,14 @@ var Protoshop = function() {
     var snapY = snapPlane(bounds.top, bounds.height, self.snap.y, self.snap.ycenter, y);
 
     if (snapX !== false) {
-      $guide.x.css('left', snapX.value + offset.x - $canvas_wrapper[0].scrollLeft).show();
+      $guide.x.css('left', snapX.value + offset.x - $canvas_wrapper[0].scrollLeft)
+        .show();
       snap.x = snapX;
     }
 
     if (snapY !== false) {
-      $guide.y.css('top', snapY.value + offset.y + 30 - $canvas_wrapper[0].scrollTop).show();
+      $guide.y.css('top', snapY.value + offset.y + 30 - $canvas_wrapper[0].scrollTop)
+        .show();
       snap.y = snapY;
     }
 
@@ -368,7 +371,8 @@ var Protoshop = function() {
 
   function bindKeyMove($el) {
     _.each(shortcuts.editing.shortcuts, function(key) {
-      $(document).bind(key.e + '.editing', key.override || key.key, bind(self, key.callback));
+      $(document).bind(key.e + '.editing', key.override || key.key,
+                       bind(self, key.callback));
     });
   }
 
