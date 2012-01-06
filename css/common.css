@@ -632,3 +632,21 @@ triangle-isosceles {
     float:right;
     margin: 12px;
 }
+
+#loading {
+    position:fixed;
+    top:0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background: rgb(249,248, 226);
+    z-index: 9999;
+    text-align: center;
+    padding-top: 100px;
+    font-weight: bold;
+    color: rgb(91, 93, 93);
+    font-style: italic;
+    font-family: 'Palatino Linotype', Baskerville, 'Bookman Old Style', 'Bitstream Charter', Garamond, Georgia, serif;
+    font-size: 47px;
+    text-shadow: rgb(249, 229, 177) -3px -3px 0px;
+}

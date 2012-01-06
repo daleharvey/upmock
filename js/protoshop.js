@@ -685,4 +685,12 @@ var Protoshop = function() {
 
   })();
 
+  if ($.browser.webkit) {
+    $('#loading').fadeOut('fast', function() {
+      $('#loading').remove();
+    });
+  } else {
+    $('#loading span').text('Sorry, currently chrome only :(');
+  }
+
 };
