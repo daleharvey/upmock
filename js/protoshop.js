@@ -357,9 +357,11 @@ var Protoshop = function() {
 
   function bind(scope, fn) {
     return function (evt) {
-      evt.stopPropagation();
-      evt.preventDefault();
-      if (fn.apply(scope, arguments) !== false) {
+      if (!$(evt.target).is('span[contenteditable=true]')) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        if (fn.apply(scope, arguments) !== false) {
+        }
       }
     };
   }
@@ -444,6 +446,10 @@ var Protoshop = function() {
 
 
   this.globalMouseDown = function(e) {
+
+    if ($(e.target).is('span[contenteditable=true]')) {
+      return true;
+    }
 
     if (e.target === this || e.target === $canvas[0]) {
       e.preventDefault();

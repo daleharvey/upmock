@@ -177,19 +177,14 @@ Elements.TextElement = function(opts, obj) {
   this.init(opts, {'data-type': 'TextElement', 'class': 'text'}, obj);
 
   this.startEditing = function() {
-    var text = this.$dom.find('span').text();
-    this.$inp = $('<textarea>' + text + '</textarea>');
-    this.$dom.find('span').replaceWith(this.$inp);
-    this.$inp[0].focus();
-    this.$inp[0].select();
+    var $span = this.$dom.find('span').attr('contentEditable', true);
+    $span[0].focus();
   };
 
   this.deselect = function() {
-    if (this.$inp) {
-      var text = this.$inp.val();
-      this.$inp.replaceWith('<span>' + text + '</span>');
-      this.$inp = null;
-    }
+    var $span = this.$dom.find('span');
+    $span[0].blur();
+    $span.removeAttr('contentEditable');
     CoreElement.prototype.deselect.call(this);
   };
 
