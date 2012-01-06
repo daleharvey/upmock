@@ -40,7 +40,7 @@ Trail.View.shim = function(dom) {
         window.protoshop.$canvas_wrapper.unbind('mousedown.global');
         setTimeout(function() {
           $(document).bind('mousedown.range', function(e) {
-            if (!(Utils.is_inside(e.target, $el[0]) ||
+            if (!(Utils.is_inside(e.target, $inner[0]) ||
                   $(e.target).parents().hasClass('jscolour'))) {
               jscolour.hide();
               $(document).unbind('mousedown.range');
