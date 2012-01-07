@@ -23,7 +23,6 @@ html, body {
     background: #DDD;
     border: 1px solid #CCC;
     border-width: 1px 1px 1px 0;
-    z-index: 9000;
 }
 
 #panel ul {
@@ -77,7 +76,7 @@ header {
     background: #DDD;
     height: 19px;
     padding: 5px;
-    z-index: 7000;
+    z-index: 9000;
     border-bottom: 1px solid #CCC;
 }
 
@@ -145,10 +144,10 @@ header {
     border-radius: 3px;
     position: absolute;
     top: 25px;
-    left: -127px;
+    left: -27px;
     color:white;
     width: 240px;
-    z-index: 10000;
+    z-index: 9000;
 }
 
 .inner table.values td:first-child {
@@ -497,7 +496,7 @@ triangle-isosceles {
     border-color: #666 transparent;
     border-width: 0 10px 10px;
     bottom: auto;
-    left: 50%;
+    left: 30px;
     margin-left: -5px;
     top: -10px;
 }
