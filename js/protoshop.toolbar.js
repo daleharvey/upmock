@@ -417,6 +417,17 @@ ElementView = Trail.View.extend({
 
   postRender: function(dom) {
 
+    $('#border-radius-value', dom).bind('change input', function(e) {
+      var key = $('#border-radius-picked', dom).val() === 'all' ? 'border-radius' :
+        'border-' + $('#border-radius-picked', dom).val() + '-radius';
+
+      var data = {};
+      data[key] = this.value + 'px';
+
+      window.protoshop.onSelected('css', data);
+
+    });
+
     $('#border-picker', dom).bind('change input', function(e) {
 
       if ($(e.target).is('#border-picked')) {

@@ -44,7 +44,7 @@
 
         <div class="picker-preview" style="background: {{background}}"></div>
 
-        <div class="inner triangle-isosceles top tabs">
+        <div class="inner triangle-isosceles top tabs clearfix">
 
           <textarea class="picker-value">{{background}}</textarea>
 
@@ -93,8 +93,6 @@
 
             <input type="button" style="float:right" value="Save" />
           </div>
-
-          <br style="clear:both" />
 
         </div>
       </div>
@@ -154,8 +152,28 @@
           </div>
         </div>
 
-        <input type="number" id="border-radius" data-css="border-radius"
-               value="{{borderRadius}}" class="toolbar-label-icon" min="0" />
+        <div class="dropdown toolbar-icon" id="border-radius">
+          <table class="inner triangle-isosceles top">
+            <tr>
+              <td>Border:</td>
+              <td>
+                <select id="border-radius-picked">
+                  <option value="all">All</option>
+                  <option value="top-left">Top Left</option>
+                  <option value="top-right">Top Right</option>
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="bottom-right">Bottom Right</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Width:</td>
+              <td>
+                <input type="number" value="{{borderRadius}}" min="0" id="border-radius-value" />
+              </td>
+            </tr>
+          </table>
+        </div>
 
         <input type="number" id="opacity" data-css="opacity" value="{{opacity}}"
                class="toolbar-label-icon" min="0" max="1" step="0.05" />
