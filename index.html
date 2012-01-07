@@ -107,9 +107,10 @@
         <div id="bg-picker-placeholder" data-background="{{backgroundColor}}"></div>
 
         <div class="dropdown toolbar-icon picker" id="border-picker">
-          <div class="picker-preview"></div>
+          <div class="picker-preview" style="background: {{borderColor}}"></div>
           <div class="inner triangle-isosceles top">
-            <input class="picker-value" value="{{borderColor}}" data-css="border-color" />
+
+            <textarea class="picker-value" data-css="border-color">{{borderColor}}</textarea>
             <div class="picker-placeholder"></div>
           </div>
         </div>

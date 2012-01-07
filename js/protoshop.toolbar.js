@@ -493,8 +493,8 @@ ElementView = Trail.View.extend({
       borderColor: 'transparent'
     };
 
-    if (obj.borderWidth > 0) {
-      obj.borderColor = dom.css('borderTopColor');
+    if (data.borderWidth > 0) {
+      data.borderColor = dom.css('borderTopColor');
     }
 
     return this.render({data: data});
