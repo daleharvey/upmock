@@ -106,18 +106,53 @@
 
         <div id="bg-picker-placeholder" data-background="{{backgroundColor}}"></div>
 
-        <div class="dropdown toolbar-icon picker" id="border-picker">
-          <div class="picker-preview" style="background: {{borderColor}}"></div>
+        <div class="dropdown toolbar-icon" id="border-picker">
+
           <div class="inner triangle-isosceles top">
 
-            <textarea class="picker-value" data-css="border-color">{{borderColor}}</textarea>
-            <div class="picker-placeholder"></div>
+            <div class="border-picker">
+              <div class="top"></div>
+              <div class="right"></div>
+              <div class="bottom"></div>
+              <div class="left"></div>
+              <div class="all"></div>
+            </div>
+
+            <table>
+              <tr>
+                <td>Border:</td>
+                <td>
+                  <select id="border-picked">
+                    <option value="all">All</option>
+                    <option value="top">Top</option>
+                    <option value="right">Right</option>
+                    <option value="bottom">Bottom</option>
+                    <option value="left">Left</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Width:</td>
+                <td><input type="number" value="{{borderWidth}}" id="border-width" min="0" /></td>
+              </tr>
+              <tr>
+                <td>Colour:</td>
+                <td><input type="color" class="color" id="border-colour"
+                           value="{{borderColor}}" /></td>
+              </tr>
+              <tr>
+                <td>Style:</td>
+                <td>
+                  <select id="border-style">
+                    <option value="solid">Solid</option>
+                    <option value="dotted">Dotted</option>
+                    <option value="dashed">Dashed</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
-
-
-        <input type="number" id="border-width" data-css="border-width"
-               value="{{borderWidth}}" class="toolbar-label-icon" min="0" />
 
         <input type="number" id="border-radius" data-css="border-radius"
                value="{{borderRadius}}" class="toolbar-label-icon" min="0" />

@@ -417,6 +417,20 @@ ElementView = Trail.View.extend({
 
   postRender: function(dom) {
 
+    $('#border-picker', dom).bind('change input', function() {
+      var val = $('#border-width', dom).val() + 'px ' +
+        $('#border-style', dom).val() + ' ' +
+        $('#border-colour', dom).val();
+
+      var key = $('#border-picked', dom).val() === 'all' ? 'border' :
+        'border-' + $('#border-picked', dom).val();
+
+      var data = {};
+      data[key] = val;
+
+      window.protoshop.onSelected('css', data);
+    });
+
     $('#bring-to-front', dom).bind('mousedown', function() {
       window.protoshop.onSelected('css', {'z-index': ++window.protoshop.index.max});
     });

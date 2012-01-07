@@ -158,9 +158,9 @@ header {
     padding: 0 5px;
 }
 
-.inner td {
-    text-align: center;
-}
+/* .inner td { */
+/*     text-align: center; */
+/* } */
 
 .dropdown.active .inner {
     display: block;
@@ -182,9 +182,9 @@ header {
 #letter-spacing { background-image: url(../img/famfam/text_letterspacing.png); }
 #line-height    { background-image: url(../img/famfam/text_linespacing.png); }
 #font-size      { background-image: url(../img/famfam/text_smallcaps.png); }
-#border-width   { background-image: url(../img/fague/border-weight.png); }
+/* #border-width   { background-image: url(../img/fague/border-weight.png); } */
 #border-radius  { background-image: url(../img/fague/layer-shape-round.png); }
-#border-picker  { background-image: url(../img/fague/border-color.png); }
+#border-picker  { background-image: url(../img/fague/border-weight.png); }
 #lock           { background-image: url(../img/famfam/lock.png); }
 #shadow         { background-image: url(../img/proto-shadow-thevisibleshadow.png); }
 #text-shadow    { background-image: url(../img/fague/edit-shadow.png); }
@@ -656,3 +656,30 @@ triangle-isosceles {
     font-size: 47px;
     text-shadow: rgb(249, 229, 177) -3px -3px 0px;
 }
+
+.border-picker {
+    width: 40px;
+    height: 40px;
+    float:left;
+    background:yellow;
+    margin-right: 15px;
+    margin-left: 5px;
+    position: relative;
+    top: 20px;
+    display:none;
+}
+
+.border-picker div {
+    position: absolute;
+    background: grey;
+    height: 15px;
+    width:15px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+}
+
+.border-picker .all { top: 10px; left: 10px; z-index: 6 }
+.border-picker .top { width: 40px; top:0; left: 0; z-index: 5 }
+.border-picker .right { height: 40px; top:0; right: 0; z-index: 4 }
+.border-picker .bottom { width: 40px; bottom:0px; left: 0; z-index: 3 }
+.border-picker .left { height: 40px; top:0; left: 15; z-index: 7 }
