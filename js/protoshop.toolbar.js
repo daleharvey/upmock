@@ -417,7 +417,12 @@ ElementView = Trail.View.extend({
 
   postRender: function(dom) {
 
-    $('#border-picker', dom).bind('change input', function() {
+    $('#border-picker', dom).bind('change input', function(e) {
+
+      if ($(e.target).is('#border-picked')) {
+        return;
+      }
+
       var val = $('#border-width', dom).val() + 'px ' +
         $('#border-style', dom).val() + ' ' +
         $('#border-colour', dom).val();
