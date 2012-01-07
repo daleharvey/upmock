@@ -536,7 +536,6 @@ triangle-isosceles {
     background: #333;
     color: #AAA;
     border: 1px solid;
-    margin-bottom: 10px;
 }
 
 #css-value {
@@ -545,7 +544,6 @@ triangle-isosceles {
 
 .tabs .page {
     display:none;
-    height: 135px;
 }
 
 
@@ -596,6 +594,10 @@ triangle-isosceles {
     overflow: auto;
 }
 
+#used-colours {
+    overflow: auto;
+    margin-bottom: 20px;
+}
 
 .used-colour {
     height: 20px;
