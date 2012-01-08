@@ -10,25 +10,35 @@ Trail.View.addShim('[type=angle]', function() {
 
 Trail.View.addShim('.dropdown', function() {
 
-  var $el = $(this);
-  var $inner = $el.find('.inner');
-  $(this).bind('mousedown', function() {
-    if (!$inner.is(':visible')) {
-      $el.addClass('active');
-      window.protoshop.$canvas_wrapper.unbind('mousedown.global');
-      setTimeout(function() {
-        $(document).bind('mousedown.range', function(e) {
-          if (!(Utils.is_inside(e.target, $inner[0]) ||
-                $(e.target).parents().hasClass('jscolour'))) {
-            jscolour.hide();
-            $(document).unbind('mousedown.range');
-            $el.removeClass('active');
-            window.protoshop.$canvas_wrapper
-              .bind('mousedown.global', window.protoshop.globalMouseDown);
-          }
-        });
-      }, 0);
+  var $dropdown_wrapper = $(this);
+  var $dropdown = $dropdown_wrapper.find('.inner');
+
+  function hideDropdown(e) {
+
+    var insidePicker = $(e.target).parents().hasClass('jscolour');
+
+    if (!Utils.is_inside(e.target, $dropdown[0]) && !insidePicker) {
+      jscolour.hide();
+      $(document).unbind('mousedown.dropdown');
+      $dropdown_wrapper.removeClass('active');
+      window.protoshop.$canvas_wrapper
+        .bind('mousedown.global', window.protoshop.globalMouseDown);
     }
+  }
+
+  $dropdown_wrapper.bind('mousedown', function(e) {
+
+    if ($dropdown.is(':visible')) {
+      return;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    $dropdown_wrapper.addClass('active');
+    window.protoshop.$canvas_wrapper.unbind('mousedown.global');
+
+    $(document).bind('mousedown.dropdown', hideDropdown);
   });
 
 });

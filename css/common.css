@@ -123,10 +123,6 @@ header {
     background-color: #CDCDCD;
 }
 
-/* .toolbar-icon.picker { */
-/*     text-indent: -999px; */
-/* } */
-
 .toolbar-select {
     float: left;
     margin-right: 5px;
@@ -157,10 +153,6 @@ header {
 .inner .values td {
     padding: 0 5px;
 }
-
-/* .inner td { */
-/*     text-align: center; */
-/* } */
 
 .dropdown.active .inner {
     display: block;
@@ -556,6 +548,7 @@ triangle-isosceles {
 .tabs table td { width: 5%;  }
 .tabs table {  margin-bottom: 10px; }
 .tabs td a { display: block;  border-bottom:1px solid #AAA; height: 25px;  box-sizing: border-box; }
+.tab-link { text-align: center; }
 .tab-link.selected { border-bottom:3px solid #AAA; }
 
 
