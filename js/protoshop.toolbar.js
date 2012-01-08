@@ -1,94 +1,66 @@
-$.fn.findAll = function(selector) {
-  return this.find(selector).add(this.filter(selector));
-};
+Trail.View.addShim('.color', function() {
+  new jscolour.picker({$domValue: $(this), $domStyle: $(this)});
+});
 
-// This shouldnt be a monolithic function, its just the ability to add a global
-// shim function to all rendered templates
-Trail.View.shim = function(dom) {
 
-  dom.findAll('.color').each(function() {
+Trail.View.addShim('[type=angle]', function() {
+  new jscolour.anglePicker({$domValue: $(this)});
+});
 
-    if ($(this).data('processed-color')) {
-      return;
+
+Trail.View.addShim('.dropdown', function() {
+
+  var $el = $(this);
+  var $inner = $el.find('.inner');
+  $(this).bind('mousedown', function() {
+    if (!$inner.is(':visible')) {
+      $el.addClass('active');
+      window.protoshop.$canvas_wrapper.unbind('mousedown.global');
+      setTimeout(function() {
+        $(document).bind('mousedown.range', function(e) {
+          if (!(Utils.is_inside(e.target, $inner[0]) ||
+                $(e.target).parents().hasClass('jscolour'))) {
+            jscolour.hide();
+            $(document).unbind('mousedown.range');
+            $el.removeClass('active');
+            window.protoshop.$canvas_wrapper
+              .bind('mousedown.global', window.protoshop.globalMouseDown);
+          }
+        });
+      }, 0);
     }
-    $(this).data('processed-color', true);
-    new jscolour.picker({$domValue: $(this), $domStyle: $(this)});
   });
 
-  dom.findAll('[type=angle]').each(function() {
+});
 
-    if ($(this).data('processed-angle')) {
-      return;
-    }
-    $(this).data('processed-angle', true);
 
-    new jscolour.anglePicker({$domValue: $(this)});
+Trail.View.addShim('.picker', function() {
+
+  var $value = $(this).find('.picker-value');
+  var $preview = $(this).find('.picker-preview');
+
+  var picker = new jscolour.picker({
+    $wrapper: $(this).find('.picker-placeholder'),
+    $domStyle: $preview,
+    $domValue: $value
   });
 
-  dom.findAll('.dropdown').each(function() {
-
-    if ($(this).data('processed-dropdown')) {
-      return;
-    }
-    $(this).data('processed-dropdown', true);
-
-    var $el = $(this);
-    var $inner = $el.find('.inner');
-    $(this).bind('mousedown', function() {
-      if (!$inner.is(':visible')) {
-        $el.addClass('active');
-        window.protoshop.$canvas_wrapper.unbind('mousedown.global');
-        setTimeout(function() {
-          $(document).bind('mousedown.range', function(e) {
-            if (!(Utils.is_inside(e.target, $inner[0]) ||
-                  $(e.target).parents().hasClass('jscolour'))) {
-              jscolour.hide();
-              $(document).unbind('mousedown.range');
-              $el.removeClass('active');
-              window.protoshop.$canvas_wrapper
-                .bind('mousedown.global', window.protoshop.globalMouseDown);
-            }
-          });
-        }, 0);
-      }
-    });
+  new jscolour.gradientPicker({
+    $domValue: $value,
+    $domStyle: $(this).find('.gradient-dom')
   });
 
-  dom.findAll('.picker').each(function() {
-
-    if ($(this).data('processed-picker')) {
-      return;
-    }
-    $(this).data('processed-picker', true);
-
-    var $value = $(this).find('.picker-value');
-    var $preview = $(this).find('.picker-preview');
-
-    var picker = new jscolour.picker({
-      $wrapper: $(this).find('.picker-placeholder'),
-      $domStyle: $preview,
-      $domValue: $value
-    });
-
-    new jscolour.gradientPicker({
-      $domValue: $value,
-      $domStyle: $(this).find('.gradient-dom')
-    });
-
-    $value.bind('change', function() {
-      var obj = {};
-      obj[$(this).data('css')] = $value.val();
-      self.protoshop.updateUsedColours();
-      self.protoshop.onSelected('css', obj);
-    });
+  $value.bind('change', function() {
+    var obj = {};
+    obj[$(this).data('css')] = $value.val();
+    self.protoshop.updateUsedColours();
+    self.protoshop.onSelected('css', obj);
   });
 
-  dom.findAll('.tabs').each(function() {
+});
 
-    if ($(this).data('processed-tabs')) {
-      return;
-    }
-    $(this).data('processed-tabs', true);
+
+Trail.View.addShim('.tabs', function() {
 
     var $dom = $(this);
     var selected = null;
@@ -109,8 +81,8 @@ Trail.View.shim = function(dom) {
     });
 
     select($dom.find('.tab-link:first').data('target'));
-  });
-};
+
+});
 
 
 PickerWidget = Trail.View.extend({
@@ -377,6 +349,7 @@ TextView = Trail.View.extend({
     var dom = obj.$dom;
     var family = Utils.findKey(Protoshop.Toolbar.fonts, dom.css('font-family')) || 'helvetica';
     var align = dom.css('text-align');
+
     var data = {
       fontSize: parseInt(dom.css('font-size'), 0),
       lineHeight: parseInt(dom.css('line-height'), 0),
