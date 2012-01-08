@@ -64,8 +64,6 @@ Trail.View.shim = function(dom) {
     var $value = $(this).find('.picker-value');
     var $preview = $(this).find('.picker-preview');
 
-    //$preview.css('background-color', '#' + $value.val());
-
     var picker = new jscolour.picker({
       $wrapper: $(this).find('.picker-placeholder'),
       $domStyle: $preview,
@@ -118,9 +116,29 @@ Trail.View.shim = function(dom) {
 PickerWidget = Trail.View.extend({
 
   template: '#picker-tpl',
+
+  create: function(colour) {
+
+    colour = colour === 'initial' ? 'transparent' : colour;
+    var style = $('<div />').css('background', colour)[0].style;
+
+    return this.render({data: {
+      pickerId: 'background-picker',
+      background: colour,
+      backgroundRepeatX: style['background-repeat-x'] === 'repeat',
+      backgroundRepeatY: style['background-repeat-y'] === 'repeat',
+      backgroundPosX: style['background-position-x'],
+      backgroundPosY: style['background-position-y'],
+      backgroundColor: style['background-color'],
+      backgroundUrl: style['background-image'].replace(/url\(/, '').replace(/\)/, '')
+    }});
+
+  },
+
   postRender: function(dom) {
 
     function switchToTab(colour) {
+
       if (/gradient/.test(colour)) {
         $('[data-target=gradient-placeholder]', dom).trigger('select');
       } else if (/image/.test(colour)) {
@@ -209,17 +227,7 @@ BgView = Trail.View.extend({
   postRender: function($dom) {
 
     var bg = localJSON.get(window.protoshop.site_prefix + '-bgColour', 'white');
-    var style = $('<div />').css('background', bg)[0].style;
-    var picker = PickerWidget.render({data: {
-      pickerId: 'background-picker',
-      background: bg,
-      backgroundRepeatX: style['background-repeat-x'] === 'repeat',
-      backgroundRepeatY: style['background-repeat-y'] === 'repeat',
-      backgroundPosX: style['background-position-x'],
-      backgroundPosY: style['background-position-y'],
-      backgroundColor: style['background-color'],
-      backgroundUrl: style['background-image'].replace(/url\(/, '').replace(/\)/, '')
-    }});
+    var picker = PickerWidget.create(bg);
 
     $('.picker-value', picker).bind('change', function() {
       $('.picker-preview', picker).css('background', this.value);
@@ -459,8 +467,6 @@ ElementView = Trail.View.extend({
       window.protoshop.selectElement(null);
     });
 
-    Protoshop.Toolbar.bindChange($('#border-width', dom));
-    Protoshop.Toolbar.bindChange($('#border-radius', dom));
     Protoshop.Toolbar.bindChange($('#opacity', dom));
 
     $('#shadow', dom).bind('change keyup', function() {
@@ -486,20 +492,7 @@ ElementView = Trail.View.extend({
     });
 
     var placeholder = $('#bg-picker-placeholder', dom);
-
-    var style = $('<div />')
-      .css('background', placeholder.data('background'))[0].style;
-
-    var picker = PickerWidget.render({data: {
-      pickerId: 'bg-picker',
-      background: placeholder.data('background'),
-      backgroundRepeatX: style['background-repeat-x'] === 'repeat',
-      backgroundRepeatY: style['background-repeat-y'] === 'repeat',
-      backgroundPosX: style['background-position-x'],
-      backgroundPosY: style['background-position-y'],
-      backgroundColor: style['background-color'],
-      backgroundUrl: style['background-image'].replace(/url\(/, '').replace(/\)/, '')
-    }});
+    var picker = PickerWidget.create(placeholder.data('background'));
 
     placeholder.replaceWith(picker);
 
