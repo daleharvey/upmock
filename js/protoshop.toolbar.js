@@ -325,22 +325,16 @@ TextView = Trail.View.extend({
     });
 
     $('#text-shadow', dom).bind('change keyup', function() {
-      var distance = $('#text-shadow-distance', dom).val();
+      var distance = parseInt($('#text-shadow-distance', dom).val(), 10);
       var size = $('#text-shadow-size', dom).val();
-      var angle = $('#text-shadow-angle', dom).val() - 90;
+      var angle = parseInt($('#text-shadow-angle', dom).val(), 10);
       var color = $('#text-shadow-color', dom).val();
-
-      if (angle < 0) {
-        angle = 360 + angle;
-      }
-
-      var x = Math.round(distance * Math.cos(angle * (Math.PI/180)));
-      var y = Math.round(distance * Math.sin(angle * (Math.PI/180)));
+      var xy = Protoshop.Toolbar.vector2xy(angle, distance);
 
       if (/^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/.test(color)) {
         color = '#' + color;
       }
-      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
+      var css = xy.x + 'px ' + xy.y + 'px ' + size + 'px ' + color;
       self.protoshop.onSelected('css',{'text-shadow': css});
     });
 
@@ -451,23 +445,17 @@ ElementView = Trail.View.extend({
 
     $('#shadow', dom).bind('change keyup', function() {
 
-      var distance = $('#shadow-distance', dom).val();
+      var distance = parseInt($('#shadow-distance', dom).val(), 10);
       var size = $('#shadow-size', dom).val();
-      var angle = $('#shadow-angle', dom).val() - 90;
+      var angle = parseInt($('#shadow-angle', dom).val(), 10);
       var color = $('#shadow-color', dom).val();
-
-      if (angle < 0) {
-        angle = 360 + angle;
-      }
-
-      var x = Math.round(distance * Math.cos(angle * (Math.PI/180)));
-      var y = Math.round(distance * Math.sin(angle * (Math.PI/180)));
+      var xy = Protoshop.Toolbar.vector2xy(angle, distance);
 
       if (/^([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/.test(color)) {
         color = '#' + color;
       }
 
-      var css = x + 'px ' + y + 'px ' + size + 'px ' + color;
+      var css = xy.x + 'px ' + xy.y + 'px ' + size + 'px ' + color;
       window.protoshop.onSelected('css',{'box-shadow': css});
     });
 
@@ -595,20 +583,37 @@ Protoshop.Toolbar.parseShadow = function(text) {
   var x = parseInt(parts[3], 10) || 0;
   var y = parseInt(parts[4], 10) || 0;
   var colour = [parts[0], parts[1], parts[2]].join('');
-  var distance = Math.sqrt((x * x) + (y * y));
-  var angle = Math.round(Math.acos (y / distance) * (180 / Math.PI)) - 180;
+
+  return $.extend(Protoshop.Toolbar.xy2vector(x, y), {
+    x: x,
+    y: y,
+    size: parseInt(parts[5], 10) || 0,
+    colour: colour
+  });
+};
+
+Protoshop.Toolbar.vector2xy = function(angle, distance) {
+
+  angle -= 270;
 
   if (angle < 0) {
     angle = 360 + angle;
   }
 
   return {
-    x: x,
-    y: y,
-    distance: distance,
-    angle: angle,
-    size: parseInt(parts[5], 10) || 0,
-    colour: colour
+    x: Math.round(distance * Math.cos(angle * (Math.PI/180))),
+    y: Math.round(distance * Math.sin(angle * (Math.PI/180)))
+  };
+
+};
+
+Protoshop.Toolbar.xy2vector = function(x, y) {
+
+  var distance = Math.sqrt((x * x) + (y * y));
+
+  return {
+    angle: Math.round(Math.atan2(x, -y) * (180 / Math.PI)) + 180,
+    distance: distance
   };
 };
 
