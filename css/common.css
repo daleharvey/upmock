@@ -525,7 +525,7 @@ triangle-isosceles {
     margin-right: 10px;
 }
 
-.dropdown textarea {
+.dropdown textarea, .picker-value {
     width: 100%;
     box-sizing: border-box;
     resize: none;
@@ -593,7 +593,7 @@ triangle-isosceles {
 
 #used-colours {
     overflow: auto;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .used-colour {
@@ -601,6 +601,7 @@ triangle-isosceles {
     width: 20px;
     float:left;
     margin-right: 10px;
+    margin-bottom: 10px;
     border: 1px solid #000;
     background-size: 100%;
 }
