@@ -28,8 +28,17 @@ var Protoshop = function() {
     ycenter: []
   };
 
+  this.releaseFocus = function() {
+    this.$canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
+  };
+
+  this.grabFocus = function() {
+    this.$canvas_wrapper.unbind('mousedown.global');
+  };
+
   this.redraw = function() {
-    $canvas_wrapper.css('background', localJSON.get(self.site_prefix + '-bgColour', 'white'));
+    var bgColour = localJSON.get(self.site_prefix + '-bgColour', 'white');
+    $canvas_wrapper.css('background', bgColour);
   };
 
   this.updateInfo = function() {

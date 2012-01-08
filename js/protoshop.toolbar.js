@@ -21,23 +21,18 @@ Trail.View.addShim('.dropdown', function() {
       jscolour.hide();
       $(document).unbind('mousedown.dropdown');
       $dropdown_wrapper.removeClass('active');
-      window.protoshop.$canvas_wrapper
-        .bind('mousedown.global', window.protoshop.globalMouseDown);
+      window.protoshop.releaseFocus();
     }
   }
 
-  $dropdown_wrapper.bind('mousedown', function(e) {
+  $dropdown_wrapper.bind('click', function(e) {
 
     if ($dropdown.is(':visible')) {
       return;
     }
 
-    e.preventDefault();
-    e.stopPropagation();
-
     $dropdown_wrapper.addClass('active');
-    window.protoshop.$canvas_wrapper.unbind('mousedown.global');
-
+    window.protoshop.grabFocus();
     $(document).bind('mousedown.dropdown', hideDropdown);
   });
 
@@ -76,6 +71,7 @@ Trail.View.addShim('.tabs', function() {
     var selected = null;
 
     function select(tab) {
+
       $dom.find('.tab-link').removeClass('selected');
       $dom.find('.tab-link[data-target=' + tab + ']').addClass('selected');
 
@@ -357,7 +353,8 @@ TextView = Trail.View.extend({
   load: function(obj) {
 
     var dom = obj.$dom;
-    var family = Utils.findKey(Protoshop.Toolbar.fonts, dom.css('font-family')) || 'helvetica';
+    var family = Utils.findKey(Protoshop.Toolbar.fonts, dom.css('font-family')) ||
+      'helvetica';
     var align = dom.css('text-align');
 
     var data = {
@@ -584,7 +581,7 @@ Protoshop.Toolbar.bindChange = function($dom) {
     }
     window.protoshop.onSelected('css', obj);
   });
-}
+};
 
 // TODO: Major major ugly
 Protoshop.Toolbar.parseShadow = function(text) {
@@ -596,7 +593,7 @@ Protoshop.Toolbar.parseShadow = function(text) {
   }
 
   var x = parseInt(parts[3], 10) || 0;
-  var y = parseInt(parts[4], 10) || 0
+  var y = parseInt(parts[4], 10) || 0;
   var colour = [parts[0], parts[1], parts[2]].join('');
   var distance = Math.sqrt((x * x) + (y * y));
   var angle = Math.round(Math.acos (y / distance) * (180 / Math.PI)) - 180;
@@ -613,7 +610,7 @@ Protoshop.Toolbar.parseShadow = function(text) {
     size: parseInt(parts[5], 10) || 0,
     colour: colour
   };
-}
+};
 
 Protoshop.Toolbar.fonts = {
   'tnr': "Cambria, 'Hoefler Text', 'Times New Roman', serif",
