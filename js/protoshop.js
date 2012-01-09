@@ -294,7 +294,7 @@ var Protoshop = function() {
       orig = diff;
     });
 
-    $canvas_wrapper.bind('mouseup.moving', function(e) {
+    $canvas_wrapper.bind('mouseup.editing', function(e) {
       $guide.x.hide();
       $guide.y.hide();
       $canvas_wrapper.unbind('.editing');
