@@ -38,7 +38,7 @@ var Protoshop = function() {
 
   this.redraw = function() {
     var bgColour = localJSON.get(self.site_prefix + '-bgColour', 'white');
-    $canvas_wrapper.css('background', bgColour);
+    $canvas_wrapper.css('background', Utils.w3cGradient2Browser(bgColour));
   };
 
   this.updateInfo = function() {
@@ -122,6 +122,12 @@ var Protoshop = function() {
     self.$selection.trigger('change', {selected: self.selected});
 
   };
+
+
+  this.refreshToolbar = function() {
+    self.$selection.trigger('change', {selected: self.selected});
+  };
+
 
   this.recalcHeight = function() {
     var max = 1000;
@@ -546,8 +552,9 @@ var Protoshop = function() {
         return;
       }
 
-      html += '<div class="used-colour" data-background="' + key + '" ' +
-        'style="background: ' + key + '"></div>';
+      html += '<div class="used-colour" data-background="' +
+        Utils.browserGradient2w3c(key).replace(/"/g, '') + '" ' + 'style="background: ' +
+        Utils.w3cGradient2Browser(key).replace(/"/g, '') + '"></div>';
     });
     $('#used-colours').html(html);
   };
@@ -694,10 +701,11 @@ var Protoshop = function() {
 
   })();
 
-  if ($.browser.webkit) {
+  // browser detection, thats the cool way right?
+  if ($.browser.webkit || $.browser.mozilla) {
     $('#loading').fadeOut('fast', function() {
       $('#loading').remove();
-    });
+     });
   } else {
     $('#loading span').text('Sorry, currently chrome only :(');
   }

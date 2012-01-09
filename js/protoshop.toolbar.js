@@ -25,15 +25,19 @@ Trail.View.addShim('.dropdown', function() {
     }
   }
 
-  $dropdown_wrapper.bind('click', function(e) {
+  $dropdown_wrapper.bind('mousedown', function(e) {
 
     if ($dropdown.is(':visible')) {
       return;
     }
 
-    $dropdown_wrapper.addClass('active');
-    window.protoshop.grabFocus();
-    $(document).bind('mousedown.dropdown', hideDropdown);
+    // Yeild to make sure the mousedown that gets bound isnt triggered from
+    // here
+    setTimeout(function() {
+      $dropdown_wrapper.addClass('active');
+      window.protoshop.grabFocus();
+      $(document).bind('mousedown.dropdown', hideDropdown);
+    }, 0);
   });
 
 });
@@ -97,18 +101,46 @@ PickerWidget = Trail.View.extend({
 
   create: function(colour) {
 
-    colour = colour === 'initial' ? 'transparent' : colour;
+    colour = colour === 'initial' ? 'transparent' : Utils.w3cGradient2Browser(colour);
     var style = $('<div />').css('background', colour)[0].style;
+
+    var bgRepeatX = false;
+    var bgRepeatY = false;
+
+    var backgroundImage = style.getPropertyValue('background-image');
+    if (/url/.test(backgroundImage)) {
+      backgroundImage = backgroundImage.replace(/url\(/, '').replace(/\)/, '')
+        .replace(/"/g, '');
+    } else {
+      backgroundImage = '';
+    }
+
+    var repeat = style.getPropertyValue('background-repeat');
+    if (repeat === 'repeat') {
+      bgRepeatY = bgRepeatX = true;
+    } else if (repeat === 'repeat-y') {
+      bgRepeatY = true;
+    } else if (repeat === 'repeat-x') {
+      bgRepeatX = true;
+    }
+
+    var bgColour = style.getPropertyValue('background-color');
+
+    if (bgColour === 'initial') {
+      bgColour = 'transparent';
+    }
+
+    var position = (style.getPropertyValue('background-position') || '0 0').split(' ');
 
     return this.render({data: {
       pickerId: 'background-picker',
       background: colour,
-      backgroundRepeatX: style['background-repeat-x'] === 'repeat',
-      backgroundRepeatY: style['background-repeat-y'] === 'repeat',
-      backgroundPosX: style['background-position-x'],
-      backgroundPosY: style['background-position-y'],
-      backgroundColor: style['background-color'],
-      backgroundUrl: style['background-image'].replace(/url\(/, '').replace(/\)/, '')
+      backgroundRepeatX: bgRepeatX,
+      backgroundRepeatY: bgRepeatY,
+      backgroundPosX: position[0],
+      backgroundPosY: position[1],
+      backgroundColor: bgColour,
+      backgroundUrl: backgroundImage
     }});
 
   },
@@ -119,7 +151,7 @@ PickerWidget = Trail.View.extend({
 
       if (/gradient/.test(colour)) {
         $('[data-target=gradient-placeholder]', dom).trigger('select');
-      } else if (/image/.test(colour)) {
+      } else if (/url/.test(colour)) {
         $('[data-target=image-placeholder]', dom).trigger('select');
       } else {
         $('[data-target=colour-placeholder]', dom).trigger('select');
@@ -130,9 +162,14 @@ PickerWidget = Trail.View.extend({
       if ($(e.target).is('.used-colour')) {
         e.preventDefault();
         e.stopPropagation();
+        // This is a bit brute force + nasty, exposes a bit of a problem with
+        // current view rendering, when switching used colours, we want to
+        // update the dom without 1. flashing like we do 2. duplicating all This
+        // rendering logic for real time updates
         var colour = $(e.target).data('background');
-        switchToTab(colour);
         $('.picker-value', dom).val(colour).trigger('change');
+        window.protoshop.refreshToolbar();
+        $('#background-picker').trigger('mousedown');
       }
     });
 
@@ -145,7 +182,7 @@ PickerWidget = Trail.View.extend({
 
       var colour = $('#img-color', dom).val();
       var url = colour + ' url(' + $('#img-url').val() + ') ' +
-        ($('#img-top').val() || 0) + ' ' + ($('#img-left').val() || 0);
+        ($('#img-left').val() || 0) + ' ' + ($('#img-top').val() || 0);
 
       var repeatx = $('#repeat-x').is(':checked');
       var repeaty = $('#repeat-y').is(':checked');
@@ -208,7 +245,8 @@ BgView = Trail.View.extend({
     var picker = PickerWidget.create(bg);
 
     $('.picker-value', picker).bind('change', function() {
-      $('.picker-preview', picker).css('background', this.value);
+      $('.picker-preview', picker).css('background',
+                                       Utils.w3cGradient2Browser(this.value));
       localJSON.set(window.protoshop.site_prefix + '-bgColour', this.value);
       window.protoshop.updateUsedColours();
       window.protoshop.redraw();
@@ -465,8 +503,9 @@ ElementView = Trail.View.extend({
     placeholder.replaceWith(picker);
 
     $('.picker-value', picker).bind('change', function() {
-      $('.picker-preview', picker).css('background', this.value);
-      window.protoshop.onSelected('css', {'background': this.value});
+      var colour = Utils.w3cGradient2Browser(this.value);
+      $('.picker-preview', picker).css('background', colour);
+      window.protoshop.onSelected('css', {'background': colour});
       window.protoshop.updateUsedColours();
     }).val(placeholder.data('background'));
 
@@ -496,8 +535,9 @@ ElementView = Trail.View.extend({
 Protoshop.Toolbar = function(protoshop) {
 
   var self = this;
-  this.protoshop = protoshop;
 
+  this.protoshop = protoshop;
+  this.sections = [];
 
   function areAll(arr, type) {
     return _.all(arr, function(x) {
@@ -534,6 +574,11 @@ Protoshop.Toolbar = function(protoshop) {
   }
 
 
+  this.refresh = function() {
+    self.render(self.sections, data);
+  };
+
+
   this.render = function(sections, args) {
 
     var picked = (args && args.selected && args.selected.length > 0) ?
@@ -549,8 +594,8 @@ Protoshop.Toolbar = function(protoshop) {
 
 
   this.protoshop.$selection.bind('change', function(evt, data) {
-    var sections = pickSections(data.selected);
-    self.render(sections, data);
+    self.sections = pickSections(data.selected);
+    self.render(self.sections, data);
   });
 
   protoshop.$selection.trigger('change', {

@@ -18,10 +18,12 @@ var localJSON = (function(){
 
 var Utils = {};
 
+
 Utils.is_inside = function(obj, parent) {
   return ( obj == parent ) ||
     ( obj.parentNode !== null && Utils.is_inside(obj.parentNode, parent) );
 };
+
 
 Utils.findKey = function(obj, val) {
   for (var prop in obj) {
@@ -39,6 +41,7 @@ Utils.rgbToHex = function(R,G,B) {
   return Utils.toHex(R)+Utils.toHex(G)+Utils.toHex(B);
 };
 
+
 Utils.toHex = function(n) {
   n = parseInt(n,10);
   if (isNaN(n)) return "00";
@@ -46,6 +49,7 @@ Utils.toHex = function(n) {
   return "0123456789ABCDEF".charAt((n-n%16)/16) +
     "0123456789ABCDEF".charAt(n%16);
 };
+
 
 Utils.readBackground = function(el) {
 
@@ -64,4 +68,23 @@ Utils.readBackground = function(el) {
   }
 
   return getComputedStyle(el,'').getPropertyValue('background-color');
+};
+
+
+Utils.w3cGradient2Browser = function(background) {
+  if (/gradient/.test(background)) {
+    var gradient = jscolour.gradientPicker.parseGradient(background);
+    var css = jscolour.gradientPicker.generateCSS(gradient.angle, gradient.stops);
+    return $.browser.webkit ? css.webkit : css.moz;
+  }
+  return background;
+};
+
+Utils.browserGradient2w3c = function(background) {
+  if (/gradient/.test(background)) {
+    var gradient = jscolour.gradientPicker.parseGradient(background);
+    var css = jscolour.gradientPicker.generateCSS(gradient.angle, gradient.stops);
+    return css.w3c;
+  }
+  return background;
 };
