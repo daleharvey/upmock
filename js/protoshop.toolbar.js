@@ -101,46 +101,17 @@ PickerWidget = Trail.View.extend({
 
   create: function(colour) {
 
-    colour = colour === 'initial' ? 'transparent' : Utils.w3cGradient2Browser(colour);
-    var style = $('<div />').css('background', colour)[0].style;
-
-    var bgRepeatX = false;
-    var bgRepeatY = false;
-
-    var backgroundImage = style.getPropertyValue('background-image');
-    if (/url/.test(backgroundImage)) {
-      backgroundImage = backgroundImage.replace(/url\(/, '').replace(/\)/, '')
-        .replace(/"/g, '');
-    } else {
-      backgroundImage = '';
-    }
-
-    var repeat = style.getPropertyValue('background-repeat');
-    if (repeat === 'repeat') {
-      bgRepeatY = bgRepeatX = true;
-    } else if (repeat === 'repeat-y') {
-      bgRepeatY = true;
-    } else if (repeat === 'repeat-x') {
-      bgRepeatX = true;
-    }
-
-    var bgColour = style.getPropertyValue('background-color');
-
-    if (bgColour === 'initial') {
-      bgColour = 'transparent';
-    }
-
-    var position = (style.getPropertyValue('background-position') || '0 0').split(' ');
+    var bg = Protoshop.Toolbar.getBGProperties(colour);
 
     return this.render({data: {
       pickerId: 'background-picker',
       background: colour,
-      backgroundRepeatX: bgRepeatX,
-      backgroundRepeatY: bgRepeatY,
-      backgroundPosX: position[0],
-      backgroundPosY: position[1],
-      backgroundColor: bgColour,
-      backgroundUrl: backgroundImage
+      backgroundRepeatX: bg.repeatX,
+      backgroundRepeatY: bg.repeatY,
+      backgroundPosX: bg.posX,
+      backgroundPosY: bg.posY,
+      backgroundColor: bg.colour,
+      backgroundUrl: bg.url
     }});
 
   },
@@ -160,16 +131,24 @@ PickerWidget = Trail.View.extend({
 
     $('#used-colours', dom).bind('mousedown', function(e) {
       if ($(e.target).is('.used-colour')) {
+
         e.preventDefault();
         e.stopPropagation();
-        // This is a bit brute force + nasty, exposes a bit of a problem with
-        // current view rendering, when switching used colours, we want to
-        // update the dom without 1. flashing like we do 2. duplicating all This
-        // rendering logic for real time updates
+
         var colour = $(e.target).data('background');
+        var bg = Protoshop.Toolbar.getBGProperties(colour);
+
         $('.picker-value', dom).val(colour).trigger('change');
-        window.protoshop.refreshToolbar();
-        $('#background-picker').trigger('mousedown');
+
+        $('#img-url', dom).val(bg.url);
+        $('#img-color', dom).val(bg.colour);
+        $('#img-top', dom).val(bg.posY);
+        $('#img-left', dom).val(bg.posY);
+
+        $('#repeat-x').attr('checked', bg.repeatX);
+        $('#repeat-y').attr('checked', bg.repeatX);
+
+        switchToTab(colour);
       }
     });
 
@@ -659,6 +638,49 @@ Protoshop.Toolbar.xy2vector = function(x, y) {
   return {
     angle: Math.round(Math.atan2(x, -y) * (180 / Math.PI)) + 180,
     distance: distance
+  };
+};
+
+Protoshop.Toolbar.getBGProperties = function(colour) {
+
+  colour = colour === 'initial' ? 'transparent' : Utils.w3cGradient2Browser(colour);
+  var style = $('<div />').css('background', colour)[0].style;
+
+  var bgRepeatX = false;
+  var bgRepeatY = false;
+
+  var backgroundImage = style.getPropertyValue('background-image');
+  if (/url/.test(backgroundImage)) {
+    backgroundImage = backgroundImage.replace(/url\(/, '').replace(/\)/, '')
+      .replace(/"/g, '');
+  } else {
+    backgroundImage = '';
+  }
+
+  var repeat = style.getPropertyValue('background-repeat');
+  if (repeat === 'repeat') {
+    bgRepeatY = bgRepeatX = true;
+  } else if (repeat === 'repeat-y') {
+    bgRepeatY = true;
+  } else if (repeat === 'repeat-x') {
+    bgRepeatX = true;
+  }
+
+  var bgColour = style.getPropertyValue('background-color');
+
+  if (bgColour === 'initial') {
+    bgColour = 'transparent';
+  }
+
+  var position = (style.getPropertyValue('background-position') || '0 0').split(' ');
+
+  return {
+    colour: bgColour,
+    url: backgroundImage,
+    posX: position[0],
+    posY: position[1],
+    repeatX: bgRepeatX,
+    repeatY: bgRepeatY
   };
 };
 

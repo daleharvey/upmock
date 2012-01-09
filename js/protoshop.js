@@ -124,11 +124,6 @@ var Protoshop = function() {
   };
 
 
-  this.refreshToolbar = function() {
-    self.$selection.trigger('change', {selected: self.selected});
-  };
-
-
   this.recalcHeight = function() {
     var max = 1000;
     var objects = _.each($canvas.find('div'), function(obj) {
