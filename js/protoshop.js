@@ -67,6 +67,15 @@ var Protoshop = function() {
     }
   };
 
+
+  this.commitUndoPoint = function() {
+    if (delayedAttribute) {
+      delayedAttribute = null;
+      self.saveUndoPoint();
+    }
+  };
+
+
   this.saveUndoPoint = function() {
     this.redo_stack = [];
     var toSave = $canvas.clone();
@@ -197,11 +206,12 @@ var Protoshop = function() {
     var delayApply = [
       'box-shadow', 'background', 'text-shadow', 'line-height', 'letter-spacing',
       'opacity', 'border-top-left-radius', 'border-top-right-radius',
-      'border-bottom-right-radius', 'border-bottom-left-radius', 'border-radius'];
+      'border-bottom-right-radius', 'border-bottom-left-radius', 'border-radius',
+      'move'];
 
-    if (callback === 'css') {
+    if (callback === 'css' || callback === 'move') {
 
-      var key = Object.keys(args)[0];
+      var key = callback === 'move' ? 'move' : Object.keys(args)[0];
 
       if (delayedAttribute !== null && delayedAttribute !== key) {
         delayedAttribute = null;
@@ -373,7 +383,7 @@ var Protoshop = function() {
         }
       }
 
-      self.onSelected('move', -(orig.y - diff.y), -(orig.x - diff.x));
+      self.onSelectedUndo('move', -(orig.y - diff.y), -(orig.x - diff.x));
 
       self.updateInfo();
 
@@ -384,7 +394,7 @@ var Protoshop = function() {
       $guide.x.hide();
       $guide.y.hide();
       $canvas_wrapper.unbind('.editing');
-      self.saveUndoPoint();
+      self.commitUndoPoint();
     });
 
   }

@@ -189,6 +189,7 @@ Elements.TextElement = function(opts, obj) {
     $span[0].blur();
     $span.removeAttr('contentEditable');
     CoreElement.prototype.deselect.call(this);
+    window.protoshop.saveUndoPoint();
   };
 
 };
