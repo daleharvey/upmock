@@ -184,6 +184,15 @@ header {
 #bg-picker, #background-picker { background-image: url(../img/famfam/paintcan.png); }
 #fg-picker      { background-image: url(../img/fague/edit-color.png); }
 #css { background-image: url(../img/famfam/css.png); }
+#align { background-image: url(../img/famfam/shape_align_left.png); }
+
+#align-top { background-image: url(../img/famfam/shape_align_top.png); }
+#align-middle { background-image: url(../img/famfam/shape_align_middle.png); }
+#align-bottom { background-image: url(../img/famfam/shape_align_bottom.png); }
+
+#align-left { background-image: url(../img/famfam/shape_align_left.png); }
+#align-center { background-image: url(../img/famfam/shape_align_center.png); }
+#align-right { background-image: url(../img/famfam/shape_align_right.png); }
 
 
 .text-preview {
@@ -719,4 +728,20 @@ triangle-isosceles {
         border-left: 3px solid transparent;
         border-right: 3px solid transparent;
         border-top: 3px solid #333;
+}
+
+.tool-btn {
+    cursor: pointer;
+    width: 21px;
+    height: 21px;
+    float:left;
+    margin: 5px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    border: 0px;
+}
+
+.tool-btn:hover {
+    background-color: #CCC;
 }

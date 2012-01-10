@@ -405,6 +405,49 @@ TextView = Trail.View.extend({
   }
 });
 
+MultipleElementView = Trail.View.extend({
+
+  template: '#multiple-toolbar-tpl',
+
+  postRender: function(dom) {
+    $('.tool-btn', dom).bind('mousedown', function(e) {
+
+      var ps = window.protoshop;
+      var align = $(e.target).data('align');
+      var bounds = ps.calculateSelectionBounds();
+      var yMid = (bounds.nw.y + bounds.se.y) / 2;
+      var xMid = (bounds.nw.x + bounds.se.x) / 2;
+
+      if (align === 'top') {
+        ps.onSelectedUndo('css', {top: bounds.nw.y});
+      } else if (align === 'left') {
+        ps.onSelectedUndo('css', {left: bounds.nw.x});
+      } else {
+        _.each(ps.selected, function(obj) {
+          if (align === 'bottom') {
+            ps.onSelectedUndo('css', {top: bounds.se.y - obj.$dom.height()});
+          } else if (align === 'right') {
+            ps.onSelectedUndo('css', {left: bounds.se.x - obj.$dom.width()});
+          } else if (align === 'center') {
+            ps.onSelectedUndo('css', {left: xMid - (obj.$dom.width() / 2)});
+          } else if (align === 'middle') {
+            ps.onSelectedUndo('css', {top: yMid - (obj.$dom.height() / 2)});
+          }
+        });
+      }
+      ps.updateInfo();
+    });
+    return dom;
+  },
+
+  load: function(obj) {
+    return this.render({data: {
+    }});
+  }
+
+});
+
+
 SingleElementView = Trail.View.extend({
 
   template: '#single-toolbar-tpl',
@@ -562,6 +605,8 @@ Protoshop.Toolbar = function(protoshop) {
 
     if (arr.length === 1) {
       sections.push(SingleElementView);
+    } else if (arr.length > 1) {
+      sections.push(MultipleElementView);
     }
 
     return sections;

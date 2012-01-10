@@ -248,7 +248,7 @@ var Protoshop = function() {
       'box-shadow', 'background', 'text-shadow', 'line-height', 'letter-spacing',
       'opacity', 'border-top-left-radius', 'border-top-right-radius',
       'border-bottom-right-radius', 'border-bottom-left-radius', 'border-radius',
-      'move'];
+      'move', 'top', 'left', 'right', 'bottom'];
 
     if (callback === 'css' || callback === 'move') {
 
