@@ -460,6 +460,7 @@ var Protoshop = function() {
       $guide.x.hide();
       $guide.y.hide();
       $canvas_wrapper.unbind('.resize');
+      self.saveUndoPoint();
     });
 
   }
