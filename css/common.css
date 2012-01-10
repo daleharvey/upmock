@@ -62,7 +62,6 @@ html, body {
 #add-select { background: url(../img/fague/ui-combo-box.png); }
 #add-image { background: url(../img/fague/image.png); }
 #help { background: url(../img/famfam/help.png); }
-#css { background: url(../img/famfam/css.png); }
 
 
 /*
@@ -184,6 +183,8 @@ header {
 #bring-to-front { background-image: url(../img/famfam/shape_move_front.png); }
 #bg-picker, #background-picker { background-image: url(../img/famfam/paintcan.png); }
 #fg-picker      { background-image: url(../img/fague/edit-color.png); }
+#css { background-image: url(../img/famfam/css.png); }
+
 
 .text-preview {
     display: block;

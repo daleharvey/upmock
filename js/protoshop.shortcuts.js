@@ -103,6 +103,30 @@ var shortcuts = {
           this.selectElement(null);
         },
         description: 'Delete Element'
+      },
+      {
+        key: 'shift+left',
+        e: 'keydown',
+        callback: function() { this.onSelected('move', 0, -10); this.updateInfo(); },
+        description: 'Move Left'
+      },
+      {
+        key: 'shift+right',
+        e: 'keydown',
+        callback: function() { this.onSelected('move', 0, 10); this.updateInfo(); },
+        description: 'Move Right'
+      },
+      {
+        key: 'shift+up',
+        e: 'keydown',
+        callback: function() { this.onSelected('move', -10, 0); this.updateInfo(); },
+        description: 'Move Up'
+      },
+      {
+        key: 'shift+down',
+        e: 'keydown',
+        callback: function() { this.onSelected('move', 10, 0); this.updateInfo(); },
+        description: 'Move Down'
       }
     ]
   }
