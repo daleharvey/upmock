@@ -15,6 +15,10 @@ var Protoshop = function() {
     localJSON.set('site_prefix', 'default');
   }
 
+  if (localJSON.get('grid', false) === false) {
+    localJSON.set('grid', {width:40, gutter: 20});
+  }
+
   this.site_prefix = localJSON.get('site_prefix');
   this.$selection = $selection;
   this.selected = [];
@@ -87,6 +91,25 @@ var Protoshop = function() {
     }
   };
 
+
+  this.drawOverlay = function() {
+
+    var overlay = localJSON.get('grid');
+    var g = overlay.gutter / 2;
+    var width = $('#canvas').width();
+    var canvas = $('<canvas width="' + width + '" height="1"></canvas>');
+    var ctx = canvas[0].getContext("2d");
+
+    ctx.fillStyle = "rgb(0,0,0)";
+    while (g < width) {
+      ctx.fillRect(g, 0, overlay.width, 1);
+      g += overlay.width + overlay.gutter;
+    }
+
+    $('#grid-overlay').css({background: 'url(' + canvas[0].toDataURL() + ')'});
+
+  };
+
   this.releaseFocus = function() {
     this.$canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
   };
@@ -123,11 +146,13 @@ var Protoshop = function() {
 
     // Snap to 960gs grid if visible
     if ($('#grid-overlay').is(":visible")) {
-      var g = 10;
-      while (g < 1024) {
+      var overlay = localJSON.get('grid');
+      var width = $('#canvas').width();
+      var g = overlay.gutter / 2;
+      while (g < width) {
         x.push(g);
-        x.push(g + 40);
-        g += 60;
+        x.push(g + overlay.width);
+        g += overlay.width + overlay.gutter;
       }
     }
 
@@ -787,15 +812,15 @@ var Protoshop = function() {
     }, 5000);
 
     if (localStorage[self.site_prefix + '-saved']) {
-
       var html = localStorage[self.site_prefix + '-saved'];
       self.undo_stack.push(html);
       self.restore(html);
+    }
 
-      if (localStorage[self.site_prefix + '-overlay'] === "true") {
-        $('#grid-overlay').show();
-        $('#toggle-grid').addClass('active');
-      }
+    self.drawOverlay();
+    if (localStorage[self.site_prefix + '-overlay'] === "true") {
+      $('#grid-overlay').show();
+      $('#toggle-grid').addClass('active');
     }
 
     self.recalcHeight();

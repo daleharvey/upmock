@@ -338,8 +338,7 @@ header {
 #grid-overlay {
     height: 100%;
     width: 1024px;
-    background: url(../img/16_col.png);
-    opacity: 0.5;
+    opacity: 0.2;
     z-index: 5000;
     bottom: 0;
     top: 0;
