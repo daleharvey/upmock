@@ -139,6 +139,7 @@ PickerWidget = Trail.View.extend({
         var bg = Protoshop.Toolbar.getBGProperties(colour);
 
         $('.picker-value', dom).val(colour).trigger('change');
+        window.protoshop.saveUndoPoint();
 
         $('#img-url', dom).val(bg.url);
         $('#img-color', dom).val(bg.colour);
@@ -247,7 +248,7 @@ SelectView = Trail.View.extend({
   postRender: function(dom) {
     $('#set-select-text', dom).bind('submit', function(e) {
       e.preventDefault();
-      window.protoshop.onSelected('setSelectText', $('#select-text').val());
+      window.protoshop.onSelectedUndo('setSelectText', $('#select-text').val());
     });
     return dom;
   },
@@ -267,7 +268,7 @@ ButtonView = Trail.View.extend({
   postRender: function(dom) {
     $('#set-button-text', dom).bind('submit', function(e) {
       e.preventDefault();
-      window.protoshop.onSelected('setButtonText', $('#button-text', dom).val());
+      window.protoshop.onSelectedUndo('setButtonText', $('#button-text', dom).val());
     });
     return dom;
   },
@@ -287,7 +288,7 @@ ImgView = Trail.View.extend({
   postRender: function(dom) {
     $('#set-image-src', dom).bind('submit', function(e) {
       e.preventDefault();
-      window.protoshop.onSelected('setImage', $('#image-src').val());
+      window.protoshop.onSelectedUndo('setImage', $('#image-src').val());
     });
     return dom;
   },
@@ -306,39 +307,41 @@ TextView = Trail.View.extend({
 
   postRender: function(dom) {
     $('#font-family', dom).bind('change', function() {
-      self.protoshop.onSelected('css',{'font-family': Protoshop.Toolbar.fonts[$(this).val()]});
+      self.protoshop.onSelectedUndo('css',{
+        'font-family': Protoshop.Toolbar.fonts[$(this).val()]
+      });
     });
     $('#bold', dom).bind('mousedown', function() {
       $(this).toggleClass('active');
-      self.protoshop.onSelected('toggleBold');
+      self.protoshop.onSelectedUndo('toggleBold');
     });
     $('#italic', dom).bind('mousedown', function() {
       $(this).toggleClass('active');
-      self.protoshop.onSelected('toggleItalic');
+      self.protoshop.onSelectedUndo('toggleItalic');
     });
     $('#underline', dom).bind('mousedown', function() {
       $(this).toggleClass('active');
-      self.protoshop.onSelected('toggleUnderline');
+      self.protoshop.onSelectedUndo('toggleUnderline');
     });
     $('#align-left', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
-      self.protoshop.onSelected('css',{'text-align': 'left'});
+      self.protoshop.onSelectedUndo('css',{'text-align': 'left'});
     });
     $('#align-center', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
-      self.protoshop.onSelected('css',{'text-align': 'center'});
+      self.protoshop.onSelectedUndo('css',{'text-align': 'center'});
     });
     $('#align-right', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
-      self.protoshop.onSelected('css',{'text-align': 'right'});
+      self.protoshop.onSelectedUndo('css',{'text-align': 'right'});
     });
     $('#align-justify', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
-      self.protoshop.onSelected('css',{'text-align': 'justify'});
+      self.protoshop.onSelectedUndo('css',{'text-align': 'justify'});
     });
 
     $('#text-shadow', dom).bind('change keyup', function() {
@@ -397,7 +400,7 @@ SingleElementView = Trail.View.extend({
   postRender: function(dom) {
     $('#css-form', dom).bind('submit', function(e) {
       e.preventDefault();
-      window.protoshop.onSelected('attr', 'style', $('#css-value').val());
+      window.protoshop.onSelectedUndo('attr', 'style', $('#css-value').val());
     });
     return dom;
   },
@@ -447,14 +450,14 @@ ElementView = Trail.View.extend({
     });
 
     $('#bring-to-front', dom).bind('mousedown', function() {
-      window.protoshop.onSelected('css', {'z-index': ++window.protoshop.index.max});
+      window.protoshop.onSelectedUndo('css', {'z-index': ++window.protoshop.index.max});
     });
     $('#send-to-back', dom).bind('mousedown', function() {
-      window.protoshop.onSelected('css', {'z-index': --window.protoshop.index.min});
+      window.protoshop.onSelectedUndo('css', {'z-index': --window.protoshop.index.min});
     });
 
     $('#lock', dom).bind('mousedown', function() {
-      window.protoshop.onSelected('lock');
+      window.protoshop.onSelectedUndo('lock');
       window.protoshop.selectElement(null);
     });
 

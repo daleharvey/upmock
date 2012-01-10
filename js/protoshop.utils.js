@@ -88,3 +88,12 @@ Utils.browserGradient2w3c = function(background) {
   }
   return background;
 };
+
+Utils.alert = function(str) {
+  var alert = $('<div class="alert">' + str + '<div>').appendTo(document.body);
+  setTimeout(function () {
+    alert.fadeOut('fast', function() {
+      alert.remove();
+    });
+  }, 500);
+};

@@ -677,3 +677,14 @@ triangle-isosceles {
 .border-picker .right { height: 40px; top:0; right: 0; z-index: 4 }
 .border-picker .bottom { width: 40px; bottom:0px; left: 0; z-index: 3 }
 .border-picker .left { height: 40px; top:0; left: 15; z-index: 7 }
+
+.alert {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    background: #333;
+    z-index: 9500;
+    padding: 10px 20px;
+    color: #DDD;
+    border-radius: 5px;
+}

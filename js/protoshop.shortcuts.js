@@ -49,6 +49,22 @@ var shortcuts = {
           });
         },
         description: 'Paste'
+      },
+      {
+        key: 'ctrl+z',
+        e: 'keydown',
+        callback: function() {
+          this.undo();
+        },
+        description: 'Undo'
+      },
+      {
+        key: 'ctrl+shift+z',
+        e: 'keydown',
+        callback: function() {
+          this.redo();
+        },
+        description: 'Redo'
       }
     ]
   },

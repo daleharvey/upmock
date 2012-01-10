@@ -2,6 +2,8 @@ var Protoshop = function() {
 
   var self = this;
 
+  var UNDO_ITEMS_LIMIT = 50;
+
   var $canvas = $('#canvas');
   var $selection = $('#selection');
   var $canvas_wrapper = $('#canvas_wrapper');
@@ -26,6 +28,49 @@ var Protoshop = function() {
     y: [],
     xcenter: [],
     ycenter: []
+  };
+
+  this.undo_stack = [];
+  this.redo_stack = [];
+
+  this.redo = function() {
+    if (this.redo_stack.length > 0) {
+      self.selectElement(null);
+      var html = self.redo_stack.pop();
+      this.undo_stack.push(html);
+      self.restore(html);
+    } else {
+      Utils.alert('nothing to redo');
+    }
+  };
+
+  this.undo = function() {
+
+    if (this.undo_stack.length > 1) {
+      self.selectElement(null);
+
+      // This is the current state
+      var current = self.undo_stack.pop();
+      this.redo_stack.push(current);
+
+      var html = self.undo_stack[self.undo_stack.length-1];
+      self.restore(html);
+    } else {
+      Utils.alert('nothing to undo');
+    }
+  };
+
+  this.saveUndoPoint = function() {
+
+    this.redo_stack = [];
+
+    var toSave = $canvas.clone();
+    toSave.find('#info, .handles, #selection').remove();
+    this.undo_stack.push(toSave.html());
+
+    while(this.undo_stack.length > UNDO_ITEMS_LIMIT) {
+      this.undo_stack.shift();
+    }
   };
 
   this.releaseFocus = function() {
@@ -136,7 +181,12 @@ var Protoshop = function() {
     $canvas_copy.height(max);
   };
 
-  this.onSelected = function(callback) {
+  this.onSelectedUndo = function(callback) {
+    self.saveUndoPoint();
+    self.onSelected.apply(self, arguments);
+  };
+
+  this.onSelected = function(callback, undoPoint) {
     var params = _.toArray(arguments).slice(1);
     var ret = _.map(self.selected, function(obj) {
       obj[callback].apply(obj, params);
@@ -298,6 +348,7 @@ var Protoshop = function() {
       $guide.x.hide();
       $guide.y.hide();
       $canvas_wrapper.unbind('.editing');
+      self.saveUndoPoint();
     });
 
   }
@@ -554,6 +605,33 @@ var Protoshop = function() {
     $('#used-colours').html(html);
   };
 
+  this.restore = function(html) {
+
+    $canvas.html(html);
+
+    _.each($canvas.find('div'), function(obj) {
+
+      var type = $(obj).data('type');
+
+      if (type) {
+
+        var index = parseInt($(obj).css('z-index'), 0);
+        if (index > self.index.max) {
+          self.index.max = index;
+        } else if (index < self.index.min) {
+          self.index.min = index;
+        }
+
+        new Elements[type]({index: index}, $(obj));
+      }
+    });
+
+    $canvas.find('.selected').each(function() {
+      self.selectElement($(this).data('obj'));
+    });
+
+  };
+
   $canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
 
   _.each(shortcuts.global.shortcuts, function(key) {
@@ -568,6 +646,7 @@ var Protoshop = function() {
       el.$dom.appendTo($canvas);
       self.selectElement(null);
       self.selectElement(el);
+      self.saveUndoPoint();
     }
 
     var panelFuns = {
@@ -662,28 +741,9 @@ var Protoshop = function() {
 
     if (localStorage[self.site_prefix + '-saved']) {
 
-      $canvas.html(localStorage[self.site_prefix + '-saved']);
-
-      _.each($canvas.find('div'), function(obj) {
-
-        var type = $(obj).data('type');
-
-        if (type) {
-
-          var index = parseInt($(obj).css('z-index'), 0);
-          if (index > self.index.max) {
-            self.index.max = index;
-          } else if (index < self.index.min) {
-            self.index.min = index;
-          }
-
-          new Elements[type]({index: index}, $(obj));
-        }
-      });
-
-      $canvas.find('.selected').each(function() {
-        self.selectElement($(this).data('obj'));
-      });
+      var html = localStorage[self.site_prefix + '-saved'];
+      self.undo_stack.push(html);
+      self.restore(html);
 
       if (localStorage[self.site_prefix + '-overlay'] === "true") {
         $('#grid-overlay').show();
