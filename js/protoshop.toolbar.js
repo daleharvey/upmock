@@ -337,17 +337,17 @@ TextView = Trail.View.extend({
       $(this).toggleClass('active');
       self.protoshop.onSelectedUndo('toggleUnderline');
     });
-    $('#align-left', dom).bind('mousedown', function() {
+    $('#text-align-left', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
       self.protoshop.onSelectedUndo('css',{'text-align': 'left'});
     });
-    $('#align-center', dom).bind('mousedown', function() {
+    $('#text-align-center', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
       self.protoshop.onSelectedUndo('css',{'text-align': 'center'});
     });
-    $('#align-right', dom).bind('mousedown', function() {
+    $('#text-align-right', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');
       self.protoshop.onSelectedUndo('css',{'text-align': 'right'});

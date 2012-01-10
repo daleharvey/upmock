@@ -165,9 +165,9 @@ header {
 #bold           { background-image: url(../img/famfam/text_bold.png); }
 #italic         { background-image: url(../img/famfam/text_italic.png); }
 #underline      { background-image: url(../img/famfam/text_underline.png); }
-#align-right    { background-image: url(../img/famfam/text_align_right.png); }
-#align-center   { background-image: url(../img/famfam/text_align_center.png); }
-#align-left     { background-image: url(../img/famfam/text_align_left.png); }
+#text-align-right    { background-image: url(../img/famfam/text_align_right.png); }
+#text-align-center   { background-image: url(../img/famfam/text_align_center.png); }
+#text-align-left     { background-image: url(../img/famfam/text_align_left.png); }
 #align-justify  { background-image: url(../img/famfam/text_align_justify.png); }
 #opacity        { background-image: url(../img/fague/layer-transparent.png); }
 #letter-spacing { background-image: url(../img/famfam/text_letterspacing.png); }
