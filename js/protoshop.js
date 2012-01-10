@@ -16,7 +16,12 @@ var Protoshop = function() {
   this.site_prefix = localJSON.get('site_prefix');
 
   if (localJSON.get(this.site_prefix + '-grid', false) === false) {
-    localJSON.set(this.site_prefix + '-grid', {width:40, gutter: 20});
+    localJSON.set(this.site_prefix + '-grid', {
+      width:40,
+      gutter: 20,
+      colour: 'rgb(0, 0, 0)',
+      opacity: 0.2
+    });
   }
 
   this.deferredUndoAttribute = null;
@@ -116,13 +121,16 @@ var Protoshop = function() {
     var canvas = $('<canvas width="' + width + '" height="1"></canvas>');
     var ctx = canvas[0].getContext("2d");
 
-    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.fillStyle = overlay.colour;
     while (g < width) {
       ctx.fillRect(g, 0, overlay.width, 1);
       g += overlay.width + overlay.gutter;
     }
 
-    $('#grid-overlay').css({background: 'url(' + canvas[0].toDataURL() + ')'});
+    $('#grid-overlay').css({
+      background: 'url(' + canvas[0].toDataURL() + ')',
+      opacity: overlay.opacity
+    });
 
   };
 

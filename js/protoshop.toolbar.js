@@ -208,7 +208,9 @@ GlobalView = Trail.View.extend({
     $('#overlay-form', $dom).bind('change input', function() {
       localJSON.set(prefix + '-grid', {
         width: parseInt($('#overlay-width', $dom).val(), 10),
-        gutter: parseInt($('#overlay-gutter', $dom).val(), 10)
+        gutter: parseInt($('#overlay-gutter', $dom).val(), 10),
+        colour: $('#overlay-colour', $dom).val(),
+        opacity: parseFloat($('#overlay-opacity', $dom).val())
       });
       window.protoshop.deferredSaveUndoPoint('grid');
       window.protoshop.drawOverlay();
