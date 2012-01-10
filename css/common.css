@@ -687,3 +687,35 @@ triangle-isosceles {
     color: #DDD;
     border-radius: 5px;
 }
+
+.dropdown-arrow {
+    cursor: pointer;
+    display: block;
+    width: 8px;
+    height: 9px;
+    border: 1px solid transparent;
+    background-color: transparent;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    float: left;
+    position: relative;
+    left: -5px;
+    padding-top:7px;
+    padding-left:1px;
+}
+
+.dropdown-arrow .inner {
+    left: -40px;
+}
+
+.dropdown-arrow:hover, .dropdown-arrow.active {
+    background-color: #EEE;
+}
+
+.arrow-down {
+        width: 0;
+        height: 0;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-top: 3px solid #333;
+}

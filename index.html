@@ -222,6 +222,21 @@
       <div class="section" id="global">
         <a id="toggle-grid" class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}"
            title="Toggle Grid Overlay"></a>
+        <div class="dropdown dropdown-arrow" id="overlay-form">
+          <div class="arrow-down"></div>
+          <div class="inner triangle-isosceles top">
+            <h3>Grid Overlay</h3>
+            <table>
+              <tr>
+                <td>Width:</td>
+                <td><input id="overlay-width" type="number" value="{{overlay.width}}" /></td>
+              </tr>
+              <tr>
+                <td>Gutter:</td>
+                <td><input id="overlay-gutter" type="number" value="{{overlay.gutter}}" /></td>
+              </tr>
+          </div>
+        </div>
       </div>
     </script>
 

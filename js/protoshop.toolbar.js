@@ -204,11 +204,20 @@ GlobalView = Trail.View.extend({
       localJSON.set(prefix, !localJSON.get(prefix));
       self.updateOverlay(this, localJSON.get(prefix));
     });
+
+    $('#overlay-form', $dom).bind('change input', function() {
+      localJSON.set('grid', {
+        width: parseInt($('#overlay-width', $dom).val(), 10),
+        gutter: parseInt($('#overlay-gutter', $dom).val(), 10)
+      });
+      window.protoshop.drawOverlay();
+    });
     return $dom;
   },
 
   load: function() {
     return this.render({data: {
+      overlay: localJSON.get('grid'),
       isOverlay: $('#grid-overlay').is(':visible')
     }});
   }
