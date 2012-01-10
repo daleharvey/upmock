@@ -182,8 +182,8 @@ var Protoshop = function() {
   };
 
   this.onSelectedUndo = function(callback) {
-    self.saveUndoPoint();
     self.onSelected.apply(self, arguments);
+    self.saveUndoPoint();
   };
 
   this.onSelected = function(callback, undoPoint) {
