@@ -199,17 +199,18 @@ GlobalView = Trail.View.extend({
   },
 
   postRender: function($dom, opts) {
-    var self = this, prefix = window.protoshop.site_prefix + '-overlay';
+    var self = this, prefix = window.protoshop.site_prefix;
     $('#toggle-grid', $dom).bind('mousedown', function(e) {
-      localJSON.set(prefix, !localJSON.get(prefix));
-      self.updateOverlay(this, localJSON.get(prefix));
+      localJSON.set(prefix + '-overlay', !localJSON.get(prefix + '-overlay'));
+      self.updateOverlay(this, localJSON.get(prefix + '-overlay'));
     });
 
     $('#overlay-form', $dom).bind('change input', function() {
-      localJSON.set('grid', {
+      localJSON.set(prefix + '-grid', {
         width: parseInt($('#overlay-width', $dom).val(), 10),
         gutter: parseInt($('#overlay-gutter', $dom).val(), 10)
       });
+      window.protoshop.deferredSaveUndoPoint('grid');
       window.protoshop.drawOverlay();
     });
     return $dom;
@@ -217,7 +218,7 @@ GlobalView = Trail.View.extend({
 
   load: function() {
     return this.render({data: {
-      overlay: localJSON.get('grid'),
+      overlay: localJSON.get(window.protoshop.site_prefix + '-grid'),
       isOverlay: $('#grid-overlay').is(':visible')
     }});
   }
@@ -236,6 +237,8 @@ BgView = Trail.View.extend({
     $('.picker-value', picker).bind('change', function() {
       $('.picker-preview', picker).css('background',
                                        Utils.w3cGradient2Browser(this.value));
+
+      window.protoshop.deferredSaveUndoPoint('bgColour');
       localJSON.set(window.protoshop.site_prefix + '-bgColour', this.value);
       window.protoshop.updateUsedColours();
       window.protoshop.redraw();

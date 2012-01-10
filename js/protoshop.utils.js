@@ -8,7 +8,11 @@ var localJSON = (function(){
       localStorage.setItem(prop, JSON.stringify(val));
     },
     get:function(prop, def) {
-      return JSON.parse(localStorage.getItem(prop) || 'false') || def;
+      try {
+        return JSON.parse((localStorage.getItem(prop) || 'false')) || def;
+      } catch(err) {
+        return def;
+      }
     },
     remove:function(prop) {
       localStorage.removeItem(prop);

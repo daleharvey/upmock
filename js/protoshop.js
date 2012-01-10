@@ -3,7 +3,6 @@ var Protoshop = function() {
   var self = this;
 
   var UNDO_ITEMS_LIMIT = 50;
-  var delayedAttribute = null;
 
   var $canvas = $('#canvas');
   var $selection = $('#selection');
@@ -14,12 +13,13 @@ var Protoshop = function() {
   if (localJSON.get('site_prefix', false) === false) {
     localJSON.set('site_prefix', 'default');
   }
+  this.site_prefix = localJSON.get('site_prefix');
 
-  if (localJSON.get('grid', false) === false) {
-    localJSON.set('grid', {width:40, gutter: 20});
+  if (localJSON.get(this.site_prefix + '-grid', false) === false) {
+    localJSON.set(this.site_prefix + '-grid', {width:40, gutter: 20});
   }
 
-  this.site_prefix = localJSON.get('site_prefix');
+  this.deferredUndoAttribute = null;
   this.$selection = $selection;
   this.selected = [];
   this.$canvas = $canvas;
@@ -52,9 +52,9 @@ var Protoshop = function() {
   this.undo = function() {
 
     // if there is a change that we delayed being saved as an undo point, do it now
-    if (delayedAttribute !== null) {
+    if (this.deferredUndoAttribute !== null) {
       this.saveUndoPoint();
-      delayedAttribute = null;
+      this.deferredUndoAttribute = null;
     }
 
     if (this.undo_stack.length > 1) {
@@ -71,21 +71,37 @@ var Protoshop = function() {
     }
   };
 
-
   this.commitUndoPoint = function() {
-    if (delayedAttribute) {
-      delayedAttribute = null;
+    if (this.deferredUndoAttribute) {
+      this.deferredUndoAttribute = null;
       self.saveUndoPoint();
     }
   };
 
 
+  this.deferredSaveUndoPoint = function(key) {
+
+    if (self.deferredUndoAttribute !== null && self.deferredUndoAttribute !== key) {
+      self.commitUndoPoint();
+    }
+
+    if (self.deferredUndoAttribute === null) {
+      self.deferredUndoAttribute = key;
+    }
+  };
+
+
   this.saveUndoPoint = function() {
+
     this.redo_stack = [];
     var toSave = $canvas.clone();
     // Probably do this when loading instead of saving
     toSave.find('#info, .handles, #selection').remove();
-    this.undo_stack.push(toSave.html());
+    this.undo_stack.push({
+      html: toSave.html(),
+      grid: localJSON.get(self.site_prefix + '-grid'),
+      background: localJSON.get(self.site_prefix + '-bgColour')
+    });
     while(this.undo_stack.length > UNDO_ITEMS_LIMIT) {
       this.undo_stack.shift();
     }
@@ -94,7 +110,7 @@ var Protoshop = function() {
 
   this.drawOverlay = function() {
 
-    var overlay = localJSON.get('grid');
+    var overlay = localJSON.get(self.site_prefix + '-grid');
     var g = overlay.gutter / 2;
     var width = $('#canvas').width();
     var canvas = $('<canvas width="' + width + '" height="1"></canvas>');
@@ -146,7 +162,7 @@ var Protoshop = function() {
 
     // Snap to 960gs grid if visible
     if ($('#grid-overlay').is(":visible")) {
-      var overlay = localJSON.get('grid');
+      var overlay = localJSON.get(self.site_prefix + '-grid');
       var width = $('#canvas').width();
       var g = overlay.gutter / 2;
       while (g < width) {
@@ -238,15 +254,15 @@ var Protoshop = function() {
 
       var key = callback === 'move' ? 'move' : Object.keys(args)[0];
 
-      if (delayedAttribute !== null && delayedAttribute !== key) {
-        delayedAttribute = null;
-        self.saveUndoPoint();
-      } else if (key === delayedAttribute) {
+      if (this.deferredUndoAttribute !== null && this.deferredUndoAttribute !== key) {
+        self.commitUndoPoint();
+      } else if (key === this.deferredUndoAttribute) {
         saveUndoPoint = false;
       }
 
       if ($.inArray(key, delayApply) !== -1) {
-        delayedAttribute = key;
+        saveUndoPoint = false;
+        this.deferredUndoAttribute = key;
       }
     }
 
@@ -677,9 +693,15 @@ var Protoshop = function() {
     $('#used-colours').html(html);
   };
 
-  this.restore = function(html) {
+  this.restore = function(restore) {
 
-    $canvas.html(html);
+    localJSON.set(self.site_prefix + '-grid', restore.grid);
+    localJSON.set(self.site_prefix + '-bgColour', restore.background);
+
+    self.redraw();
+    self.drawOverlay();
+
+    $canvas.html(restore.html);
 
     _.each($canvas.find('div'), function(obj) {
 
@@ -811,20 +833,27 @@ var Protoshop = function() {
       localStorage[self.site_prefix + '-saved'] = toSave.html();
     }, 5000);
 
+    var html = '';
+
     if (localStorage[self.site_prefix + '-saved']) {
-      var html = localStorage[self.site_prefix + '-saved'];
-      self.undo_stack.push(html);
-      self.restore(html);
+      html = localStorage[self.site_prefix + '-saved'];
     }
 
-    self.drawOverlay();
+    var stackPoint = {
+      html: html,
+      grid: localJSON.get(self.site_prefix + '-grid'),
+      background: localJSON.get(self.site_prefix + '-bgColour')
+    };
+
+    self.undo_stack.push(stackPoint);
+    self.restore(stackPoint);
+
     if (localStorage[self.site_prefix + '-overlay'] === "true") {
       $('#grid-overlay').show();
       $('#toggle-grid').addClass('active');
     }
 
     self.recalcHeight();
-    self.redraw();
 
   })();
 
