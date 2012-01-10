@@ -407,6 +407,60 @@ TextView = Trail.View.extend({
   }
 });
 
+
+DistributeElementView = Trail.View.extend({
+
+  template: '#distribute-toolbar-tpl',
+
+  postRender: function(dom) {
+
+    function space(prop, dim) {
+
+      var ps = window.protoshop;
+      var count = ps.selected.length;
+      var gap = 0;
+      var a, b, $a, i;
+
+      ps.selected.sort(function(a, b) {
+        return parseInt(a.$dom.css(prop), 10) > parseInt(b.$dom.css(prop), 10);
+      });
+
+      for (i = 0; i < count - 1; i++) {
+        a = ps.selected[i].$dom;
+        b = ps.selected[i+1].$dom;
+        gap += parseInt(b.css(prop), 10) - (parseInt(a.css(prop), 10) + a[dim]());
+      }
+
+      if (gap > 0) {
+        var diff = Math.ceil(gap / (count - 1));
+        for (i = 0; i < count - 1; i++) {
+          $a = ps.selected[i].$dom;
+          var obj = {};
+          obj[prop] = parseInt($a.css(prop), 10) + $a[dim]() + diff;
+          ps.selected[i+1].css(obj);
+        }
+      }
+
+      ps.updateInfo();
+    }
+
+    $('#distribute-horizontal', dom).bind('mousedown', function() {
+      space('left', 'width');
+    });
+    $('#distribute-vertical', dom).bind('mousedown', function() {
+      space('top', 'height');
+    });
+
+    return dom;
+  },
+
+  load: function(obj) {
+    return this.render();
+  }
+
+});
+
+
 MultipleElementView = Trail.View.extend({
 
   template: '#multiple-toolbar-tpl',
@@ -443,8 +497,7 @@ MultipleElementView = Trail.View.extend({
   },
 
   load: function(obj) {
-    return this.render({data: {
-    }});
+    return this.render();
   }
 
 });
@@ -609,6 +662,10 @@ Protoshop.Toolbar = function(protoshop) {
       sections.push(SingleElementView);
     } else if (arr.length > 1) {
       sections.push(MultipleElementView);
+    }
+
+    if (arr.length > 2) {
+      sections.push(DistributeElementView);
     }
 
     return sections;

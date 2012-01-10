@@ -194,6 +194,8 @@ header {
 #align-center { background-image: url(../img/famfam/shape_align_center.png); }
 #align-right { background-image: url(../img/famfam/shape_align_right.png); }
 
+#distribute-vertical { background-image: url(../img/fague/ui-splitter-horizontal.png); }
+#distribute-horizontal { background-image: url(../img/fague/ui-splitter.png); }
 
 .text-preview {
     display: block;
