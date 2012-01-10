@@ -355,7 +355,7 @@ TextView = Trail.View.extend({
         color = '#' + color;
       }
       var css = xy.x + 'px ' + xy.y + 'px ' + size + 'px ' + color;
-      self.protoshop.onSelected('css',{'text-shadow': css});
+      self.protoshop.onSelectedUndo('css',{'text-shadow': css});
     });
 
     Protoshop.Toolbar.bindChange($('#font-size', dom));
@@ -426,7 +426,7 @@ ElementView = Trail.View.extend({
       var data = {};
       data[key] = this.value + 'px';
 
-      window.protoshop.onSelected('css', data);
+      window.protoshop.onSelectedUndo('css', data);
 
     });
 
@@ -446,7 +446,7 @@ ElementView = Trail.View.extend({
       var data = {};
       data[key] = val;
 
-      window.protoshop.onSelected('css', data);
+      window.protoshop.onSelectedUndo('css', data);
     });
 
     $('#bring-to-front', dom).bind('mousedown', function() {
@@ -476,7 +476,7 @@ ElementView = Trail.View.extend({
       }
 
       var css = xy.x + 'px ' + xy.y + 'px ' + size + 'px ' + color;
-      window.protoshop.onSelected('css',{'box-shadow': css});
+      window.protoshop.onSelectedUndo('css',{'box-shadow': css});
     });
 
     var placeholder = $('#bg-picker-placeholder', dom);
@@ -487,7 +487,7 @@ ElementView = Trail.View.extend({
     $('.picker-value', picker).bind('change', function() {
       var colour = Utils.w3cGradient2Browser(this.value);
       $('.picker-preview', picker).css('background', colour);
-      window.protoshop.onSelected('css', {'background': colour});
+      window.protoshop.onSelectedUndo('css', {'background': colour});
       window.protoshop.updateUsedColours();
     }).val(placeholder.data('background'));
 
@@ -594,7 +594,7 @@ Protoshop.Toolbar.bindChange = function($dom) {
     if (key === 'opacity') {
       obj[key] = Number(parseFloat(obj[key], 10)).toFixed(2);
     }
-    window.protoshop.onSelected('css', obj);
+    window.protoshop.onSelectedUndo('css', obj);
   });
 };
 

@@ -3,6 +3,7 @@ var Protoshop = function() {
   var self = this;
 
   var UNDO_ITEMS_LIMIT = 50;
+  var delayedAttribute = null;
 
   var $canvas = $('#canvas');
   var $selection = $('#selection');
@@ -46,6 +47,12 @@ var Protoshop = function() {
 
   this.undo = function() {
 
+    // if there is a change that we delayed being saved as an undo point, do it now
+    if (delayedAttribute !== null) {
+      this.saveUndoPoint();
+      delayedAttribute = null;
+    }
+
     if (this.undo_stack.length > 1) {
       self.selectElement(null);
 
@@ -61,13 +68,11 @@ var Protoshop = function() {
   };
 
   this.saveUndoPoint = function() {
-
     this.redo_stack = [];
-
     var toSave = $canvas.clone();
+    // Probably do this when loading instead of saving
     toSave.find('#info, .handles, #selection').remove();
     this.undo_stack.push(toSave.html());
-
     while(this.undo_stack.length > UNDO_ITEMS_LIMIT) {
       this.undo_stack.shift();
     }
@@ -181,9 +186,40 @@ var Protoshop = function() {
     $canvas_copy.height(max);
   };
 
-  this.onSelectedUndo = function(callback) {
+
+  this.onSelectedUndo = function(callback, args) {
+
+    var saveUndoPoint = true;
+
+    // These elements will get changed in quick succession, filling the
+    // clipboard with junk, we squash changes to these attributes into a single
+    // undo point
+    var delayApply = [
+      'box-shadow', 'background', 'text-shadow', 'line-height', 'letter-spacing',
+      'opacity', 'border-top-left-radius', 'border-top-right-radius',
+      'border-bottom-right-radius', 'border-bottom-left-radius', 'border-radius'];
+
+    if (callback === 'css') {
+
+      var key = Object.keys(args)[0];
+
+      if (delayedAttribute !== null && delayedAttribute !== key) {
+        delayedAttribute = null;
+        self.saveUndoPoint();
+      } else if (key === delayedAttribute) {
+        saveUndoPoint = false;
+      }
+
+      if ($.inArray(key, delayApply) !== -1) {
+        delayedAttribute = key;
+      }
+    }
+
     self.onSelected.apply(self, arguments);
-    self.saveUndoPoint();
+
+    if (saveUndoPoint) {
+      self.saveUndoPoint();
+    }
   };
 
   this.onSelected = function(callback, undoPoint) {
