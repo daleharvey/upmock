@@ -357,7 +357,9 @@ var Protoshop = function() {
     return snap;
   }
 
-  function calculateResizeBounds(bounds, snap) {
+  function calculateResizeBounds(bounds, snap, constrain) {
+
+    var ratio = bounds.width / bounds.height;
 
     if (snap.x) {
       if (snap.x.point === 'start') {
@@ -367,6 +369,9 @@ var Protoshop = function() {
         bounds.width = snap.x.value - bounds.left;
       } else if (snap.x.point === 'middle') {
         bounds.width = ((bounds.left + bounds.width) - snap.x.value * 2);
+      }
+      if (constrain) {
+        bounds.height = bounds.width * (1/ratio);
       }
     }
 
@@ -378,6 +383,9 @@ var Protoshop = function() {
         bounds.height = snap.y.value - bounds.top;
       } else if (snap.y.point === 'middle') {
         bounds.height = ((bounds.top + bounds.height) - snap.y.value * 2);
+      }
+      if (constrain) {
+        bounds.width = bounds.height * ratio;
       }
     }
 
@@ -482,12 +490,35 @@ var Protoshop = function() {
     };
 
     var startBounds = self.calculateSelectionBounds();
+
     self.snap = collectSnapPoints(self.selected);
 
     $canvas_wrapper.bind('mousemove.resize', function(e) {
 
       $guide.x.hide();
       $guide.y.hide();
+
+      if (e.shiftKey && type.length === 2) {
+
+        var yMult = (type[0] === 's') ? 1 : -1;
+        var xMult = (type[1] === 'e') ? 1 : -1;
+        var ratio = size.width / size.height;
+
+        var axis = {
+          y: (type[0] === 's') ? e.clientY - (start.pageY - size.height)
+            : (start.pageY + size.height) - e.clientY,
+          x: (type[1] === 'e') ? e.clientX - (start.pageX - size.width)
+            : (start.pageX + size.width) - e.clientX
+        };
+
+        if (axis.x / axis.y > ratio) {
+          e.clientY = (start.pageY - (size.height * yMult)) +
+            (axis.x * (1 / ratio) * yMult);
+        } else {
+          e.clientX = (start.pageX - (size.width * xMult)) +
+            (axis.y * ratio * xMult);
+        }
+      }
 
       var obj = {}, i;
       for(i = 0; i < len; i++) {
@@ -497,7 +528,7 @@ var Protoshop = function() {
       if (!e.metaKey) {
         var tmp = $.extend({}, size, offset, obj);
         var snap = offsetSnap(tmp, type);
-        obj = calculateResizeBounds(tmp, snap);
+        obj = calculateResizeBounds(tmp, snap, e.shiftKey);
       }
 
       self.selected[0].css(obj);
@@ -695,7 +726,8 @@ var Protoshop = function() {
       }
 
       html += '<div class="used-colour" data-background="' +
-        Utils.browserGradient2w3c(key).replace(/"/g, '') + '" ' + 'style="background: ' +
+        Utils.browserGradient2w3c(key).replace(/"/g, '') + '" ' +
+        'style="background: ' +
         Utils.w3cGradient2Browser(key).replace(/"/g, '') + '"></div>';
     });
     $('#used-colours').html(html);
