@@ -197,7 +197,7 @@ header {
 
 #distribute-vertical { background-image: url(../img/fague/ui-splitter-horizontal.png); }
 #distribute-horizontal { background-image: url(../img/fague/ui-splitter.png); }
-
+#lorum-ipsum { background-image: url(../img/famfam/text_letter_omega.png); }
 .text-preview {
     display: block;
     position: absolute;

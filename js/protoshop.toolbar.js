@@ -314,12 +314,27 @@ ImgView = Trail.View.extend({
   }
 });
 
-
 TextView = Trail.View.extend({
 
   template: '#text-toolbar-tpl',
 
   postRender: function(dom) {
+    $('#lorum-ipsum', dom).bind('mousedown', function() {
+      var selected = self.protoshop.selected[0].$dom;
+      var clone = selected.clone().css('visibility', 'hidden').appendTo(document.body);
+      var height = selected.height();
+      var width = selected.width();
+      var span = clone.find('span');
+      var words = Utils.lorum_ipsum.slice();
+      var acc = [];
+      do {
+        var t = words.shift();
+        acc.push(t);
+        span.text(acc.join(' '));
+      } while(span.height() < height && span.width() < width);
+      acc.pop();
+      selected.find('span').text(acc.join(' '));
+    });
     $('#font-family', dom).bind('change', function() {
       self.protoshop.onSelectedUndo('css',{
         'font-family': Protoshop.Toolbar.fonts[$(this).val()]
