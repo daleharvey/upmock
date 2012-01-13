@@ -440,8 +440,15 @@ var Protoshop = function() {
         }
       }
 
-      self.onSelectedUndo('move', -(orig.y - diff.y), -(orig.x - diff.x));
+      if (e.shiftKey) {
+        if (Math.abs(diff.y) > Math.abs(diff.x)) {
+          diff.x = 0;
+        } else {
+          diff.y = 0;
+        }
+      }
 
+      self.onSelectedUndo('move', -(orig.y - diff.y), -(orig.x - diff.x));
       self.updateInfo();
 
       orig = diff;
