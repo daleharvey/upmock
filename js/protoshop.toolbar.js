@@ -333,6 +333,7 @@ TextView = Trail.View.extend({
         span.text(acc.join(' '));
       } while(span.height() < height && span.width() < width);
       acc.pop();
+      clone.remove();
       selected.find('span').text(acc.join(' '));
     });
     $('#font-family', dom).bind('change', function() {
