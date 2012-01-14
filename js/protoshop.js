@@ -291,6 +291,29 @@ var Protoshop = function() {
   };
 
 
+  this.copy = function() {
+    return _.map(this.selected, function(obj) {
+      var tmp = obj.$dom.clone().removeClass('selected');
+      tmp.find('.handles').remove();
+      return tmp.wrap('<div>').parent().html();
+    });
+  };
+
+  this.paste = function(data, offset) {
+    var arr = _.map(data, function(html) {
+      var $obj = $(html);
+      $obj.css({
+        left: parseInt($obj.css('left'), 10) + (offset ? 50 : 0),
+        top: parseInt($obj.css('top'), 10) + (offset ? 50 : 0)
+      });
+      var obj = new Elements[$obj.data('type')](++self.index.max, $obj);
+      obj.$dom.appendTo($('#canvas'));
+      if (offset) {
+        self.selectElement(obj);
+      }
+    });
+  };
+
   var snap = 4;
   var $guide = {
     x: $('#snapx'),
@@ -397,6 +420,10 @@ var Protoshop = function() {
 
     var start = e, orig = {}, diff = {}, bounds = {};
     var startBounds = self.calculateSelectionBounds();
+
+    if (e.altKey) {
+      self.paste(self.copy(), false);
+    }
 
     var size = {
       width: startBounds.se.x - startBounds.nw.x,
