@@ -4,6 +4,7 @@ var Protoshop = function() {
 
   var UNDO_ITEMS_LIMIT = 50;
 
+  var $window = $(window);
   var $canvas = $('#canvas');
   var $selection = $('#selection');
   var $canvas_wrapper = $('#canvas_wrapper');
@@ -431,8 +432,7 @@ var Protoshop = function() {
     };
 
     self.snap = collectSnapPoints(self.selected);
-
-    $canvas_wrapper.bind('mousemove.editing', function(e) {
+    $window.bind('mousemove.editing', function(e) {
 
       diff = {x: e.clientX - start.clientX, y: e.clientY - start.clientY};
 
@@ -479,12 +479,16 @@ var Protoshop = function() {
       self.updateInfo();
 
       orig = diff;
+
+      // $canvas_wrapper[0].scrollTop = (startBounds.se.y + diff.y + 30) - $(window).height();
+      // $canvas_wrapper[0].scrollLeft = (startBounds.se.x + diff.x) - $(window).width();
+
     });
 
-    $canvas_wrapper.bind('mouseup.editing', function(e) {
+    $window.bind('mouseup.editing', function(e) {
       $guide.x.hide();
       $guide.y.hide();
-      $canvas_wrapper.unbind('.editing');
+      $window.unbind('.editing');
       self.commitUndoPoint();
     });
 
@@ -527,7 +531,7 @@ var Protoshop = function() {
 
     self.snap = collectSnapPoints(self.selected);
 
-    $canvas_wrapper.bind('mousemove.resize', function(e) {
+    $window.bind('mousemove.resize', function(e) {
 
       $guide.x.hide();
       $guide.y.hide();
@@ -570,10 +574,10 @@ var Protoshop = function() {
 
     });
 
-    $canvas_wrapper.bind('mouseup.moving', function(e) {
+    $window.bind('mouseup.moving', function(e) {
       $guide.x.hide();
       $guide.y.hide();
-      $canvas_wrapper.unbind('.resize');
+      $window.unbind('.resize');
       self.saveUndoPoint();
     });
 
@@ -616,7 +620,7 @@ var Protoshop = function() {
     $selection.css({top: start.clientY, left: 0, height: 1, width: 1});
     $selection.show();
 
-    $canvas_wrapper.bind('mousemove.selecting', function(e) {
+    $window.bind('mousemove.selecting', function(e) {
 
       e.clientY += yOffset;
       e.clientX -= xOffset;
@@ -646,9 +650,9 @@ var Protoshop = function() {
       });
     });
 
-    $canvas_wrapper.bind('mouseup.selecting', function(e) {
+    $window.bind('mouseup.selecting', function(e) {
       $selection.hide();
-      $canvas_wrapper.unbind('.selecting');
+      $window.unbind('.selecting');
       _.each(selected, function(obj) {
         obj.removeClass('soft-select');
         self.selectElement(obj.data('obj'));
