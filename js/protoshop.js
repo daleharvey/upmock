@@ -253,6 +253,7 @@ var Protoshop = function() {
       //   maxWidth = Math.max(maxWidth, left + width);
       // }
     });
+
     $canvas_copy.height(maxHeight);
 
     // var x = $canvas.width();
@@ -367,6 +368,21 @@ var Protoshop = function() {
   }
 
 
+  this.scrollHorizontal = false;
+  this.scrollVertical = false;
+  this.scrollInterval = null;
+
+  this.autoScroll = function() {
+    if (self.scrollVertical) {
+      $canvas_wrapper[0].scrollTop += self.scrollVertical;
+    }
+    // if (scrollHorizontal) {
+    //   $canvas_wrapper[0].scrollLeft += scrollHorizontal;
+    // }
+    $window.trigger('mousemove');
+  };
+
+
   function offsetSnap(bounds, type) {
 
     type = type || '';
@@ -455,21 +471,7 @@ var Protoshop = function() {
     var cacheClientX = 0;
     var cacheClientY = 0;
 
-    var scrollHorizontal = false;
-    var scrollVertical = false;
-    var scrollInterval = null;
-
     var startHeight = $canvas_copy.height();
-
-    function autoScroll() {
-      if (scrollVertical) {
-        $canvas_wrapper[0].scrollTop += scrollVertical;
-      }
-      // if (scrollHorizontal) {
-      //   $canvas_wrapper[0].scrollLeft += scrollHorizontal;
-      // }
-      $window.trigger('mousemove');
-    }
 
     self.snap = collectSnapPoints(self.selected);
     $window.bind('mousemove.editing', function(e) {
@@ -538,30 +540,14 @@ var Protoshop = function() {
 
       orig = diff;
 
-      scrollHorizontal = 0;
-      // if (e.clientX > $(window).width()) {
-      //   scrollHorizontal = AUTOSCROLL_INCREMENT;
-      // } else if (e.clientX < 0) {
-      //   scrollHorizontal = -AUTOSCROLL_INCREMENT;
-      // }
-
-      scrollVertical = 0;
-      if (e.clientY > $(window).height()) {
-        scrollVertical = AUTOSCROLL_INCREMENT;
-      } else if (e.clientY < 30) {
-        scrollVertical = -AUTOSCROLL_INCREMENT;
-      }
-
-      if (scrollInterval !== null && !scrollHorizontal && !scrollVertical) {
-        clearInterval(scrollInterval);
-        scrollInterval = null;
-      } else if (scrollInterval === null && (scrollHorizontal || scrollVertical)) {
-        scrollInterval = setInterval(autoScroll, AUTOSCROLL_INTERVAL);
-      }
-
+      self.maybeScroll(e);
     });
 
     $window.bind('mouseup.editing', function(e) {
+      if (self.scrollInterval !== null) {
+        clearInterval(self.scrollInterval);
+        self.scrollInterval = null;
+      }
       $guide.x.hide();
       $guide.y.hide();
       $window.unbind('.editing');
@@ -569,6 +555,26 @@ var Protoshop = function() {
     });
 
   }
+
+  this.maybeScroll = function(e) {
+
+    self.scrollVertical = 0;
+    if (e.clientY > $(window).height()) {
+      self.scrollVertical = AUTOSCROLL_INCREMENT;
+    } else if (e.clientY < 30) {
+      self.scrollVertical = -AUTOSCROLL_INCREMENT;
+    }
+
+    if (self.scrollInterval !== null && !self.scrollHorizontal &&
+        !self.scrollVertical) {
+      clearInterval(self.scrollInterval);
+      self.scrollInterval = null;
+    } else if (self.scrollInterval === null &&
+               (self.scrollHorizontal || self.scrollVertical)) {
+      self.scrollInterval = setInterval(self.autoScroll, AUTOSCROLL_INTERVAL);
+    }
+
+  };
 
   function bindMouseResize($el, e, type) {
 
@@ -585,6 +591,12 @@ var Protoshop = function() {
     var diff = {};
     var start = e;
     var len = type.length;
+
+    var startScrollTop = $canvas_wrapper[0].scrollTop;
+    var startScrollLeft = $canvas_wrapper[0].scrollLeft;
+
+    var cacheClientX = 0;
+    var cacheClientY = 0;
 
     var resize = {
       'n': function(e, obj) {
@@ -609,8 +621,19 @@ var Protoshop = function() {
 
     $window.bind('mousemove.resize', function(e) {
 
+      if (!e.clientX && !e.clientY) {
+        e.clientY = cacheClientY;
+        e.clientX = cacheClientX;
+      } else {
+        cacheClientY = e.clientY;
+        cacheClientX = e.clientX;
+      }
+
       $guide.x.hide();
       $guide.y.hide();
+
+      var yDiff = startScrollTop - $canvas_wrapper[0].scrollTop;
+      e.clientY -= yDiff;
 
       if (e.shiftKey && type.length === 2) {
 
@@ -647,10 +670,21 @@ var Protoshop = function() {
 
       self.selected[0].css(obj);
       self.updateInfo();
+      self.recalcHeight();
 
+      if (obj.top + obj.height > self.maxHeight) {
+        self.maxHeight = obj.top + obj.height;
+      }
+
+      e.clientY += yDiff;
+      self.maybeScroll(e);
     });
 
     $window.bind('mouseup.moving', function(e) {
+      if (self.scrollInterval !== null) {
+        clearInterval(self.scrollInterval);
+        self.scrollInterval = null;
+      }
       $guide.x.hide();
       $guide.y.hide();
       $window.unbind('.resize');
@@ -665,6 +699,7 @@ var Protoshop = function() {
         evt.stopPropagation();
         evt.preventDefault();
         if (fn.apply(scope, arguments) !== false) {
+          // maybe need to cancel or something in the future
         }
       }
     };
