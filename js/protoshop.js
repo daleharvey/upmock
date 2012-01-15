@@ -150,7 +150,11 @@ var Protoshop = function() {
 
   this.redraw = function() {
     var bgColour = localJSON.get(self.site_prefix + '-bgColour', 'white');
+    var width = localJSON.get(self.site_prefix + '-width', 1024);
     $canvas_wrapper.css('background', Utils.w3cGradient2Browser(bgColour));
+    $canvas.width(width).css('margin-left', -Math.round(width/2));
+    $canvas_copy.width(width).css('margin-left', -Math.round(width/2));
+    self.drawOverlay();
   };
 
   this.updateInfo = function() {
@@ -1043,6 +1047,7 @@ var Protoshop = function() {
     }
 
     self.recalcHeight();
+    self.redraw();
 
     // $canvas_wrapper[0].scrollLeft = (($canvas_copy.width()) / 2) -
     //   (($window.width() - $canvas.width()) / 2);

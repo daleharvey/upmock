@@ -236,6 +236,9 @@ BgView = Trail.View.extend({
     var bg = localJSON.get(window.protoshop.site_prefix + '-bgColour', 'white');
     var picker = PickerWidget.create(bg);
 
+    var placeholder = $dom.findAll('#picker-placeholder');
+    placeholder.replaceWith(picker);
+
     $('.picker-value', picker).bind('change', function() {
       $('.picker-preview', picker).css('background',
                                        Utils.w3cGradient2Browser(this.value));
@@ -246,11 +249,18 @@ BgView = Trail.View.extend({
       window.protoshop.redraw();
     });
 
-    return picker;
+    $('#canvas-width', $dom).bind('change input', function() {
+      localJSON.set(window.protoshop.site_prefix + '-width', parseInt(this.value, 10))
+      window.protoshop.redraw();
+    });
+
+    return $dom;
   },
 
   load: function() {
-    return this.render();
+    return this.render({data: {
+      canvasWidth: localJSON.get(window.protoshop.site_prefix + '-width', 1024)
+    }});
   }
 });
 
