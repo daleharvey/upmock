@@ -133,10 +133,17 @@ var Protoshop = function() {
       g += overlay.width + overlay.gutter;
     }
 
-    $('#grid-overlay').css({
+    var oldGrid = $('#grid-overlay');
+
+    var newGrid = oldGrid.clone().css({
       background: 'url(' + canvas[0].toDataURL() + ')',
       opacity: overlay.opacity
-    });
+    }).appendTo($canvas_copy);
+
+    // defer removal, gets rid of flickering
+    setTimeout(function() {
+      oldGrid.remove();
+    }, 0);
 
   };
 
