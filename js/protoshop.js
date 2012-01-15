@@ -3,6 +3,8 @@ var Protoshop = function() {
   var self = this;
 
   var UNDO_ITEMS_LIMIT = 50;
+  var AUTOSCROLL_INCREMENT = 15;
+  var AUTOSCROLL_INTERVAL = 25;
 
   var $window = $(window);
   var $canvas = $('#canvas');
@@ -33,6 +35,9 @@ var Protoshop = function() {
   this.index = {min: 2000, max: 2000};
   this.usedColours = [];
   this.bgColour = null;
+
+  this.maxHeight = 1000;
+  this.maxWidth = 1024;
 
   this.snap = {
     x: [],
@@ -234,15 +239,28 @@ var Protoshop = function() {
 
 
   this.recalcHeight = function() {
-    var max = Math.max(1000, $(document.body).height());
+    var maxHeight = Math.max(self.maxHeight, $(document.body).height());
+    var maxWidth = Math.max(self.maxWidth, $canvas.width());
     var objects = _.each($canvas.find('div'), function(obj) {
       var top = parseInt($(obj).css('top'), 10);
       var height = parseInt($(obj).css('height'), 10);
+      // var left = parseInt($(obj).css('left'), 10);
+      // var width = parseInt($(obj).css('width'), 10);
       if (!isNaN(top) && !isNaN(height)) {
-        max = Math.max(max, top + height);
+        maxHeight = Math.max(maxHeight, top + height);
       }
+      // if (!isNaN(left) && !isNaN(width)) {
+      //   maxWidth = Math.max(maxWidth, left + width);
+      // }
     });
-    $canvas_copy.height(max);
+    $canvas_copy.height(maxHeight);
+
+    // var x = $canvas.width();
+    // var totalWidth = Math.max(((maxWidth - x) * 2) + x, $window.width());
+    // var tmp = (totalWidth - $canvas.width()) / 2;
+    // $canvas_copy.width(totalWidth);
+    // $canvas_copy.css('margin-left', tmp);
+    // $canvas.css('margin-left', tmp);
   };
 
 
@@ -431,8 +449,38 @@ var Protoshop = function() {
       height: startBounds.se.y - startBounds.nw.y
     };
 
+    var startScrollTop = $canvas_wrapper[0].scrollTop;
+    var startScrollLeft = $canvas_wrapper[0].scrollLeft;
+
+    var cacheClientX = 0;
+    var cacheClientY = 0;
+
+    var scrollHorizontal = false;
+    var scrollVertical = false;
+    var scrollInterval = null;
+
+    var startHeight = $canvas_copy.height();
+
+    function autoScroll() {
+      if (scrollVertical) {
+        $canvas_wrapper[0].scrollTop += scrollVertical;
+      }
+      // if (scrollHorizontal) {
+      //   $canvas_wrapper[0].scrollLeft += scrollHorizontal;
+      // }
+      $window.trigger('mousemove');
+    }
+
     self.snap = collectSnapPoints(self.selected);
     $window.bind('mousemove.editing', function(e) {
+
+      if (!e.clientX && !e.clientY) {
+        e.clientY = cacheClientY;
+        e.clientX = cacheClientX;
+      } else {
+        cacheClientY = e.clientY;
+        cacheClientX = e.clientX;
+      }
 
       diff = {x: e.clientX - start.clientX, y: e.clientY - start.clientY};
 
@@ -475,13 +523,41 @@ var Protoshop = function() {
         }
       }
 
+      diff.y -= startScrollTop - $canvas_wrapper[0].scrollTop;
+      diff.x -= startScrollLeft - $canvas_wrapper[0].scrollLeft;
+
       self.onSelectedUndo('move', -(orig.y - diff.y), -(orig.x - diff.x));
       self.updateInfo();
 
+      if (startBounds.se.y + diff.y > self.maxHeight) {
+        self.maxHeight = startBounds.se.y + diff.y;
+      }
+      if (startBounds.se.x + diff.x > self.maxWidth) {
+        self.maxWidth = startBounds.se.x + diff.x;
+      }
+
       orig = diff;
 
-      // $canvas_wrapper[0].scrollTop = (startBounds.se.y + diff.y + 30) - $(window).height();
-      // $canvas_wrapper[0].scrollLeft = (startBounds.se.x + diff.x) - $(window).width();
+      scrollHorizontal = 0;
+      // if (e.clientX > $(window).width()) {
+      //   scrollHorizontal = AUTOSCROLL_INCREMENT;
+      // } else if (e.clientX < 0) {
+      //   scrollHorizontal = -AUTOSCROLL_INCREMENT;
+      // }
+
+      scrollVertical = 0;
+      if (e.clientY > $(window).height()) {
+        scrollVertical = AUTOSCROLL_INCREMENT;
+      } else if (e.clientY < 30) {
+        scrollVertical = -AUTOSCROLL_INCREMENT;
+      }
+
+      if (scrollInterval !== null && !scrollHorizontal && !scrollVertical) {
+        clearInterval(scrollInterval);
+        scrollInterval = null;
+      } else if (scrollInterval === null && (scrollHorizontal || scrollVertical)) {
+        scrollInterval = setInterval(autoScroll, AUTOSCROLL_INTERVAL);
+      }
 
     });
 
@@ -932,6 +1008,9 @@ var Protoshop = function() {
     }
 
     self.recalcHeight();
+
+    // $canvas_wrapper[0].scrollLeft = (($canvas_copy.width()) / 2) -
+    //   (($window.width() - $canvas.width()) / 2);
 
   })();
 

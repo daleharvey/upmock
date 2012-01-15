@@ -239,6 +239,7 @@ header {
 }
 
 #canvas {
+    box-sizing: border-box;
     width: 1024px;
     position: absolute;
     left: 50%;
@@ -248,6 +249,7 @@ header {
 }
 
 #canvas_copy {
+    box-sizing: border-box;
     width: 1024px;
     position: absolute;
     left: 50%;
