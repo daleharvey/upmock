@@ -6,9 +6,18 @@ var shortcuts = {
         key: 'esc',
         e: 'keydown',
         callback: function() {
+          var showing = !$('#panel').is(':visible');
           this.selectElement(null);
           $('#panel, header').toggle();
-          $('#canvas_wrapper').css({'top': $('#panel').is(':visible') ? 30 : 0});
+          $('#canvas_wrapper').css({'top': showing ? 30 : 0});
+
+          if (showing) {
+            if (localJSON.get(window.protoshop.site_prefix + '-overlay') === true) {
+              $('.grid-overlay').show();
+            }
+          } else {
+            $('.grid-overlay').hide();
+          }
         },
         description: 'Preview Design'
       },
