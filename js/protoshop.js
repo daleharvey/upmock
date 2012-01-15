@@ -133,12 +133,13 @@ var Protoshop = function() {
       g += overlay.width + overlay.gutter;
     }
 
-    var oldGrid = $('#grid-overlay');
-
+    var oldGrid = $('.grid-overlay[data-deleted!=true]:eq(0)');
     var newGrid = oldGrid.clone().css({
       background: 'url(' + canvas[0].toDataURL() + ')',
       opacity: overlay.opacity
     }).appendTo($canvas_copy);
+
+    oldGrid.attr('data-deleted', 'true');
 
     // defer removal, gets rid of flickering
     setTimeout(function() {
@@ -186,7 +187,7 @@ var Protoshop = function() {
     ycenter.push(Math.round($canvas.height() / 2));
 
     // Snap to 960gs grid if visible
-    if ($('#grid-overlay').is(":visible")) {
+    if ($('.grid-overlay').is(":visible")) {
       var overlay = localJSON.get(self.site_prefix + '-grid');
       var width = $('#canvas').width();
       var g = overlay.gutter / 2;
@@ -1050,16 +1051,12 @@ var Protoshop = function() {
     self.undo_stack.push(stackPoint);
     self.restore(stackPoint);
 
-    if (localStorage[self.site_prefix + '-overlay'] === "true") {
-      $('#grid-overlay').show();
-      $('#toggle-grid').addClass('active');
-    }
-
     self.recalcHeight();
     self.redraw();
 
-    // $canvas_wrapper[0].scrollLeft = (($canvas_copy.width()) / 2) -
-    //   (($window.width() - $canvas.width()) / 2);
+    if (localJSON.get(self.site_prefix + '-overlay', true) === true) {
+      $('.grid-overlay[data-deleted!=true]:eq(0)').show();
+    }
 
   })();
 

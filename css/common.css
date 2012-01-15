@@ -353,7 +353,7 @@ header {
 .handle-w { top: 50%; left: -4px; margin-top: -3px; cursor: ew-resize; }
 
 
-#grid-overlay {
+.grid-overlay {
     height: 100%;
     width: 100%;
     z-index: 5000;

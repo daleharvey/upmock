@@ -191,17 +191,17 @@ GlobalView = Trail.View.extend({
 
   updateOverlay: function(btn, visible) {
     if (!visible) {
-      $('#grid-overlay').slideUp();
+      $('.grid-overlay:eq(0)').slideUp();
     } else {
-      $('#grid-overlay').slideDown();
+      $('.grid-overlay:eq(0)').slideDown();
     }
-    $(btn).toggleClass('active');
+    $(btn).toggleClass('active', visible);
   },
 
   postRender: function($dom, opts) {
     var self = this, prefix = window.protoshop.site_prefix;
     $('#toggle-grid', $dom).bind('mousedown', function(e) {
-      localJSON.set(prefix + '-overlay', !localJSON.get(prefix + '-overlay'));
+      localJSON.set(prefix + '-overlay', !localJSON.get(prefix + '-overlay', true));
       self.updateOverlay(this, localJSON.get(prefix + '-overlay'));
     });
 
@@ -221,7 +221,7 @@ GlobalView = Trail.View.extend({
   load: function() {
     return this.render({data: {
       overlay: localJSON.get(window.protoshop.site_prefix + '-grid'),
-      isOverlay: $('#grid-overlay').is(':visible')
+      isOverlay: localJSON.get(window.protoshop.site_prefix + '-overlay', true)
     }});
   }
 });

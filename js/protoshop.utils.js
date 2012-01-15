@@ -9,7 +9,10 @@ var localJSON = (function(){
     },
     get:function(prop, def) {
       try {
-        return JSON.parse((localStorage.getItem(prop) || 'false')) || def;
+        if (localStorage.getItem(prop) === null) {
+          return def;
+        }
+        return JSON.parse((localStorage.getItem(prop) || 'false'));
       } catch(err) {
         return def;
       }
