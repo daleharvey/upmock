@@ -932,6 +932,8 @@ var Protoshop = function() {
   _.each(shortcuts.global.shortcuts, function(key) {
     $(document).bind(key.e, key.override || key.key, function(e) {
       if (!$(e.target).is('span[contenteditable=true]')) {
+        e.preventDefault();
+        e.stopPropagation();
         key.callback.apply(self, arguments);
       }
     });

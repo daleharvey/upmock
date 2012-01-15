@@ -20,6 +20,40 @@ var shortcuts = {
         description: 'Show / Hide the help dialog'
       },
       {
+        key: 'meta+c',
+        e: 'keydown',
+        callback: function() {
+          localJSON.set('clipboard', this.copy());
+        },
+        description: 'Copy'
+      },
+      {
+        key: 'meta+v',
+        e: 'keydown',
+        callback: function() {
+          var self = this;
+          self.selectElement(null);
+          this.paste(localJSON.get('clipboard', []), true);
+        },
+        description: 'Paste'
+      },
+      {
+        key: 'meta+z',
+        e: 'keydown',
+        callback: function() {
+          this.undo();
+        },
+        description: 'Undo'
+      },
+      {
+        key: 'meta+shift+z',
+        e: 'keydown',
+        callback: function() {
+          this.redo();
+        },
+        description: 'Redo'
+      },
+      {
         key: 'ctrl+c',
         e: 'keydown',
         callback: function() {
