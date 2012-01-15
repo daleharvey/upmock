@@ -929,8 +929,10 @@ var Protoshop = function() {
   $canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
 
   _.each(shortcuts.global.shortcuts, function(key) {
-    $(document).bind(key.e, key.override || key.key, function() {
-      key.callback.apply(self, arguments);
+    $(document).bind(key.e, key.override || key.key, function(e) {
+      if (!$(e.target).is('span[contenteditable=true]')) {
+        key.callback.apply(self, arguments);
+      }
     });
   });
 
