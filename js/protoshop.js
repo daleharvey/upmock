@@ -955,15 +955,15 @@ var Protoshop = function() {
       'add-block': function() {
         append(new Elements.BlockElement({index: ++self.index.max}));
       },
-      'add-text': function() {
-        append(new Elements.TextElement({index: ++self.index.max}));
-      },
       'add-h1': function() {
         append(new Elements.TextElement({
           index: ++self.index.max,
           css: {'font-size': 24, 'font-weight': 'bold'},
           text: 'Header'
         }));
+      },
+      'add-text': function() {
+        append(new Elements.TextElement({index: ++self.index.max}));
       },
       'add-hr': function() {
         append(new Elements.BlockElement({
