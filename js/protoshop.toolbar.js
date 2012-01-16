@@ -105,13 +105,13 @@ PickerWidget = Trail.View.extend({
 
     return this.render({data: {
       pickerId: 'background-picker',
-      background: colour,
-      backgroundRepeatX: bg.repeatX,
-      backgroundRepeatY: bg.repeatY,
-      backgroundPosX: bg.posX,
-      backgroundPosY: bg.posY,
-      backgroundColor: bg.colour,
-      backgroundUrl: bg.url
+      bg: colour,
+      bgRepeatX: bg.repeatX,
+      bgRepeatY: bg.repeatY,
+      bgPosX: bg.posX,
+      bgPosY: bg.posY,
+      bgColor: bg.colour,
+      bgUrl: bg.url
     }});
 
   },

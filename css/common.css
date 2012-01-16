@@ -560,6 +560,7 @@ h3 {
 }
 
 #css-value {
+    width: 250px;
     height: 100px;
 }
 
@@ -598,12 +599,26 @@ h3 {
     text-align: center;
 }
 
+.image-placeholder label {
+    display:block;
+}
 .image-placeholder a {
     color: #999;
     font-size: 11px;
+    cursor: pointer;
 }
 .image-placeholder a:hover {
     text-decoration: underline;
+}
+.image-placeholder .save {
+    float:right;
+}
+.img-url {
+    width: 200px;
+}
+
+.align-vertical {
+    width: 100px;
 }
 
 .clearfix {
@@ -740,7 +755,7 @@ h3 {
         border-top: 3px solid #333;
 }
 
-.tool-btn {
+#align button {
     cursor: pointer;
     width: 21px;
     height: 21px;
@@ -752,6 +767,6 @@ h3 {
     border: 0px;
 }
 
-.tool-btn:hover {
+#align button:hover {
     background-color: #CCC;
 }
