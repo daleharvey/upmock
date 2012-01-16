@@ -465,7 +465,7 @@ var Protoshop = function() {
 
   function bindMouseMove(e) {
 
-    var start = e, orig = {}, diff = {}, bounds = {};
+    var start = e, orig = {x:0, y:0}, diff = {}, bounds = {};
     var startBounds = self.calculateSelectionBounds();
 
     if (e.altKey) {
