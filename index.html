@@ -322,22 +322,14 @@
       </div>
 
       <select id="font-family" class="toolbar-select">
-        <option {{#family-helvetica}}selected="selected"{{/family-helvetica}}
-                value="helvetica">Helvetica</option>
-        <option {{#family-tnr}}selected="selected"{{/family-tnr}}
-                value="tnr">Times New Roman</option>
-        <option {{#family-georgia}}selected="selected"{{/family-georgia}}
-                value="georgia">Georgia</option>
-        <option {{#family-garamond}}selected="selected"{{/family-garamond}}
-                value="garamond">Garamond</option>
-        <option {{#family-verdana}}selected="selected"{{/family-verdana}}
-                value="verdana">Verdana</option>
-        <option {{#family-trebuchet}}selected="selected"{{/family-trebuchet}}
-                value="trebuchet">Trebuchet</option>
-        <option {{#family-impact}}selected="selected"{{/family-impact}}
-                value="impact">Impact</option>
-        <option {{#family-monospace}}selected="selected"{{/family-monospace}}
-                value="monospace">Monospace</option>
+        <option {{option family-helvetica}} value="helvetica">Helvetica</option>
+        <option {{option family-tnr}} value="tnr">Times New Roman</option>
+        <option {{option family-georgia}} value="georgia">Georgia</option>
+        <option {{option family-garamond}} value="garamond">Garamond</option>
+        <option {{option family-verdana}} value="verdana">Verdana</option>
+        <option {{option family-trebuchet}} value="trebuchet">Trebuchet</option>
+        <option {{option family-impact}} value="impact">Impact</option>
+        <option {{option family-monospace}} value="monospace">Monospace</option>
       </select>
 
       <input type="number" id="font-size" data-css="font-size"
@@ -352,19 +344,19 @@
              max="10" min="-10" />
 
       <a id="bold" title="Bold"
-         class="toolbar-icon {{#isBold}}active{{/isBold}}"></a>
+         class="toolbar-icon {{active isBold}}"></a>
       <a id="italic" title="Italic"
-         class="toolbar-icon {{#isItalic}}active{{/isItalic}}"></a>
+         class="toolbar-icon {{active isItalic}}"></a>
       <a id="underline" title="Underline"
-         class="toolbar-icon {{#isUnderline}}active{{/isUnderline}}"></a>
+         class="toolbar-icon {{active isUnderline}}"></a>
       <a id="text-align-left" title="Align Left"
-         class="toolbar-icon align {{#align-left}}active{{/align-left}}"></a>
+         class="toolbar-icon align {{active align-left}}"></a>
       <a id="text-align-center" title="Align Center"
-         class="toolbar-icon align {{#align-center}}active{{/align-center}}"></a>
+         class="toolbar-icon align {{active align-center}}"></a>
       <a id="text-align-right" title="Align Right"
-         class="toolbar-icon align {{#align-right}}active{{/align-right}}"></a>
+         class="toolbar-icon align {{active align-right}}"></a>
       <a id="align-justify" title="Justify"
-         class="toolbar-icon align {{#align-justify}}active{{/align-justify}}"></a>
+         class="toolbar-icon align {{active align-justify}}"></a>
 
       <a id="lorum-ipsum" title="Lorum Ipsum" class="toolbar-icon"></a>
 
