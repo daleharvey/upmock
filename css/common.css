@@ -135,14 +135,30 @@ header {
 
 .dropdown .inner {
     display: none;
-    background: #666;
+    background: #DDD;
     padding: 10px;
     border-radius: 3px;
     position: absolute;
-    top: 25px;
+    top: 30px;
     left: -27px;
-    color:white;
+    color: #333;
     z-index: 9000;
+    border: 1px solid #CCC;
+    box-shadow: 1px 1px 1px #222;
+}
+
+.inner:after {
+    border-color: #DDD transparent;
+    border-style: solid;
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    border-width: 0 8px 8px;
+    bottom: auto;
+    left: 30px;
+    margin-left: -5px;
+    top: -8px;
 }
 
 .inner table.values td:first-child {
@@ -384,7 +400,7 @@ form label {
 
 form label span {
     display:block;
-    width: 50px;
+    width: 60px;
 }
 
 
@@ -518,22 +534,6 @@ h3 {
     z-index: 8000;
 }
 
-.inner:after {
-    border-color: #666 transparent;
-    border-style: solid;
-    content: "";
-    display: block;
-    position: absolute;
-    width: 0;
-    border-width: 0 10px 10px;
-    bottom: auto;
-    left: 30px;
-    margin-left: -5px;
-    top: -10px;
-}
-.triangle-isosceles:after {
-}
-
 .inner .jscolour {
     background: transparent;
     border: 0px;
@@ -554,14 +554,13 @@ h3 {
     width: 100%;
     box-sizing: border-box;
     resize: none;
-    background: #333;
-    color: #AAA;
     border: 1px solid;
 }
 
 #css-value {
     width: 250px;
     height: 100px;
+    font-family: monospace;
 }
 
 .tabs .page {
