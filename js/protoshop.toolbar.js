@@ -492,7 +492,7 @@ MultipleElementView = Trail.View.extend({
   template: '#multiple-toolbar-tpl',
 
   postRender: function(dom) {
-    $('.tool-btn', dom).bind('mousedown', function(e) {
+    $('button', dom).bind('mousedown', function(e) {
 
       var ps = window.protoshop;
       var align = $(e.target).data('align');
