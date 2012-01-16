@@ -250,7 +250,7 @@ BgView = Trail.View.extend({
     });
 
     $('#canvas-width', $dom).bind('change input', function() {
-      localJSON.set(window.protoshop.site_prefix + '-width', parseInt(this.value, 10))
+      localJSON.set(window.protoshop.site_prefix + '-width', parseInt(this.value, 10));
       window.protoshop.redraw();
     });
 
