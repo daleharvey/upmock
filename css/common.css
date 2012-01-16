@@ -53,7 +53,7 @@ html, body {
 
 #cursor { background: url(../img/famfam/cursor.png); }
 #add-block { background: url(../img/fague/ui-panel.png); }
-#add-text { background: url(../img/text.gif); }
+#add-text { background: url(../img/fague/ui-label.png); }
 #add-h1 { background: url(../img/famfam/text_heading_1.png); }
 #add-hr { background: url(../img/fague/ui-separator.png); }
 #add-vr { background: url(../img/fague/ui-vertical-separator.png); }
@@ -161,7 +161,7 @@ header {
     float: left;
 }
 
-#toggle-grid    { background-image: url(../img/grid.png); }
+#toggle-grid    { background-image: url(../img/fague/grid.png); }
 #bold           { background-image: url(../img/famfam/text_bold.png); }
 #italic         { background-image: url(../img/famfam/text_italic.png); }
 #underline      { background-image: url(../img/famfam/text_underline.png); }
