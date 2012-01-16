@@ -352,20 +352,21 @@ header {
 }
 
 .handles div {
-    background: blue;
-    height: 6px;
-    width: 6px;
+    background: white;
+    height: 7px;
+    width: 7px;
     position: absolute;
+    border:1px solid black;
 }
 
-.handle-nw { top: -4px; left: -4px; cursor: nwse-resize; }
-.handle-ne { top: -4px; right: -4px; cursor: nesw-resize; }
-.handle-sw { bottom: -4px; left: -4px; cursor: nesw-resize; }
-.handle-se { bottom: -4px; right: -4px; cursor: nwse-resize;  }
-.handle-n { top: -4px; left: 50%; margin-left: -3px; cursor: ns-resize; }
-.handle-e { top: 50%; right: -4px; margin-top: -3px;cursor: ew-resize; }
-.handle-s { bottom: -4px; left: 50%; margin-left: -3px; cursor: ns-resize; }
-.handle-w { top: 50%; left: -4px; margin-top: -3px; cursor: ew-resize; }
+.handle-nw { top: -8px; left: -8px; cursor: nwse-resize; }
+.handle-ne { top: -8px; right: -8px; cursor: nesw-resize; }
+.handle-sw { bottom: -8px; left: -8px; cursor: nesw-resize; }
+.handle-se { bottom: -8px; right: -8px; cursor: nwse-resize;  }
+.handle-n { top: -8px; left: 50%; margin-left: -4px; cursor: ns-resize; }
+.handle-e { top: 50%; right: -8px; margin-top: -4px;cursor: ew-resize; }
+.handle-s { bottom: -8px; left: 50%; margin-left: -4px; cursor: ns-resize; }
+.handle-w { top: 50%; left: -8px; margin-top: -4px; cursor: ew-resize; }
 
 #tabs {
     display: -webkit-box;
@@ -580,8 +581,6 @@ h3 {
 
 #info {
     position: absolute;
-    top: 50px;
-    left: 50px;
     background: yellow;
     z-index: 6000;
     font-family: monospace;
