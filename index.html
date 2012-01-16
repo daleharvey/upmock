@@ -32,383 +32,381 @@
       </div>
     </div>
 
-    <script type="text/html" id="background-toolbar-tpl">
-      <div class="section">
-        <div id="picker-placeholder"></div>
-        <input type="number" min="100" value="{{canvasWidth}}"
-               id="canvas-width" class="toolbar-label-icon" />
-      </div>
-    </script>
+  </body>
 
-    <script type="text/html" id="picker-tpl">
 
-      <div class="dropdown toolbar-icon picker" id="{{pickerId}}">
-        <div class="picker-preview" style="background: {{background}}"></div>
-        <div class="inner tabs">
+  <script type="text/html" id="background-toolbar-tpl">
+    <div class="section">
+      <div id="picker-placeholder"></div>
+      <input type="number" min="100" value="{{canvasWidth}}"
+             id="canvas-width" class="toolbar-label-icon" />
+    </div>
+  </script>
 
-          <textarea class="picker-value">{{background}}</textarea>
 
-          <h3>Used Colours</h3>
-          <div id="used-colours" class="overflow"></div>
-          <div id="tabs">
-            <a class="tab-link" data-target="colour-placeholder">Solid Colour</a>
-            <a class="tab-link" data-target="gradient-placeholder">Gradient</a>
-            <a class="tab-link" data-target="image-placeholder">Image</a>
+  <script type="text/html" id="picker-tpl">
+
+    <div class="dropdown toolbar-icon picker" id="{{pickerId}}">
+      <div class="picker-preview" style="background: {{background}}"></div>
+      <div class="inner tabs">
+
+        <textarea class="picker-value">{{background}}</textarea>
+
+        <h3>Used Colours</h3>
+        <div id="used-colours" class="overflow"></div>
+        <div id="tabs">
+          <a class="tab-link" data-target="colour-placeholder">Solid Colour</a>
+          <a class="tab-link" data-target="gradient-placeholder">Gradient</a>
+          <a class="tab-link" data-target="image-placeholder">Image</a>
+        </div>
+        <div class="colour-placeholder page">
+          <div class="picker-placeholder"></div>
+        </div>
+
+        <div class="gradient-placeholder page">
+          <div class="gradient">
+            <div class="gradient-value"></div>
+            <div class="gradient-dom" style=""></div>
           </div>
-          <div class="colour-placeholder page">
-            <div class="picker-placeholder"></div>
-          </div>
+        </div>
 
-          <div class="gradient-placeholder page">
-            <div class="gradient">
-              <div class="gradient-value"></div>
-              <div class="gradient-dom" style=""></div>
-            </div>
-          </div>
-
-          <div class="image-placeholder page">
-            <p>
-              url <input type="text" id="img-url" style="width: 200px;"
-                         value="{{backgroundUrl}}" />
-            </p>
-            <p>
-              color <input type="color" class="color" id="img-color"
-                           value="{{backgroundColor}}"
-                           style="background:{{backgroundColor}}" />
-            </p>
-            <p>
-              <div>top <input type="text" size="6" id="img-top"
-                              value="{{backgroundPosY}}" />
+        <div class="image-placeholder page">
+          <p>
+            url <input type="text" id="img-url" style="width: 200px;"
+                       value="{{backgroundUrl}}" />
+          </p>
+          <p>
+            color <input type="color" class="color" id="img-color"
+                         value="{{backgroundColor}}"
+                         style="background:{{backgroundColor}}" />
+          </p>
+          <p>
+            <div>top <input type="text" size="6" id="img-top"
+                            value="{{backgroundPosY}}" />
               <a>center</a> <a>top</a> <a>bottom</a></div>
-              <div>left <input type="text" size="6" id="img-left"
-                               value="{{backgroundPosX}}" />
+            <div>left <input type="text" size="6" id="img-left"
+                             value="{{backgroundPosX}}" />
               <a>center</a> <a>left</a> <a>right</a></div>
-            </p>
+          </p>
 
-            <label for="repeat-x">repeat-x</label>
-            <input type="checkbox" id="repeat-x"
-                   {{checkbox backgroundRepeatX}} />
-            <label for="repeat-y">repeat-y</label>
-            <input type="checkbox" id="repeat-y"
-                   {{checkbox backgroundRepeatY}} />
+          <label for="repeat-x">repeat-x</label>
+          <input type="checkbox" id="repeat-x"
+                 {{checkbox backgroundRepeatX}} />
+          <label for="repeat-y">repeat-y</label>
+          <input type="checkbox" id="repeat-y"
+                 {{checkbox backgroundRepeatY}} />
 
-            <input type="button" style="float:right" value="Save" />
-          </div>
-
+          <input type="button" style="float:right" value="Save" />
         </div>
+
       </div>
-    </script>
+    </div>
+  </script>
 
-    <script type="text/html" id="textandblock-toolbar-tpl">
 
-      <div class="section" id="textandblock">
+  <script type="text/html" id="textandblock-toolbar-tpl">
+    <div clas="section" id="textandblock">
+      <div id="bg-picker-placeholder"
+           data-background="{{backgroundColor}}"></div>
+      <div class="dropdown toolbar-icon" id="border-picker">
+        <form class="inner">
+          <label>
+            <span>Border</span>
+            <select id="border-picked">
+              <option value="all">All</option>
+              <option value="top">Top</option>
+              <option value="right">Right</option>
+              <option value="bottom">Bottom</option>
+              <option value="left">Left</option>
+            </select>
+          </label>
 
-        <div id="bg-picker-placeholder" data-background="{{backgroundColor}}"></div>
+          <label>
+            <span>Width:</span>
+            <input type="number" value="{{borderWidth}}"
+                   id="border-width" min="0" />
+          </label>
 
-        <div class="dropdown toolbar-icon" id="border-picker">
-          <form class="inner">
-            <label>
-              <span>Border</span>
-              <select id="border-picked">
-                <option value="all">All</option>
-                <option value="top">Top</option>
-                <option value="right">Right</option>
-                <option value="bottom">Bottom</option>
-                <option value="left">Left</option>
-              </select>
-            </label>
+          <label>
+            <span>Colour:</span>
+            <input type="color" class="color" id="border-colour"
+                   value="{{borderColor}}" />
+          </label>
 
-            <label>
-              <span>Width:</span>
-              <input type="number" value="{{borderWidth}}"
-                     id="border-width" min="0" />
-            </label>
-
-            <label>
-              <span>Colour:</span>
-              <input type="color" class="color" id="border-colour"
-                     value="{{borderColor}}" />
-            </label>
-
-            <label>
-              <span>Style:</span>
-              <select id="border-style">
-                <option value="solid">Solid</option>
-                <option value="dotted">Dotted</option>
-                <option value="dashed">Dashed</option>
-              </select>
-            </label>
-          </form>
-        </div>
+          <label>
+            <span>Style:</span>
+            <select id="border-style">
+              <option value="solid">Solid</option>
+              <option value="dotted">Dotted</option>
+              <option value="dashed">Dashed</option>
+            </select>
+          </label>
+        </form>
       </div>
 
       <div class="dropdown toolbar-icon" id="border-radius">
+        <form class="inner">
 
-        <table class="inner">
-          <tr>
-            <td>Border:</td>
-            <td>
-              <select id="border-radius-picked">
-                <option value="all">All</option>
-                <option value="top-left">Top Left</option>
-                <option value="top-right">Top Right</option>
-                <option value="bottom-left">Bottom Left</option>
-                <option value="bottom-right">Bottom Right</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>Width:</td>
-            <td>
-              <input type="number" value="{{borderRadius}}" min="0"
-                     id="border-radius-value" />
-            </td>
-          </tr>
-        </table>
+          <label>
+            <span>Border</span>
+            <select id="border-radius-picked">
+              <option value="all">All</option>
+              <option value="top-left">Top Left</option>
+              <option value="top-right">Top Right</option>
+              <option value="bottom-left">Bottom Left</option>
+              <option value="bottom-right">Bottom Right</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Width:</span>
+            <input type="number" value="{{borderRadius}}" min="0"
+                   id="border-radius-value" />
+          </label>
+
+        </form>
       </div>
 
-        <input type="number" id="opacity" data-css="opacity" value="{{opacity}}"
-               class="toolbar-label-icon" min="0" max="1" step="0.05" />
+      <input type="number" id="opacity" data-css="opacity" value="{{opacity}}"
+             class="toolbar-label-icon" min="0" max="1" step="0.05" />
 
-        <a id="lock" title="Lock" class="toolbar-icon"></a>
+      <a id="lock" title="Lock" class="toolbar-icon"></a>
 
-        <div class="dropdown toolbar-icon" id="shadow">
-          <table class="inner">
-            <tr>
-              <td>blur:</td>
-              <td><input id="shadow-size" type="range"
-                         value="{{shadow.size}}" /></td>
-            </tr>
-            <tr>
-              <td>distance:</td>
-              <td><input id="shadow-distance" type="range"
-                         value="{{shadow.distance}}" /></td>
-            </tr>
-            <tr>
-              <td>angle:</td>
-              <td><input type="angle" id="shadow-angle"
-                         value="{{shadow.angle}}" /></td>
-            </tr>
-            <tr>
-              <td>colour:</td>
-              <td><input id="shadow-color" type="text" class="color"
-                         style="background:{{shadow.colour}}"
-                         value="{{shadow.colour}}" /></td>
-            </tr>
-          </table>
+      <div class="dropdown toolbar-icon" id="shadow">
+        <form class="inner">
+          <label>
+            <span>blur:</span>
+            <input id="shadow-size" type="range" value="{{shadow.size}}" />
+          </label>
+          <label>
+            <span>distance:</span>
+            <input id="shadow-distance" type="range"
+                   value="{{shadow.distance}}" />
+          </label>
+          <label>
+            <span>angle:</span>
+            <input type="angle" id="shadow-angle" value="{{shadow.angle}}" />
+          </label>
+          <label>
+            <span>colour:</span>
+            <input id="shadow-color" type="text" class="color"
+                   style="background:{{shadow.colour}}"
+                   value="{{shadow.colour}}" />
+          </label>
+        </form>
+      </div>
+      <a id="send-to-back" title="Send to Back" class="toolbar-icon"></a>
+      <a id="bring-to-front" title="Bring to Front" class="toolbar-icon"></a>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="single-toolbar-tpl">
+    <div class="dropdown toolbar-icon" id="css">
+      <form id="css-form" class="inner">
+        <textarea id="css-value">{{cssValue}}</textarea>
+        <input type="submit" value="Update CSS" />
+      </form>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="distribute-toolbar-tpl">
+    <div class="section">
+      <a id="distribute-horizontal" title="Distribute Horizontally"
+         class="toolbar-icon"></a>
+      <a id="distribute-vertical" title="Distribute Vertically"
+         class="toolbar-icon"></a>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="multiple-toolbar-tpl">
+    <div class="dropdown toolbar-icon" id="align">
+      <div class="inner">
+        <div style="float:left;">
+          <button class="tool-btn" id="align-top" data-align="top"></button>
+          <button class="tool-btn" id="align-middle"
+                  data-align="middle"></button>
+          <button class="tool-btn" id="align-bottom"
+                  data-align="bottom"></button>
         </div>
-        <a id="send-to-back" title="Send to Back" class="toolbar-icon"></a>
-        <a id="bring-to-front" title="Bring to Front" class="toolbar-icon"></a>
-      </div>
-    </script>
-
-    <script type="text/html" id="single-toolbar-tpl">
-        <div class="dropdown toolbar-icon" id="css">
-          <div class="inner">
-            <form id="css-form">
-              <textarea id="css-value">{{cssValue}}</textarea>
-              <input type="submit" value="Update CSS" />
-            </form>
-          </div>
+        <div style="float:right">
+          <button class="tool-btn" id="align-left"
+                  data-align="left"></button>
+          <button class="tool-btn" id="align-center"
+                  data-align="center"></button>
+          <button class="tool-btn" id="align-right"
+                  data-align="right"></button>
         </div>
-    </script>
-
-    <script type="text/html" id="distribute-toolbar-tpl">
-      <div class="section">
-        <a id="distribute-horizontal" title="Distribute Horizontally"
-           class="toolbar-icon"></a>
-        <a id="distribute-vertical" title="Distribute Vertically"
-           class="toolbar-icon"></a>
       </div>
-    </script>
+    </div>
+  </script>
 
-    <script type="text/html" id="multiple-toolbar-tpl">
-      <div class="dropdown toolbar-icon" id="align">
+
+  <script type="text/html" id="global-toolbar-tpl">
+    <div class="section" id="global">
+      <a id="toggle-grid"
+         class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}"
+         title="Toggle Grid Overlay"></a>
+      <div class="dropdown dropdown-arrow" id="overlay-form">
+        <div class="arrow-down"></div>
+        <form class="inner">
+          <h3>Grid Overlay</h3>
+          <label>
+            <span>Width:</span>
+            <input id="overlay-width" type="number"
+                   value="{{overlay.width}}" />
+          </label>
+          <label>
+            <span>Gutter:</span>
+            <input id="overlay-gutter" type="number"
+                   value="{{overlay.gutter}}" />
+          </label>
+          <label>
+            <span>Colour:</span>
+            <input id="overlay-colour" type="colour" class="color"
+                   value="{{overlay.colour}}" />
+          </label>
+          <label>
+            <span>Opacity:</span>
+            <input id="overlay-opacity" type="number" max="1" min="0"
+                   step="0.1" value="{{overlay.opacity}}" />
+          </label>
+        </form>
+      </div>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="img-toolbar-tpl">
+    <div class="section" id="img">
+      <form id="set-image-src" class="toolbar-form">
+        <input type="text" placeholder="Image Source" id="image-src"
+               value="{{backgroundImage}}" />
+        <input type="submit" value="Update" />
+      </form>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="button-toolbar-tpl">
+    <div class="section" id="button">
+      <form id="set-button-text" class="toolbar-form">
+        <input type="text" id="button-text" value="{{buttonText}}" />
+        <input type="submit" value="Update" />
+      </form>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="select-toolbar-tpl">
+    <div class="section" id="select">
+      <form id="set-select-text" class="toolbar-form">
+        <input type="text" id="select-text" value="{{selectText}}" />
+        <input type="submit" value="Update" />
+      </form>
+    </div>
+  </script>
+
+
+  <script type="text/html" id="text-toolbar-tpl">
+    <div class="section" id="text">
+
+      <div class="dropdown toolbar-icon picker" id="fg-picker">
+        <div class="picker-preview"></div>
         <div class="inner">
-          <div style="float:left;">
-            <button class="tool-btn" id="align-top" data-align="top"></button>
-            <button class="tool-btn" id="align-middle"
-                    data-align="middle"></button>
-            <button class="tool-btn" id="align-bottom"
-                    data-align="bottom"></button>
-          </div>
-          <div style="float:right">
-            <button class="tool-btn" id="align-left"
-                    data-align="left"></button>
-            <button class="tool-btn" id="align-center"
-                    data-align="center"></button>
-              <button class="tool-btn" id="align-right"
-                      data-align="right"></button>
-          </div>
+          <input class="picker-value" value="{{color}}" data-css="color" />
+          <div class="picker-placeholder"></div>
         </div>
       </div>
-    </script>
 
-    <script type="text/html" id="global-toolbar-tpl">
-      <div class="section" id="global">
-        <a id="toggle-grid"
-           class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}"
-           title="Toggle Grid Overlay"></a>
-        <div class="dropdown dropdown-arrow" id="overlay-form">
-          <div class="arrow-down"></div>
-          <div class="inner">
-            <h3>Grid Overlay</h3>
-            <table>
-              <tr>
-                <td>Width:</td>
-                <td><input id="overlay-width" type="number"
-                           value="{{overlay.width}}" /></td>
-              </tr>
-              <tr>
-                <td>Gutter:</td>
-                <td><input id="overlay-gutter" type="number"
-                           value="{{overlay.gutter}}" /></td>
-              </tr>
-              <tr>
-                <td>Colour:</td>
-                <td><input id="overlay-colour" type="colour" class="color"
-                           value="{{overlay.colour}}" /></td>
-              </tr>
-              <tr>
-                <td>Opacity:</td>
-                <td><input id="overlay-opacity" type="number" max="1" min="0"
-                           step="0.1" value="{{overlay.opacity}}" /></td>
-              </tr>
-          </div>
-        </div>
-      </div>
-    </script>
+      <select id="font-family" class="toolbar-select">
+        <option {{#family-helvetica}}selected="selected"{{/family-helvetica}}
+                value="helvetica">Helvetica</option>
+        <option {{#family-tnr}}selected="selected"{{/family-tnr}}
+                value="tnr">Times New Roman</option>
+        <option {{#family-georgia}}selected="selected"{{/family-georgia}}
+                value="georgia">Georgia</option>
+        <option {{#family-garamond}}selected="selected"{{/family-garamond}}
+                value="garamond">Garamond</option>
+        <option {{#family-verdana}}selected="selected"{{/family-verdana}}
+                value="verdana">Verdana</option>
+        <option {{#family-trebuchet}}selected="selected"{{/family-trebuchet}}
+                value="trebuchet">Trebuchet</option>
+        <option {{#family-impact}}selected="selected"{{/family-impact}}
+                value="impact">Impact</option>
+        <option {{#family-monospace}}selected="selected"{{/family-monospace}}
+                value="monospace">Monospace</option>
+      </select>
 
-    <script type="text/html" id="img-toolbar-tpl">
-      <div class="section" id="img">
-        <form id="set-image-src" class="toolbar-form">
-          <input type="text" placeholder="Image Source" id="image-src"
-                 value="{{backgroundImage}}" />
-          <input type="submit" value="Update" />
+      <input type="number" id="font-size" data-css="font-size"
+             value="{{fontSize}}"
+             class="toolbar-label-icon" min="0" max="400" />
+
+      <input type="number" id="line-height" data-css="line-height"
+             value="{{lineHeight}}" class="toolbar-label-icon" max="200" />
+
+      <input type="number" id="letter-spacing" data-css="letter-spacing"
+             value="{{letterSpacing}}" class="toolbar-label-icon"
+             max="10" min="-10" />
+
+      <a id="bold" title="Bold"
+         class="toolbar-icon {{#isBold}}active{{/isBold}}"></a>
+      <a id="italic" title="Italic"
+         class="toolbar-icon {{#isItalic}}active{{/isItalic}}"></a>
+      <a id="underline" title="Underline"
+         class="toolbar-icon {{#isUnderline}}active{{/isUnderline}}"></a>
+      <a id="text-align-left" title="Align Left"
+         class="toolbar-icon align {{#align-left}}active{{/align-left}}"></a>
+      <a id="text-align-center" title="Align Center"
+         class="toolbar-icon align {{#align-center}}active{{/align-center}}"></a>
+      <a id="text-align-right" title="Align Right"
+         class="toolbar-icon align {{#align-right}}active{{/align-right}}"></a>
+      <a id="align-justify" title="Justify"
+         class="toolbar-icon align {{#align-justify}}active{{/align-justify}}"></a>
+
+      <a id="lorum-ipsum" title="Lorum Ipsum" class="toolbar-icon"></a>
+
+      <div class="dropdown toolbar-icon" id="text-shadow">
+        <form class="inner">
+          <label>
+            <span>blur:</span>
+            <input id="text-shadow-size" type="range"
+                   value="{{shadow.size}}" />
+          </label>
+          <label>
+            <span>distance:</span>
+            <input id="text-shadow-distance" type="range"
+                   value="{{shadow.distance}}" />
+          </label>
+          <label>
+            <span>angle:</span>
+            <input type="angle" id="text-shadow-angle"
+                   value="{{shadow.angle}}" />
+          </label>
+          <label>
+            <span>colour:</span>
+            <input id="text-shadow-color" type="text" class="color"
+                   style="background:{{shadow.colour}}"
+                   value="{{shadow.colour}}" />
+          </label>
         </form>
       </div>
-    </script>
+    </div>
+  </script>
 
-    <script type="text/html" id="button-toolbar-tpl">
-      <div class="section" id="button">
-        <form id="set-button-text" class="toolbar-form">
-          <input type="text" id="button-text" value="{{buttonText}}" />
-          <input type="submit" value="Update" />
-        </form>
-      </div>
-    </script>
-
-
-    <script type="text/html" id="select-toolbar-tpl">
-      <div class="section" id="select">
-        <form id="set-select-text" class="toolbar-form">
-          <input type="text" id="select-text" value="{{selectText}}" />
-          <input type="submit" value="Update" />
-        </form>
-      </div>
-    </script>
-
-
-    <script type="text/html" id="text-toolbar-tpl">
-      <div class="section" id="text">
-
-        <div class="dropdown toolbar-icon picker" id="fg-picker">
-          <div class="picker-preview"></div>
-          <div class="inner">
-            <input class="picker-value" value="{{color}}" data-css="color" />
-            <div class="picker-placeholder"></div>
-          </div>
-        </div>
-
-
-        <select id="font-family" class="toolbar-select">
-          <option {{#family-helvetica}}selected="selected"{{/family-helvetica}}
-                  value="helvetica">Helvetica</option>
-          <option {{#family-tnr}}selected="selected"{{/family-tnr}}
-                  value="tnr">Times New Roman</option>
-          <option {{#family-georgia}}selected="selected"{{/family-georgia}}
-                  value="georgia">Georgia</option>
-          <option {{#family-garamond}}selected="selected"{{/family-garamond}}
-                  value="garamond">Garamond</option>
-          <option {{#family-verdana}}selected="selected"{{/family-verdana}}
-                  value="verdana">Verdana</option>
-          <option {{#family-trebuchet}}selected="selected"{{/family-trebuchet}}
-                  value="trebuchet">Trebuchet</option>
-          <option {{#family-impact}}selected="selected"{{/family-impact}}
-                  value="impact">Impact</option>
-          <option {{#family-monospace}}selected="selected"{{/family-monospace}}
-                  value="monospace">Monospace</option>
-        </select>
-
-        <input type="number" id="font-size" data-css="font-size"
-               value="{{fontSize}}"
-               class="toolbar-label-icon" min="0" max="400" />
-
-        <input type="number" id="line-height" data-css="line-height"
-               value="{{lineHeight}}" class="toolbar-label-icon" max="200" />
-
-        <input type="number" id="letter-spacing" data-css="letter-spacing"
-               value="{{letterSpacing}}" class="toolbar-label-icon"
-               max="10" min="-10" />
-
-        <a id="bold" title="Bold"
-           class="toolbar-icon {{#isBold}}active{{/isBold}}"></a>
-        <a id="italic" title="Italic"
-           class="toolbar-icon {{#isItalic}}active{{/isItalic}}"></a>
-        <a id="underline" title="Underline"
-           class="toolbar-icon {{#isUnderline}}active{{/isUnderline}}"></a>
-        <a id="text-align-left" title="Align Left"
-           class="toolbar-icon align {{#align-left}}active{{/align-left}}"></a>
-        <a id="text-align-center" title="Align Center"
-           class="toolbar-icon align {{#align-center}}active{{/align-center}}"></a>
-        <a id="text-align-right" title="Align Right"
-           class="toolbar-icon align {{#align-right}}active{{/align-right}}"></a>
-        <a id="align-justify" title="Justify"
-           class="toolbar-icon align {{#align-justify}}active{{/align-justify}}"></a>
-
-        <a id="lorum-ipsum" title="Lorum Ipsum" class="toolbar-icon"></a>
-
-        <div class="dropdown toolbar-icon" id="text-shadow">
-          <table class="inner">
-            <tr>
-              <td>blur:</td>
-              <td><input id="text-shadow-size" type="range"
-                         value="{{shadow.size}}" /></td>
-            </tr>
-            <tr>
-              <td>distance:</td>
-              <td><input id="text-shadow-distance" type="range"
-                         value="{{shadow.distance}}" /></td>
-            </tr>
-            <tr>
-              <td>angle:</td>
-              <td><input type="angle" id="text-shadow-angle"
-                         value="{{shadow.angle}}" /></td>
-            </tr>
-            <tr>
-              <td>colour:</td>
-              <td><input id="text-shadow-color" type="text" class="color"
-                         style="background:{{shadow.colour}}"
-                         value="{{shadow.colour}}" /></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </script>
-
-    <script type="text/html" id="shortcut-section-tpl">
-      <div class="shortcut-section">
-        <h3>{{description}}</h3>
-        {{#shortcuts}}
-        <dl>
-          <dt>{{key}}</dt>
-          <dd>{{description}}</dd>
-        </dl>
-        {{/shortcuts}}
-      </div>
-    </script>
-
-  </body>
+  <script type="text/html" id="shortcut-section-tpl">
+    <div class="shortcut-section">
+      <h3>{{description}}</h3>
+      {{#shortcuts}}
+      <dl>
+        <dt>{{key}}</dt>
+        <dd>{{description}}</dd>
+      </dl>
+      {{/shortcuts}}
+    </div>
+  </script>
 
   <script src="./js/libs/jquery-1.7.1.min.js"></script>
   <script src="./js/libs/handlebars-1.0.0.beta.4.js"></script>

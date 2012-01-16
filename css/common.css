@@ -153,10 +153,6 @@ header {
     padding: 0 5px;
 }
 
-.inner label {
-    display: block;
-}
-
 .dropdown.active .inner {
     display: block;
 }
@@ -357,9 +353,13 @@ header {
 
 #tabs {
     display: -webkit-box;
+    display: -moz-box;
     -webkit-box-align: stretch;
     -webkit-box-orient: horizontal;
+    -moz-box-align: stretch;
+    -moz-box-orient: horizontal;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .tab-link {
@@ -367,25 +367,25 @@ header {
     border-bottom:1px solid #AAA;
     display: block;
     -webkit-box-flex: 1;
+    -moz-box-flex: 1;
 }
 .tab-link.selected {
     border-bottom:3px solid #AAA;
 }
 
-#border-picker label {
+form label {
     display: -webkit-box;
     -webkit-box-align: stretch;
     -webkit-box-orient: horizontal;
+    display: -moz-box;
+    -moz-box-align: stretch;
+    -moz-box-orient: horizontal;
 }
 
-#border-picker label span {
+form label span {
     display:block;
     width: 50px;
 }
-/* #border-picker label input, #border-picker label select { */
-/*     display:block; */
-/*     -webkit-box-flex: 1; */
-/* } */
 
 
 .grid-overlay {
@@ -575,6 +575,7 @@ h3 {
 .stops { position: relative; left: -5px; }
 .stop-input { visibility: hidden; }
 
+#background-picker .inner { width: 250px; }
 .gradient { margin-bottom: 10px; }
 
 #info {
