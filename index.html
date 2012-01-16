@@ -17,7 +17,7 @@
     <div id="canvas_wrapper">
       <div id="canvas"></div>
       <div id="canvas_copy">
-        <div class="grid-overlay overlay"></div>
+        <div class="grid-overlay"></div>
         <div id="selection"></div>
         <div id="snapx"></div>
         <div id="snapy"></div>
@@ -37,7 +37,8 @@
     <script type="text/html" id="background-toolbar-tpl">
       <div class="section">
         <div id="picker-placeholder"></div>
-        <input type="number" value="{{canvasWidth}}" id="canvas-width" class="toolbar-label-icon" />
+        <input type="number" value="{{canvasWidth}}" id="canvas-width"
+               class="toolbar-label-icon" />
       </div>
     </script>
 
@@ -55,9 +56,12 @@
           <div id="used-colours" class="overflow"></div>
 
           <table style="width:100%" cellspacing="0"><tr>
-              <td><a class="tab-link" data-target="colour-placeholder">Solid Colour</a></td>
-              <td><a class="tab-link" data-target="gradient-placeholder">Gradient</a></td>
-              <td><a class="tab-link" data-target="image-placeholder">Image</a></td>
+              <td><a class="tab-link" data-target="colour-placeholder">
+                  Solid Colour</a></td>
+              <td><a class="tab-link" data-target="gradient-placeholder">
+                  Gradient</a></td>
+              <td><a class="tab-link" data-target="image-placeholder">
+                  Image</a></td>
           </tr></table>
 
           <div class="colour-placeholder page">
@@ -78,7 +82,8 @@
             </p>
             <p>
               color <input type="color" class="color" id="img-color"
-                           value="{{backgroundColor}}" style="background:{{backgroundColor}}" />
+                           value="{{backgroundColor}}"
+                           style="background:{{backgroundColor}}" />
             </p>
             <p>
               <div>top <input type="text" size="6" id="img-top"
@@ -90,9 +95,11 @@
             </p>
 
             <label for="repeat-x">repeat-x</label>
-            <input type="checkbox" id="repeat-x" {{checkbox backgroundRepeatX}} />
+            <input type="checkbox" id="repeat-x"
+                   {{checkbox backgroundRepeatX}} />
             <label for="repeat-y">repeat-y</label>
-            <input type="checkbox" id="repeat-y" {{checkbox backgroundRepeatY}} />
+            <input type="checkbox" id="repeat-y"
+                   {{checkbox backgroundRepeatY}} />
 
             <input type="button" style="float:right" value="Save" />
           </div>
@@ -105,7 +112,8 @@
 
       <div class="section" id="textandblock">
 
-        <div id="bg-picker-placeholder" data-background="{{backgroundColor}}"></div>
+        <div id="bg-picker-placeholder"
+             data-background="{{backgroundColor}}"></div>
 
         <div class="dropdown toolbar-icon" id="border-picker">
 
@@ -134,7 +142,8 @@
               </tr>
               <tr>
                 <td>Width:</td>
-                <td><input type="number" value="{{borderWidth}}" id="border-width" min="0" /></td>
+                <td><input type="number" value="{{borderWidth}}"
+                           id="border-width" min="0" /></td>
               </tr>
               <tr>
                 <td>Colour:</td>
@@ -172,7 +181,8 @@
             <tr>
               <td>Width:</td>
               <td>
-                <input type="number" value="{{borderRadius}}" min="0" id="border-radius-value" />
+                <input type="number" value="{{borderRadius}}" min="0"
+                       id="border-radius-value" />
               </td>
             </tr>
           </table>
@@ -187,15 +197,18 @@
           <table class="inner triangle-isosceles top">
             <tr>
               <td>blur:</td>
-              <td><input id="shadow-size" type="range" value="{{shadow.size}}" /></td>
+              <td><input id="shadow-size" type="range"
+                         value="{{shadow.size}}" /></td>
             </tr>
             <tr>
               <td>distance:</td>
-              <td><input id="shadow-distance" type="range" value="{{shadow.distance}}" /></td>
+              <td><input id="shadow-distance" type="range"
+                         value="{{shadow.distance}}" /></td>
             </tr>
             <tr>
               <td>angle:</td>
-              <td><input type="angle" id="shadow-angle" value="{{shadow.angle}}" /></td>
+              <td><input type="angle" id="shadow-angle"
+                         value="{{shadow.angle}}" /></td>
             </tr>
             <tr>
               <td>colour:</td>
@@ -235,13 +248,18 @@
         <div class="inner triangle-isosceles top">
           <div style="float:left;">
             <button class="tool-btn" id="align-top" data-align="top"></button>
-            <button class="tool-btn" id="align-middle" data-align="middle"></button>
-            <button class="tool-btn" id="align-bottom" data-align="bottom"></button>
+            <button class="tool-btn" id="align-middle"
+                    data-align="middle"></button>
+            <button class="tool-btn" id="align-bottom"
+                    data-align="bottom"></button>
           </div>
           <div style="float:right">
-            <button class="tool-btn" id="align-left" data-align="left"></button>
-            <button class="tool-btn" id="align-center" data-align="center"></button>
-              <button class="tool-btn" id="align-right" data-align="right"></button>
+            <button class="tool-btn" id="align-left"
+                    data-align="left"></button>
+            <button class="tool-btn" id="align-center"
+                    data-align="center"></button>
+              <button class="tool-btn" id="align-right"
+                      data-align="right"></button>
           </div>
         </div>
       </div>
@@ -249,7 +267,8 @@
 
     <script type="text/html" id="global-toolbar-tpl">
       <div class="section" id="global">
-        <a id="toggle-grid" class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}"
+        <a id="toggle-grid"
+           class="toolbar-icon {{#isOverlay}}active{{/isOverlay}}"
            title="Toggle Grid Overlay"></a>
         <div class="dropdown dropdown-arrow" id="overlay-form">
           <div class="arrow-down"></div>
@@ -273,8 +292,8 @@
               </tr>
               <tr>
                 <td>Opacity:</td>
-                <td><input id="overlay-opacity" type="number" max="1" min="0" step="0.1"
-                           value="{{overlay.opacity}}" /></td>
+                <td><input id="overlay-opacity" type="number" max="1" min="0"
+                           step="0.1" value="{{overlay.opacity}}" /></td>
               </tr>
           </div>
         </div>
@@ -342,7 +361,8 @@
                   value="monospace">Monospace</option>
         </select>
 
-        <input type="number" id="font-size" data-css="font-size" value="{{fontSize}}"
+        <input type="number" id="font-size" data-css="font-size"
+               value="{{fontSize}}"
                class="toolbar-label-icon" min="0" max="400" />
 
         <input type="number" id="line-height" data-css="line-height"
@@ -373,15 +393,18 @@
           <table class="inner triangle-isosceles top">
             <tr>
               <td>blur:</td>
-              <td><input id="text-shadow-size" type="range" value="{{shadow.size}}" /></td>
+              <td><input id="text-shadow-size" type="range"
+                         value="{{shadow.size}}" /></td>
             </tr>
             <tr>
               <td>distance:</td>
-              <td><input id="text-shadow-distance" type="range" value="{{shadow.distance}}" /></td>
+              <td><input id="text-shadow-distance" type="range"
+                         value="{{shadow.distance}}" /></td>
             </tr>
             <tr>
               <td>angle:</td>
-              <td><input type="angle" id="text-shadow-angle" value="{{shadow.angle}}" /></td>
+              <td><input type="angle" id="text-shadow-angle"
+                         value="{{shadow.angle}}" /></td>
             </tr>
             <tr>
               <td>colour:</td>

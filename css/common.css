@@ -361,6 +361,9 @@ header {
     top: 0;
     position: absolute;
     pointer-events: none;
+    display: none;
+    pointer-events: none;
+    -moz-user-select: -moz-none;
 }
 
 #selection {
@@ -379,13 +382,6 @@ header {
 /*
  * DIALOGS
  */
-
-.overlay {
-    display: none;
-    z-index: 5000;
-    pointer-events: none;
-    -moz-user-select: -moz-none;
-}
 
 .modal-overlay {
     position: absolute;
