@@ -142,7 +142,6 @@ header {
     top: 25px;
     left: -27px;
     color:white;
-    width: 240px;
     z-index: 9000;
 }
 
@@ -152,6 +151,10 @@ header {
 
 .inner .values td {
     padding: 0 5px;
+}
+
+.inner label {
+    display: block;
 }
 
 .dropdown.active .inner {
@@ -352,6 +355,38 @@ header {
 .handle-s { bottom: -4px; left: 50%; margin-left: -3px; cursor: ns-resize; }
 .handle-w { top: 50%; left: -4px; margin-top: -3px; cursor: ew-resize; }
 
+#tabs {
+    display: -webkit-box;
+    -webkit-box-align: stretch;
+    -webkit-box-orient: horizontal;
+    margin-bottom: 10px;
+}
+
+.tab-link {
+    text-align: center;
+    border-bottom:1px solid #AAA;
+    display: block;
+    -webkit-box-flex: 1;
+}
+.tab-link.selected {
+    border-bottom:3px solid #AAA;
+}
+
+#border-picker label {
+    display: -webkit-box;
+    -webkit-box-align: stretch;
+    -webkit-box-orient: horizontal;
+}
+
+#border-picker label span {
+    display:block;
+    width: 50px;
+}
+/* #border-picker label input, #border-picker label select { */
+/*     display:block; */
+/*     -webkit-box-flex: 1; */
+/* } */
+
 
 .grid-overlay {
     height: 100%;
@@ -483,26 +518,13 @@ h3 {
     z-index: 8000;
 }
 
-triangle-isosceles {
-	position:relative;
-	padding:15px;
-	margin:1em 0 3em;
-	color:#000;
-	background:#666; /* default background for browsers without gradient support */
-	-webkit-border-radius:10px;
-	-moz-border-radius:10px;
-	border-radius:10px;
-}
-
-/* Variant : for top positioned triangle
------------------------------------------- */
-
-.triangle-isosceles.top {
-	background:#666; /* default background for browsers without gradient support */
-}
-
-.triangle-isosceles.top:after {
+.inner:after {
     border-color: #666 transparent;
+    border-style: solid;
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
     border-width: 0 10px 10px;
     bottom: auto;
     left: 30px;
@@ -510,15 +532,6 @@ triangle-isosceles {
     top: -10px;
 }
 .triangle-isosceles:after {
-    border-color: #666 transparent;
-    border-style: solid;
-    border-width: 15px 15px 0;
-    bottom: -15px;
-    content: "";
-    display: block;
-    left: 50px;
-    position: absolute;
-    width: 0;
 }
 
 .inner .jscolour {
@@ -556,13 +569,6 @@ triangle-isosceles {
 
 
  p { margin: 10px 0 0 0; }
-
-.tabs table td { width: 5%;  }
-.tabs table {  margin-bottom: 10px; }
-.tabs td a { display: block;  border-bottom:1px solid #AAA; height: 25px;  box-sizing: border-box; }
-.tab-link { text-align: center; }
-.tab-link.selected { border-bottom:3px solid #AAA; }
-
 
 .gradientBox { height: 100%; width: 100%; }
 .color-stop { width: 8px; height: 8px; border: 1px solid #999; }
@@ -640,7 +646,7 @@ triangle-isosceles {
     border-color: black transparent;
 }
 
-#helphelp {
+#close-help {
     float:right;
     margin: 12px;
 }
