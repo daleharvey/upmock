@@ -161,8 +161,15 @@ Elements.ImgElement = function(opts, obj) {
     img.load(function() {
       self.$dom.removeClass('empty');
       self.$dom.css({'width': this.naturalWidth, 'height': this.naturalHeight});
+      window.protoshop.updateInfo();
     });
     img.attr('src', src);
+  };
+
+  this.resetImageSize = function() {
+    var img = this.$dom.find('img'), src = img.attr('src');
+    img.attr('src', '');
+    this.setImage(src);
   };
 
 };

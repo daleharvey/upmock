@@ -215,6 +215,9 @@ header {
 #lorum-ipsum { background-image: url(../img/famfam/text_letter_omega.png); }
 
 #canvas-width { background-image: url(../img/fague/application-resize.png); }
+#reset-img { background-image: url(../img/fague/image-resize-actual.png); }
+
+
 
 .text-preview {
     display: block;

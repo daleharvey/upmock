@@ -314,6 +314,11 @@ ImgView = Trail.View.extend({
       e.preventDefault();
       window.protoshop.onSelectedUndo('setImage', $('#image-src').val());
     });
+
+    $('#reset-img', dom).bind('mousedown', function() {
+      window.protoshop.onSelectedUndo('resetImageSize');
+    });
+
     return dom;
   },
 
