@@ -189,7 +189,6 @@ header {
 #letter-spacing { background-image: url(../img/famfam/text_letterspacing.png); }
 #line-height    { background-image: url(../img/famfam/text_linespacing.png); }
 #font-size      { background-image: url(../img/famfam/text_smallcaps.png); }
-/* #border-width   { background-image: url(../img/fague/border-weight.png); } */
 #border-radius  { background-image: url(../img/fague/layer-shape-round.png); }
 #border-picker  { background-image: url(../img/fague/border-weight.png); }
 #lock           { background-image: url(../img/famfam/lock.png); }
@@ -242,10 +241,6 @@ header {
     height: 4px;
     z-index: 30000;
 }
-
-/* #fg-picker .picker-value, #border-picker .picker-value { */
-/*     display:none; */
-/* } */
 
 /*
  * MAIN CANVAS
