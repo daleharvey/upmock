@@ -929,6 +929,93 @@ var Protoshop = function() {
 
   $canvas_wrapper.bind('mousedown.global', this.globalMouseDown);
 
+
+  function drop(e) {
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    var offset = {
+      x: $canvas[0].offsetLeft,
+      y: $canvas_wrapper[0].offsetTop - $canvas_wrapper[0].scrollTop
+    };
+
+    var i, len, reader, file;
+    var files = e.dataTransfer.files;
+    var done = [];
+    var count = files.length;
+
+    function fileLoaded(event) {
+      var img = new Elements.ImgElement({
+        index: ++self.index.max,
+        css: { width: 100, height: 100},
+        html: '<img src="" />'
+      });
+      img.css({
+        top: e.clientY - offset.y,
+        left: e.clientX - offset.x + (done.length * 50)
+      });
+      img.setImageData(event.target.result);
+      append(img);
+
+      done.push(img);
+
+      if (done.length === count) {
+        self.selectElement(null);
+        _.each(done, function(obj) {
+          self.selectElement(obj);
+        });
+      }
+    }
+
+    for (i = 0; i < files.length; i++) {
+
+      file = files[i];
+
+      if (file.size > (1048576 * 2)) {
+        Utils.alert('2MB Limit');
+        continue;
+      }
+
+      if (!file.type.match(/image.(png|jpg|jpeg)/)) {
+        Utils.alert('file is not an image');
+        continue;
+      }
+
+      reader = new FileReader();
+      reader.index = i;
+      reader.file = file;
+
+      if (!hasStupidChromeBug()) {
+        reader.addEventListener("loadend", fileLoaded, false);
+      } else {
+        reader.onload = fileLoaded;
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function hasStupidChromeBug() {
+    return typeof(FileReader.prototype.addEventListener) !== "function";
+  }
+
+  function doNothing(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function append(el) {
+    el.$dom.appendTo($canvas);
+    self.selectElement(null);
+    self.selectElement(el);
+    self.saveUndoPoint();
+  }
+
+  document.addEventListener("dragenter", doNothing, false);
+  document.addEventListener("dragover", doNothing, false);
+  document.addEventListener("drop", drop, false);
+
+
   _.each(shortcuts.global.shortcuts, function(key) {
     $(document).bind(key.e, key.override || key.key, function(e) {
       if (!$(e.target).is('span[contenteditable=true]')) {
@@ -939,14 +1026,8 @@ var Protoshop = function() {
     });
   });
 
-  (function() {
 
-    function append(el) {
-      el.$dom.appendTo($canvas);
-      self.selectElement(null);
-      self.selectElement(el);
-      self.saveUndoPoint();
-    }
+  (function() {
 
     var panelFuns = {
       'cursor': function() {

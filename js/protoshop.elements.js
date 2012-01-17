@@ -166,6 +166,16 @@ Elements.ImgElement = function(opts, obj) {
     img.attr('src', src);
   };
 
+  this.setImageData = function(data) {
+    var self = this, img = this.$dom.find('img');
+    img.load(function() {
+      self.$dom.removeClass('empty');
+      self.$dom.css({'width': this.naturalWidth, 'height': this.naturalHeight});
+      window.protoshop.updateInfo();
+    });
+    img.attr('src', data);
+  };
+
   this.resetImageSize = function() {
     var img = this.$dom.find('img'), src = img.attr('src');
     img.attr('src', '');
