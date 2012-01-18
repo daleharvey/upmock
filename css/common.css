@@ -581,6 +581,22 @@ h3 {
     margin-right: 10px;
 }
 
+.toolbar-form input {
+    margin: 0px;
+    padding: 2px;
+    border: 1px solid #AAA;
+    border-radius: 3px 0 0 3px;
+}
+
+.toolbar-form input[type=submit] {
+    padding: 2px 5px;
+    margin: -5px 0 0 -5px;
+    border-radius: 0 3px 3px 0;
+    color: white;
+    border-left: 0;
+    background: -webkit-linear-gradient(90deg,rgb(100,100, 100) 0%,rgb(128,128, 128) 100%)
+}
+
 .dropdown textarea, .picker-value {
     width: 100%;
     box-sizing: border-box;
