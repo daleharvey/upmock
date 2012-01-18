@@ -265,6 +265,25 @@ BgView = Trail.View.extend({
 });
 
 
+RuleView = Trail.View.extend({
+
+  template: '#rule-toolbar-tpl',
+
+  postRender: function($dom) {
+    $('#rule-picker-value', $dom).bind('change', function() {
+      window.protoshop.onSelectedUndo('setColour', this.value);
+    });
+    return $dom;
+  },
+
+  load: function(obj) {
+    return this.render({data: {
+      'color': obj.$dom.find('.rule').css('background-color')
+    }});
+  }
+});
+
+
 SelectView = Trail.View.extend({
 
   template: '#select-toolbar-tpl',
@@ -286,7 +305,6 @@ SelectView = Trail.View.extend({
 
 
 ButtonView = Trail.View.extend({
-
   template: '#button-toolbar-tpl',
 
   postRender: function(dom) {
@@ -687,6 +705,8 @@ Protoshop.Toolbar = function(protoshop) {
       sections = [GlobalView, TextView];
     } else if (areAll(arr, Elements.BlockElement)) {
       sections = [GlobalView, ElementView];
+    } else if (areAll(arr, Elements.HRElement) || areAll(arr, Elements.VRElement)) {
+      sections = [GlobalView, RuleView];
     } else {
       sections = [GlobalView, ElementView];
     }

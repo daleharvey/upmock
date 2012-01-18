@@ -222,8 +222,12 @@ Elements.HRElement = function(opts, obj) {
     cssClass: 'hr',
     attrs: {'data-handles': 'w,e'}
   });
-
   this.init(opts, {'data-type': 'HRElement', 'class': 'block'}, obj);
+
+  this.setColour = function(colour) {
+    this.$dom.find('.rule').css('background-color', colour);
+  };
+
 };
 Elements.HRElement.prototype = new CoreElement();
 
@@ -235,5 +239,9 @@ Elements.VRElement = function(opts, obj) {
   });
 
   this.init(opts, {'data-type': 'VRElement', 'class': 'block'}, obj);
+
+  this.setColour = function(colour) {
+    this.$dom.find('.rule').css('background-color', colour);
+  };
 };
 Elements.VRElement.prototype = new CoreElement();
