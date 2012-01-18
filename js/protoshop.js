@@ -13,6 +13,17 @@ var Protoshop = function() {
   var $canvas_copy = $('#canvas_copy');
   var $info = $('<div id="info">info</div>');
 
+  var cursors = {
+    nw: 'nwse-resize',
+    ne: 'nesw-resize',
+    sw: 'nesw-resize',
+    se: 'nwse-resize',
+    n: 'ns-resize',
+    e: 'ew-resize',
+    s: 'ns-resize',
+    w: 'ew-resize'
+  };
+
   if (localJSON.get('site_prefix', false) === false) {
     localJSON.set('site_prefix', 'default');
   }
@@ -590,6 +601,8 @@ var Protoshop = function() {
 
   function bindMouseResize($el, e, type) {
 
+    $(document.body).css('cursor', cursors[type]);
+
     var size = {
       width: self.selected[0].$dom.width(),
       height: self.selected[0].$dom.height()
@@ -693,6 +706,9 @@ var Protoshop = function() {
     });
 
     $window.bind('mouseup.moving', function(e) {
+
+      $(document.body).css('cursor', 'auto');
+
       if (self.scrollInterval !== null) {
         clearInterval(self.scrollInterval);
         self.scrollInterval = null;
