@@ -328,6 +328,7 @@ header {
     width: 200px;
     background: transparent;
     padding: 10px 0;
+    margin-top: -10px;
 }
 
 #canvas div.block.hr .rule {
@@ -341,6 +342,7 @@ header {
     height: 200px;
     background: transparent;
     padding: 0 10px;
+    margin-left: -10px;
 }
 
 #canvas div.block.vr .rule {
