@@ -18,6 +18,10 @@ var CoreElement = function() {
       this.$dom.css(opts.css);
     }
 
+    if (opts.cssClass) {
+      this.$dom.addClass(opts.cssClass);
+    }
+
     if (opts.html && this.$dom.children().length < 1) {
       this.$dom.append(opts.html);
     }

@@ -142,7 +142,7 @@ PickerWidget = Trail.View.extend({
         window.protoshop.saveUndoPoint();
 
         $('#img-url', dom).val(bg.url);
-        $('#img-color', dom).val(bg.colour);
+        $('#img-color', dom).val(bg.colour).trigger('change');
         $('#img-top', dom).val(bg.posY);
         $('#img-left', dom).val(bg.posY);
 

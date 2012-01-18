@@ -1048,16 +1048,18 @@ var Protoshop = function() {
       },
       'add-hr': function() {
         append(new Elements.BlockElement({
+          html: '<div class="rule"></div>',
+          cssClass: 'hr',
           attrs: {'data-handles': 'w,e'},
-          index: ++self.index.max,
-          css: {height: 1, width: 200}
+          index: ++self.index.max
         }));
       },
       'add-vr': function() {
         append(new Elements.BlockElement({
+          html: '<div class="rule"></div>',
+          cssClass: 'vr',
           attrs: {'data-handles': 'n,s'},
-          index: ++self.index.max,
-          css: {height: 200, width: 1}
+          index: ++self.index.max
         }));
       },
       'add-input': function() {

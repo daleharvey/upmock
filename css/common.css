@@ -315,8 +315,40 @@ header {
     background: grey;
 }
 
+#canvas div.block.hr {
+    height: 1px;
+    width: 200px;
+    background: transparent;
+    padding: 10px 0;
+}
+
+#canvas div.block.hr .rule {
+    height: 1px;
+    width: 100%;
+    background:black;
+}
+
+#canvas div.block.vr {
+    width: 1px;
+    height: 200px;
+    background: transparent;
+    padding: 0 10px;
+}
+
+#canvas div.block.vr .rule {
+    width: 1px;
+    height: 100%;
+    background:black;
+}
+
 #canvas div.text {
     width: 200px;
+}
+
+element.style {
+    background: black;
+    height: 1px;
+    width: 100%;
 }
 
 #canvas span, #canvas img {
