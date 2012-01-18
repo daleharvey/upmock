@@ -360,9 +360,12 @@ TextView = Trail.View.extend({
       var height = selected.height();
       var width = selected.width();
       var span = clone.find('span');
-      var words = Utils.lorum_ipsum.slice();
+      var words = [];
       var acc = [];
       do {
+        if (words.length === 0) {
+          words = Utils.lorum_ipsum.slice();
+        }
         var t = words.shift();
         acc.push(t);
         span.text(acc.join(' '));
