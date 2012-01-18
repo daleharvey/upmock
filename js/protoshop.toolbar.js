@@ -323,8 +323,10 @@ ImgView = Trail.View.extend({
   },
 
   load: function(obj) {
+    var domsrc = obj.$dom.find('img').attr('src');
+    var src = /^data/.test(domsrc) ? '' : domsrc;
     return this.render({data: {
-      'backgroundImage': obj.$dom.find('img').attr('src')
+      'backgroundImage': src
     }});
   }
 });
