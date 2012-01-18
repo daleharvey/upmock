@@ -571,10 +571,6 @@ h3 {
     padding: 0px;
 }
 
-.jscolour {
-    margin: 0 10px;
-}
-
 .toolbar-form {
     display: inline;
     float: left;
@@ -601,7 +597,11 @@ h3 {
     width: 100%;
     box-sizing: border-box;
     resize: none;
-    border: 1px solid;
+    border: 1px solid #999;
+}
+
+.picker-value {
+    margin-bottom: 10px;
 }
 
 #css-value {
@@ -622,7 +622,7 @@ h3 {
 .stops { position: relative; left: -5px; }
 .stop-input { visibility: hidden; }
 
-#background-picker .inner { width: 250px; }
+#background-picker .inner { width: 220px; }
 .gradient { margin-bottom: 10px; }
 
 #info {
@@ -636,7 +636,6 @@ h3 {
 }
 
 .tabs h3 {
-    margin-top: 5px;
     font-weight: normal;
     font-size: inherit;
     border-bottom: 1px solid #AAA;
@@ -792,11 +791,11 @@ h3 {
 }
 
 .arrow-down {
-        width: 0;
-        height: 0;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-        border-top: 3px solid #333;
+    width: 0;
+    height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 3px solid #333;
 }
 
 #align button {
