@@ -315,6 +315,10 @@ header {
     background: grey;
 }
 
+#canvas div.block.selected, #canvas div.text.selected {
+    cursor: move;
+}
+
 #canvas div.block.hr {
     height: 1px;
     width: 200px;
