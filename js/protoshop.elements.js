@@ -215,3 +215,25 @@ Elements.TextElement = function(opts, obj) {
 
 };
 Elements.TextElement.prototype = new CoreElement();
+
+Elements.HRElement = function(opts, obj) {
+  opts = $.extend(opts, {
+    html: '<div class="rule"></div>',
+    cssClass: 'hr',
+    attrs: {'data-handles': 'w,e'}
+  });
+
+  this.init(opts, {'data-type': 'HRElement', 'class': 'block'}, obj);
+};
+Elements.HRElement.prototype = new CoreElement();
+
+Elements.VRElement = function(opts, obj) {
+  opts = $.extend(opts, {
+    html: '<div class="rule"></div>',
+    cssClass: 'vr',
+    attrs: {'data-handles': 'n,s'}
+  });
+
+  this.init(opts, {'data-type': 'VRElement', 'class': 'block'}, obj);
+};
+Elements.VRElement.prototype = new CoreElement();
