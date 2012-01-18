@@ -1046,66 +1046,66 @@ var Protoshop = function() {
   (function() {
 
     var panelFuns = {
-      'cursor': function() {
+      'cursor': { title: 'Select elements', callback: function() {
         self.selectElement(null);
-      },
-      'add-block': function() {
+      }},
+      'add-block': { title: 'Add Block Element', callback: function() {
         append(new Elements.BlockElement({index: ++self.index.max}));
-      },
-      'add-h1': function() {
+      }},
+      'add-h1': { title: 'Add Headers', callback: function() {
         append(new Elements.TextElement({
           index: ++self.index.max,
           css: {'font-size': 24, 'font-weight': 'bold'},
           text: 'Header'
         }));
-      },
-      'add-text': function() {
+      }},
+      'add-text': { title: 'Add Paragraph', callback: function() {
         append(new Elements.TextElement({index: ++self.index.max}));
-      },
-      'add-hr': function() {
+      }},
+      'add-hr': { title: 'Add Horizontal Rule', callback: function() {
         append(new Elements.HRElement({index: ++self.index.max}));
-      },
-      'add-vr': function() {
+      }},
+      'add-vr': { title: 'Add Vertical Rule', callback: function() {
         append(new Elements.VRElement({index: ++self.index.max}));
-      },
-      'add-input': function() {
+      }},
+      'add-input': { title: 'Add Input Element', callback: function() {
         append(new Elements.HTMLElement({
           index: ++self.index.max,
           html: '<input type="text" />'
         }));
-      },
-      'add-checkbox': function() {
+      }},
+      'add-checkbox': { title: 'Add Checkbox', callback: function() {
         append(new Elements.HTMLElement({
           index: ++self.index.max,
           html: '<input type="checkbox" />',
           attrs: {'data-handles': ''}
         }));
-      },
-      'add-button': function() {
+      }},
+      'add-button': { title: 'Add Button', callback: function() {
         append(new Elements.ButtonElement({index: ++self.index.max}));
-      },
-      'add-select': function() {
+      }},
+      'add-select': { title: 'Add Dropdown Menu', callback: function() {
         append(new Elements.SelectElement({index: ++self.index.max}));
-      },
-      'add-image': function() {
+      }},
+      'add-image': { title: 'Add Image', callback: function() {
         append(new Elements.ImgElement({
           index: ++self.index.max,
           css: { width: 100, height: 100},
           html: '<img src="" />'
         }));
-      },
-      'help': function() {
+      }},
+      'help': { title: 'Show Help', callback: function() {
         $('#keyboard-help').toggle();
-      }
+      }}
     };
 
     var $panel = $('<div id="panel"></div>');
     var $ul = $('<ul></ul>');
 
     _.each(panelFuns, function(v, k) {
-      var $li = $('<li />');
+      var $li = $('<li />', {title: v.title});
       var $btn = $('<a id="' + k + '"></a>');
-      $btn.bind('mousedown', v);
+      $btn.bind('mousedown', v.callback);
       $li.append($btn);
       $ul.append($li);
     });
