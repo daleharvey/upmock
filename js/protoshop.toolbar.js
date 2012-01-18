@@ -764,7 +764,7 @@ Protoshop.Toolbar.parseShadow = function(text) {
     x: x,
     y: y,
     size: parseInt(parts[5], 10) || 0,
-    colour: colour
+    colour: colour === 'none' ? 'black' : colour
   });
 };
 
