@@ -169,7 +169,7 @@ var Protoshop = function() {
     var bnd = self.calculateSelectionBounds();
     var text = bnd.nw.x + 'x' + bnd.nw.y + ' ' + (bnd.se.x - bnd.nw.x) + 'px ' +
       (bnd.se.y - bnd.nw.y) + 'px';
-    $info.css({left: bnd.nw.x, top: bnd.se.y + 10}).text(text);
+    $info.css({left: bnd.nw.x, top: bnd.se.y + 15}).text(text);
   };
 
 
