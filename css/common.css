@@ -123,6 +123,10 @@ header {
     background-color: #CDCDCD;
 }
 
+#canvas-width {
+    width: 50px;
+}
+
 .toolbar-select {
     float: left;
     margin-right: 5px;
