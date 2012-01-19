@@ -203,6 +203,7 @@ Elements.TextElement = function(opts, obj) {
   this.startEditing = function() {
     var $span = this.$dom.find('span').attr('contentEditable', true);
     $span[0].focus();
+    document.execCommand('selectAll', false, null);
   };
 
   this.deselect = function() {
