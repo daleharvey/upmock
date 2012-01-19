@@ -824,3 +824,7 @@ h3 {
 #align button:hover {
     background-color: #CCC;
 }
+
+#cursor-overlay {
+    background: transparent;
+}

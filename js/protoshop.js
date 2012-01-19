@@ -601,7 +601,7 @@ var Protoshop = function() {
 
   function bindMouseResize($el, e, type) {
 
-    $(document.body).css('cursor', cursors[type]);
+    $('#cursor-overlay').css('cursor', cursors[type]).show();
 
     var size = {
       width: self.selected[0].$dom.width(),
@@ -707,7 +707,7 @@ var Protoshop = function() {
 
     $window.bind('mouseup.moving', function(e) {
 
-      $(document.body).css('cursor', 'auto');
+      $('#cursor-overlay').hide();
 
       if (self.scrollInterval !== null) {
         clearInterval(self.scrollInterval);
