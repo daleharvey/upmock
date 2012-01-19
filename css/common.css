@@ -311,6 +311,7 @@ header {
     left: 50px;
     top: 50px;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 #canvas div.block {
@@ -319,7 +320,7 @@ header {
     background: grey;
 }
 
-#canvas div.block.selected, #canvas div.text.selected {
+#canvas div.block.selected {
     cursor: move;
 }
 
