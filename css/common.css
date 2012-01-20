@@ -828,3 +828,23 @@ h3 {
 #cursor-overlay {
     background: transparent;
 }
+
+#home {
+    background: #333;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px;
+    box-shadow: 1px 1px 3px #333;
+    border: 3px solid #CCC;
+    border-top: 0px;
+    border-radius: 0 0 5px 5px;
+    position: fixed;
+    top: 0p;
+    right: 40px;
+    z-index: 9500;
+}
+
+#home a {
+    color: white;
+    text-decoration: none;
+}

@@ -1,3 +1,10 @@
+$.ajaxSetup({
+  cache: false,
+  contentType: 'application/json'
+});
+
+$.couch.urlPrefix = '/couch';
+
 var Protoshop = function() {
 
   var self = this;
@@ -59,6 +66,8 @@ var Protoshop = function() {
 
   this.undo_stack = [];
   this.redo_stack = [];
+
+  this.user = false;
 
   this.redo = function() {
     if (this.redo_stack.length > 0) {
@@ -1151,13 +1160,27 @@ var Protoshop = function() {
 
   })();
 
-  // browser detection, thats the cool way right?
-  if ($.browser.webkit || $.browser.mozilla) {
-    $('#loading').fadeOut('fast', function() {
-      $('#loading').remove();
-     });
-  } else {
-    $('#loading span').text('Sorry, currently chrome only :(');
+  function show() {
+    if (self.user) {
+      $('#home a').attr('href', '/user/' + self.user.name + '/');
+    }
+    // browser detection, thats the cool way right?
+    if ($.browser.webkit || $.browser.mozilla) {
+      $('#loading').fadeOut('fast', function() {
+        $('#loading').remove();
+      });
+    } else {
+      $('#loading span').text('Sorry, currently chrome only :(');
+    }
   }
+
+  $.couch.session({}).then(function(data) {
+    self.user = !data.userCtx.name ? false : {name: data.userCtx.name};
+  }, "json").then(function() {
+    show();
+  }).fail(function() {
+    self.user = false;
+    show();
+  });
 
 };
