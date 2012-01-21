@@ -219,8 +219,6 @@ GlobalView = Trail.View.extend({
   },
 
   load: function() {
-    console.trace();
-    console.log(DataStore.data);
     return this.render({data: {
       overlay: DataStore.data.grid,
       isOverlay: DataStore.data.overlay
