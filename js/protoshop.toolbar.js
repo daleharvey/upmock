@@ -201,17 +201,17 @@ GlobalView = Trail.View.extend({
   postRender: function($dom, opts) {
     var self = this, prefix = window.protoshop.site_prefix;
     $('#toggle-grid', $dom).bind('mousedown', function(e) {
-      localJSON.set(prefix + '-overlay', !localJSON.get(prefix + '-overlay', true));
-      self.updateOverlay(this, localJSON.get(prefix + '-overlay'));
+      DataStore.data.overlay = !DataStore.data.overlay;
+      self.updateOverlay(this, DataStore.data.overlay);
     });
 
     $('#overlay-form', $dom).bind('change input', function() {
-      localJSON.set(prefix + '-grid', {
+      DataStore.grid = {
         width: parseInt($('#overlay-width', $dom).val(), 10),
         gutter: parseInt($('#overlay-gutter', $dom).val(), 10),
         colour: $('#overlay-colour', $dom).val(),
         opacity: parseFloat($('#overlay-opacity', $dom).val())
-      });
+      };
       window.protoshop.deferredSaveUndoPoint('grid');
       window.protoshop.drawOverlay();
     });
@@ -219,9 +219,11 @@ GlobalView = Trail.View.extend({
   },
 
   load: function() {
+    console.trace();
+    console.log(DataStore.data);
     return this.render({data: {
-      overlay: localJSON.get(window.protoshop.site_prefix + '-grid'),
-      isOverlay: localJSON.get(window.protoshop.site_prefix + '-overlay', true)
+      overlay: DataStore.data.grid,
+      isOverlay: DataStore.data.overlay
     }});
   }
 });
@@ -233,7 +235,7 @@ BgView = Trail.View.extend({
 
   postRender: function($dom) {
 
-    var bg = localJSON.get(window.protoshop.site_prefix + '-bgColour', 'white');
+    var bg = DataStore.data.bgColour;
     var picker = PickerWidget.create(bg);
 
     var placeholder = $dom.findAll('#picker-placeholder');
@@ -244,13 +246,13 @@ BgView = Trail.View.extend({
                                        Utils.w3cGradient2Browser(this.value));
 
       window.protoshop.deferredSaveUndoPoint('bgColour');
-      localJSON.set(window.protoshop.site_prefix + '-bgColour', this.value);
+      DataStore.data.bgColour = this.value;
       window.protoshop.updateUsedColours();
       window.protoshop.redraw();
     });
 
     $('#canvas-width', $dom).bind('change input', function() {
-      localJSON.set(window.protoshop.site_prefix + '-width', parseInt(this.value, 10));
+      DataStore.data.width = parseInt(this.value, 10);
       window.protoshop.redraw();
     });
 
@@ -259,7 +261,7 @@ BgView = Trail.View.extend({
 
   load: function() {
     return this.render({data: {
-      canvasWidth: localJSON.get(window.protoshop.site_prefix + '-width', 1024)
+      canvasWidth: DataStore.data.width
     }});
   }
 });
@@ -750,10 +752,6 @@ Protoshop.Toolbar = function(protoshop) {
   this.protoshop.$selection.bind('change', function(evt, data) {
     self.sections = pickSections(data.selected);
     self.render(self.sections, data);
-  });
-
-  protoshop.$selection.trigger('change', {
-    selected: protoshop.selected
   });
 
 };

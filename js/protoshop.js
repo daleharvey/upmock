@@ -5,6 +5,52 @@ $.ajaxSetup({
 
 $.couch.urlPrefix = '/couch';
 
+var defaultSite = {
+  html: '',
+  width: 1024,
+  overlay: true,
+  bgColour: 'white',
+  grid: {
+    width:40,
+    gutter: 20,
+    colour: 'rgb(0, 0, 0)',
+    opacity: 0.2
+  }
+};
+
+var DataStore = {
+
+  data: null,
+  local: false,
+
+  load: function(user, name, callback) {
+    var self = this;
+    self.local = !user;
+    if (!self.local) {
+      $.couch.db('upmock-' + user.name).openDoc(name).then(function(data) {
+        self.data = $.extend(defaultSite, data);
+        callback();
+      });
+    } else {
+      this.data = localJSON.get(name, defaultSite);
+      callback();
+    }
+  },
+
+  save: function() {
+    var self = this;
+    if (!self.local) {
+      var db = $.couch.db('upmock-' + window.protoshop.user.name);
+      db.saveDoc(this.data).then(function(result) {
+        self.data._rev = result.rev;
+      });
+    } else {
+      localJSON.set(this.data._id, this.data);
+    }
+  }
+
+};
+
 var Protoshop = function() {
 
   var self = this;
@@ -30,20 +76,6 @@ var Protoshop = function() {
     s: 'ns-resize',
     w: 'ew-resize'
   };
-
-  if (localJSON.get('site_prefix', false) === false) {
-    localJSON.set('site_prefix', 'default');
-  }
-  this.site_prefix = localJSON.get('site_prefix');
-
-  if (localJSON.get(this.site_prefix + '-grid', false) === false) {
-    localJSON.set(this.site_prefix + '-grid', {
-      width:40,
-      gutter: 20,
-      colour: 'rgb(0, 0, 0)',
-      opacity: 0.2
-    });
-  }
 
   this.deferredUndoAttribute = null;
   this.$selection = $selection;
@@ -130,8 +162,8 @@ var Protoshop = function() {
     toSave.find('#info, .handles, #selection').remove();
     this.undo_stack.push({
       html: toSave.html(),
-      grid: localJSON.get(self.site_prefix + '-grid'),
-      background: localJSON.get(self.site_prefix + '-bgColour')
+      grid: DataStore.data.grid,
+      background: DataStore.data.bgColour
     });
     while(this.undo_stack.length > UNDO_ITEMS_LIMIT) {
       this.undo_stack.shift();
@@ -141,7 +173,7 @@ var Protoshop = function() {
 
   this.drawOverlay = function() {
 
-    var overlay = localJSON.get(self.site_prefix + '-grid');
+    var overlay = DataStore.data.grid;
     var g = overlay.gutter / 2;
     var width = $('#canvas').width();
     var canvas = $('<canvas width="' + width + '" height="1"></canvas>');
@@ -177,8 +209,8 @@ var Protoshop = function() {
   };
 
   this.redraw = function() {
-    var bgColour = localJSON.get(self.site_prefix + '-bgColour', 'white');
-    var width = localJSON.get(self.site_prefix + '-width', 1024);
+    var bgColour = DataStore.data.bgColour;
+    var width = DataStore.data.width;
     $canvas_wrapper.css('background', Utils.w3cGradient2Browser(bgColour));
     $canvas.width(width).css('margin-left', -Math.round(width/2));
     $canvas_copy.width(width).css('margin-left', -Math.round(width/2));
@@ -208,7 +240,7 @@ var Protoshop = function() {
 
     // Snap to 960gs grid if visible
     if ($('.grid-overlay').is(":visible")) {
-      var overlay = localJSON.get(self.site_prefix + '-grid');
+      var overlay = DataStore.data.grid;
       var width = $('#canvas').width();
       var g = overlay.gutter / 2;
       while (g < width) {
@@ -895,7 +927,7 @@ var Protoshop = function() {
 
     var html = "", colours = {};
 
-    colours[localJSON.get(self.site_prefix + '-bgColour', 'white')] = true;
+    colours[DataStore.data.bgColour] = true;
 
     $.each($('.block, .text'), function(i, obj) {
       colours[$(obj).css('color')] = true;
@@ -920,9 +952,6 @@ var Protoshop = function() {
   };
 
   this.restore = function(restore) {
-
-    localJSON.set(self.site_prefix + '-grid', restore.grid);
-    localJSON.set(self.site_prefix + '-bgColour', restore.background);
 
     self.redraw();
     self.drawOverlay();
@@ -1128,37 +1157,41 @@ var Protoshop = function() {
   var html = _.map(shortcuts, function(data) { return template(data); });
   $('#keyboard-placer').html(html.join(''));
 
-  (function() {
+  this.initaliseData = function(callback) {
+
+    if (self.user) {
+      self.site_prefix = document.location.pathname.split('/')[3];
+    } else {
+      self.site_prefix = 'default';
+    }
 
     var autoSave = setInterval(function() {
       var toSave = $canvas.clone();
       toSave.find('#info, .handles, #selection').remove();
-      localStorage[self.site_prefix + '-saved'] = toSave.html();
-    }, 5000);
+      DataStore.data.html = toSave.html();
+      DataStore.save();
+    }, 20000);
 
-    var html = '';
+    DataStore.load(self.user, self.site_prefix, function() {
 
-    if (localStorage[self.site_prefix + '-saved']) {
-      html = localStorage[self.site_prefix + '-saved'];
-    }
+      self.undo_stack.push(DataStore.data);
+      self.restore(DataStore.data);
 
-    var stackPoint = {
-      html: html,
-      grid: localJSON.get(self.site_prefix + '-grid'),
-      background: localJSON.get(self.site_prefix + '-bgColour')
-    };
+      self.recalcHeight();
+      self.redraw();
 
-    self.undo_stack.push(stackPoint);
-    self.restore(stackPoint);
+      if (DataStore.data.overlay) {
+        $('.grid-overlay[data-deleted!=true]:eq(0)').show();
+      }
 
-    self.recalcHeight();
-    self.redraw();
+      protoshop.$selection.trigger('change', {
+        selected: protoshop.selected
+      });
 
-    if (localJSON.get(self.site_prefix + '-overlay', true) === true) {
-      $('.grid-overlay[data-deleted!=true]:eq(0)').show();
-    }
+      callback();
+    });
 
-  })();
+  };
 
   function show() {
     if (self.user) {
@@ -1166,8 +1199,10 @@ var Protoshop = function() {
     }
     // browser detection, thats the cool way right?
     if ($.browser.webkit || $.browser.mozilla) {
-      $('#loading').fadeOut('fast', function() {
-        $('#loading').remove();
+      self.initaliseData(function () {
+        $('#loading').fadeOut('fast', function() {
+          $('#loading').remove();
+        });
       });
     } else {
       $('#loading span').text('Sorry, currently chrome only :(');
