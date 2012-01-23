@@ -1170,7 +1170,7 @@ var Protoshop = function() {
       toSave.find('#info, .handles, #selection').remove();
       DataStore.data.html = toSave.html();
       DataStore.save();
-    }, 20000);
+    }, 5000);
 
     DataStore.load(self.user, self.site_prefix, function() {
 
