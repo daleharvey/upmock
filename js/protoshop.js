@@ -51,6 +51,34 @@ var DataStore = {
 
 };
 
+var AutoSave = {
+
+  TIMEOUT: 3000,
+  timer: null,
+
+  isDirty: function() {
+    return this.timer !== null;
+  },
+
+  autoSave: function() {
+    var toSave = $('#canvas').clone();
+    toSave.find('#info, .handles, #selection').remove();
+    DataStore.data.html = toSave.html();
+    DataStore.save();
+    this.timer = null;
+  },
+
+  trigger: function() {
+
+    if (this.timer !== null) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+
+    this.timer = setTimeout($.proxy(this.autoSave, this), this.TIMEOUT);
+  }
+};
+
 var Protoshop = function() {
 
   var self = this;
@@ -370,6 +398,7 @@ var Protoshop = function() {
     var ret = _.map(self.selected, function(obj) {
       obj[callback].apply(obj, params);
     });
+    AutoSave.trigger();
     self.recalcHeight();
     return ret;
   };
@@ -1165,13 +1194,6 @@ var Protoshop = function() {
       self.site_prefix = 'default';
     }
 
-    var autoSave = setInterval(function() {
-      var toSave = $canvas.clone();
-      toSave.find('#info, .handles, #selection').remove();
-      DataStore.data.html = toSave.html();
-      DataStore.save();
-    }, 5000);
-
     DataStore.load(self.user, self.site_prefix, function() {
 
       self.undo_stack.push(DataStore.data);
@@ -1216,6 +1238,12 @@ var Protoshop = function() {
   }).fail(function() {
     self.user = false;
     show();
+  });
+
+  $(window).bind('beforeunload', function() {
+    if (AutoSave.isDirty()) {
+      return 'You have unsaved changes!';
+    }
   });
 
 };
