@@ -1183,7 +1183,20 @@ var Protoshop = function() {
   })();
 
   var template = Handlebars.compile($('#shortcut-section-tpl').html());
-  var html = _.map(shortcuts, function(data) { return template(data); });
+  var isMac = /Mac/.test(navigator.appVersion);
+  var html = _.map(shortcuts, function(data) {
+    var tmp = $.extend({}, data);
+    var newShortcuts = [];
+    _.each(tmp.shortcuts, function(shortcut, key) {
+      shortcut.key = shortcut.key.replace('meta', 'cmd');
+      if (isMac && !/ctrl/.test(shortcut.key) ||
+          !isMac && !/cmd/.test(shortcut.key)) {
+        newShortcuts.push(shortcut);
+      }
+    });
+    tmp.shortcuts = newShortcuts;
+    return template(tmp);
+  });
   $('#keyboard-placer').html(html.join(''));
 
   this.initaliseData = function(callback) {
