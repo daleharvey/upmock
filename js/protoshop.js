@@ -14,7 +14,7 @@ var defaultSite = {
     width:40,
     gutter: 20,
     colour: 'rgb(0, 0, 0)',
-    opacity: 0.2
+    opacity: 0.05
   }
 };
 
