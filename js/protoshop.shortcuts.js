@@ -3,7 +3,7 @@ var shortcuts = {
     description: 'Global Shortcuts',
     shortcuts: [
       {
-        key: 'esc',
+        key: 'tab',
         e: 'keydown',
         callback: function() {
           var showing = !$('#panel').is(':visible');
