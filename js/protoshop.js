@@ -1202,7 +1202,7 @@ var Protoshop = function() {
   this.initaliseData = function(callback) {
 
     if (self.user) {
-      self.site_prefix = document.location.pathname.split('/')[3];
+      self.site_prefix = decodeURIComponent(document.location.pathname.split('/')[3]);
     } else {
       self.site_prefix = 'default';
     }
