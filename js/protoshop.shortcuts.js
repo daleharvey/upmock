@@ -8,11 +8,11 @@ var shortcuts = {
         callback: function() {
           var showing = !$('#panel').is(':visible');
           this.selectElement(null);
-          $('#panel, header').toggle();
+          $('#panel, header, #home').toggle();
           $('#canvas_wrapper').css({'top': showing ? 30 : 0});
 
           if (showing) {
-            if (localJSON.get(window.protoshop.site_prefix + '-overlay') === true) {
+            if (DataStore.data.overlay) {
               $('.grid-overlay').show();
             }
           } else {
