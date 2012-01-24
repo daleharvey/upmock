@@ -336,24 +336,12 @@ var Protoshop = function() {
     var objects = _.each($canvas.find('div'), function(obj) {
       var top = parseInt($(obj).css('top'), 10);
       var height = parseInt($(obj).css('height'), 10);
-      // var left = parseInt($(obj).css('left'), 10);
-      // var width = parseInt($(obj).css('width'), 10);
       if (!isNaN(top) && !isNaN(height)) {
         maxHeight = Math.max(maxHeight, top + height);
       }
-      // if (!isNaN(left) && !isNaN(width)) {
-      //   maxWidth = Math.max(maxWidth, left + width);
-      // }
     });
 
     $canvas_copy.height(maxHeight);
-
-    // var x = $canvas.width();
-    // var totalWidth = Math.max(((maxWidth - x) * 2) + x, $window.width());
-    // var tmp = (totalWidth - $canvas.width()) / 2;
-    // $canvas_copy.width(totalWidth);
-    // $canvas_copy.css('margin-left', tmp);
-    // $canvas.css('margin-left', tmp);
   };
 
 
@@ -469,9 +457,6 @@ var Protoshop = function() {
     if (self.scrollVertical) {
       $canvas_wrapper[0].scrollTop += self.scrollVertical;
     }
-    // if (scrollHorizontal) {
-    //   $canvas_wrapper[0].scrollLeft += scrollHorizontal;
-    // }
     $window.trigger('mousemove');
   };
 
