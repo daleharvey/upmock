@@ -258,6 +258,10 @@ header {
     right: 0;
 }
 
+#canvas_wrapper.preview {
+    top: 0px;
+}
+
 #canvas {
     box-sizing: border-box;
     width: 1024px;
