@@ -208,18 +208,20 @@
           </label>
         </form>
       </div>
-      <a id="send-to-back" title="Send to Back" class="toolbar-icon"></a>
-      <a id="bring-to-front" title="Bring to Front" class="toolbar-icon"></a>
     </div>
   </script>
 
 
   <script type="text/html" id="single-toolbar-tpl">
-    <div class="dropdown toolbar-icon" id="css" title="Custom CSS">
-      <form id="css-form" class="inner">
-        <textarea id="css-value">{{cssValue}}</textarea>
-        <input type="submit" value="Update CSS" />
-      </form>
+    <div class="section">
+      <a id="send-to-back" title="Send to Back" class="toolbar-icon"></a>
+      <a id="bring-to-front" title="Bring to Front" class="toolbar-icon"></a>
+      <div class="dropdown toolbar-icon" id="css" title="Custom CSS">
+        <form id="css-form" class="inner">
+          <textarea id="css-value">{{cssValue}}</textarea>
+          <input type="submit" value="Update CSS" />
+        </form>
+      </div>
     </div>
   </script>
 

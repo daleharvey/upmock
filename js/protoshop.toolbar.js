@@ -566,6 +566,12 @@ SingleElementView = Trail.View.extend({
       e.preventDefault();
       window.protoshop.onSelectedUndo('attr', 'style', $('#css-value').val());
     });
+    $('#bring-to-front', dom).bind('mousedown', function() {
+      window.protoshop.onSelectedUndo('css', {'z-index': ++window.protoshop.index.max});
+    });
+    $('#send-to-back', dom).bind('mousedown', function() {
+      window.protoshop.onSelectedUndo('css', {'z-index': --window.protoshop.index.min});
+    });
     return dom;
   },
 
@@ -611,13 +617,6 @@ ElementView = Trail.View.extend({
       data[key] = val;
 
       window.protoshop.onSelectedUndo('css', data);
-    });
-
-    $('#bring-to-front', dom).bind('mousedown', function() {
-      window.protoshop.onSelectedUndo('css', {'z-index': ++window.protoshop.index.max});
-    });
-    $('#send-to-back', dom).bind('mousedown', function() {
-      window.protoshop.onSelectedUndo('css', {'z-index': --window.protoshop.index.min});
     });
 
     $('#lock', dom).bind('mousedown', function() {
