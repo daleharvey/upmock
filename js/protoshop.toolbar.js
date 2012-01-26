@@ -607,6 +607,11 @@ SingleElementView = Trail.View.extend({
     $('#send-to-back', dom).bind('mousedown', function() {
       window.protoshop.onSelectedUndo('css', {'z-index': --window.protoshop.index.min});
     });
+    $('#lock', dom).bind('mousedown', function() {
+      window.protoshop.onSelectedUndo('lock');
+      window.protoshop.selectElement(null);
+    });
+
     return dom;
   },
 
@@ -652,11 +657,6 @@ ElementView = Trail.View.extend({
       data[key] = val;
 
       window.protoshop.onSelectedUndo('css', data);
-    });
-
-    $('#lock', dom).bind('mousedown', function() {
-      window.protoshop.onSelectedUndo('lock');
-      window.protoshop.selectElement(null);
     });
 
     Protoshop.Toolbar.bindChange($('#opacity', dom));
