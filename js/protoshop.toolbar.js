@@ -222,6 +222,7 @@ GlobalView = Trail.View.extend({
     $('#overlay-form', $dom).bind('change input', function() {
       DataStore.data.grid = {
         width: parseInt($('#overlay-width', $dom).val(), 10),
+        height: parseInt($('#overlay-height', $dom).val(), 10),
         gutter: parseInt($('#overlay-gutter', $dom).val(), 10),
         colour: $('#overlay-colour', $dom).val(),
         opacity: parseFloat($('#overlay-opacity', $dom).val())

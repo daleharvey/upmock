@@ -13,6 +13,7 @@ var defaultSite = {
   bgColour: 'white',
   grid: {
     width:40,
+    height: 20,
     gutter: 20,
     colour: 'rgb(0, 0, 0)',
     opacity: 0.05
@@ -29,7 +30,7 @@ var DataStore = {
     self.local = !user;
     if (!self.local) {
       $.couch.db('upmock-' + user.name).openDoc(name).then(function(data) {
-        self.data = $.extend(defaultSite, data);
+        self.data = $.extend(true, defaultSite, data);
         callback();
       });
     } else {
@@ -204,15 +205,20 @@ var Protoshop = function() {
   this.drawOverlay = function() {
 
     var overlay = DataStore.data.grid;
+    var gridHeight = overlay.height;
     var g = overlay.gutter / 2;
-    var width = $('#canvas').width();
-    var canvas = $('<canvas width="' + width + '" height="1"></canvas>');
+    var width = $canvas.width();
+    var canvas = $('<canvas width="' + width + '" height="' + gridHeight +
+                   '"></canvas>');
     var ctx = canvas[0].getContext("2d");
 
     ctx.fillStyle = overlay.colour;
     while (g < width) {
-      ctx.fillRect(g, 0, overlay.width, 1);
+      ctx.fillRect(g, 0, overlay.width, gridHeight);
       g += overlay.width + overlay.gutter;
+    }
+    if (gridHeight !== 0) {
+      ctx.fillRect(0, gridHeight - 1, width, 1);
     }
 
     var oldGrid = $('.grid-overlay[data-deleted!=true]:eq(0)');
@@ -275,14 +281,23 @@ var Protoshop = function() {
     ycenter.push(Math.round($canvas.height() / 2));
 
     // Snap to 960gs grid if visible
-    if ($('.grid-overlay').is(":visible")) {
+    if (DataStore.data.overlay) {
       var overlay = DataStore.data.grid;
-      var width = $('#canvas').width();
+      var gridHeight = overlay.height;
+      var width = $canvas.width();
+      var height = $canvas.height();
       var g = overlay.gutter / 2;
       while (g < width) {
         x.push(g);
         x.push(g + overlay.width);
         g += overlay.width + overlay.gutter;
+      }
+      g = 0;
+      if (gridHeight !== 0) {
+        while(g < height) {
+          y.push(g);
+          g += gridHeight;
+        }
       }
     }
 
