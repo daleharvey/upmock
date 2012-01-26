@@ -863,8 +863,6 @@ h3 {
 .close {
     cursor: pointer;
     float:right;
-    font-weight: bold;
-    font-family: monospace;
     font-size: 18px;
     margin: 12px;
 }
@@ -883,7 +881,7 @@ h3 {
 
 #font-preview li {
     padding: 10px;
-    font-size: 18px;
+    font-size: 28px;
     border-bottom: 1px solid #EEE;
 }
 
@@ -892,7 +890,7 @@ h3 {
 }
 
 #font-preview-wrapper button {
-    margin: 10px;
     padding: 5px;
+    width: 100%;
+    font-size: 16px;
 }
-
