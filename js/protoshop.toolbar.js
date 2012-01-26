@@ -31,12 +31,22 @@ Trail.View.addShim('.dropdown', function() {
       return;
     }
 
+    // Ensure that current selections are maintained
+    var range = false;
+
+    if (self.protoshop.selected.length > 0 && self.protoshop.selected[0].editing) {
+      range = Utils.getSelectionRange();
+    }
+
     // Yeild to make sure the mousedown that gets bound isnt triggered from
     // here
     setTimeout(function() {
       $dropdown_wrapper.addClass('active');
       window.protoshop.grabFocus();
       $(document).bind('mousedown.dropdown', hideDropdown);
+      if (range) {
+        Utils.restoreSelectionRange(range);
+      }
     }, 0);
   });
 
@@ -60,10 +70,14 @@ Trail.View.addShim('.picker', function() {
   });
 
   $value.bind('change', function() {
-    var obj = {};
-    obj[$(this).data('css')] = $value.val();
-    self.protoshop.updateUsedColours();
-    self.protoshop.onSelected('css', obj);
+    if (self.protoshop.selected[0].editing) {
+      document.execCommand('ForeColor', false, $value.val());
+    } else {
+      var obj = {};
+      obj[$(this).data('css')] = $value.val();
+      self.protoshop.updateUsedColours();
+      self.protoshop.onSelected('css', obj);
+    }
   });
 
 });
