@@ -1182,8 +1182,8 @@ var Protoshop = function() {
     var newShortcuts = [];
     _.each(tmp.shortcuts, function(shortcut, key) {
       shortcut.key = shortcut.key.replace('meta', 'cmd');
-      if (isMac && !/ctrl/.test(shortcut.key) ||
-          !isMac && !/cmd/.test(shortcut.key)) {
+      if ((isMac && !/ctrl/.test(shortcut.key) ||
+           !isMac && !/cmd/.test(shortcut.key)) && shortcut.description) {
         newShortcuts.push(shortcut);
       }
     });

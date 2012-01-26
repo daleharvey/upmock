@@ -95,7 +95,18 @@ var shortcuts = {
           this.redo();
         },
         description: 'Redo'
+      },
+      {
+        key: 'shift',
+        e: 'keydown',
+        callback: function() { $(document.body).addClass('shift-down'); }
+      },
+      {
+        key: 'shift',
+        e: 'keyup',
+        callback: function() { $(document.body).removeClass('shift-down'); }
       }
+
     ]
   },
   editing: {
@@ -158,16 +169,6 @@ var shortcuts = {
         e: 'keydown',
         callback: function() { this.onSelected('move', 10, 0); this.updateInfo(); },
         description: 'Move Down'
-      },
-      {
-        key: 'shift',
-        e: 'keydown',
-        callback: function() { $(document.body).addClass('shift-down'); }
-      },
-      {
-        key: 'shift',
-        e: 'keyup',
-        callback: function() { $(document.body).removeClass('shift-down'); }
       }
     ]
   }
