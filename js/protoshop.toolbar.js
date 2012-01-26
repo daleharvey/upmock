@@ -902,6 +902,7 @@ Protoshop.Toolbar.showFontsDialog = function() {
   var $preview = $dialog.find('#font-preview');
   var $previewStyle = $dialog.find('#font-preview-style');
   var $button = $dialog.find('button');
+  var tpl = Handlebars.compile($('#font-item-tpl').html());
 
   function loadFonts() {
     var toLoad = [];
@@ -909,9 +910,7 @@ Protoshop.Toolbar.showFontsDialog = function() {
     for (var i = index; i < limit; i++) {
       var checked = $.inArray(fonts[i].family, DataStore.data.fonts) !== -1 ?
         'checked="checked"' : '';
-      var item = '<li><label style="font-family: ' + fonts[i].family + '"> ' +
-        '<input type="checkbox" data-family="' + fonts[i].family + '" ' + checked +
-        '/>' + fonts[i].family + '</label></li>';
+      var item = tpl({checked: checked, family: fonts[i].family});
       $preview.append(item);
       toLoad.push(fonts[i].family);
     }

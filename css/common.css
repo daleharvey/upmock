@@ -885,6 +885,22 @@ h3 {
     border-bottom: 1px solid #EEE;
 }
 
+#font-preview label {
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-align: stretch;
+    -webkit-box-orient: horizontal;
+    -moz-box-align: stretch;
+    -moz-box-orient: horizontal;
+    width: 100%;
+}
+#font-preview li span {
+    display: block;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
 #font-preview li input[type=checkbox] {
     margin-right: 10px;
 }
