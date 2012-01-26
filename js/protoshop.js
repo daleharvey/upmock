@@ -893,7 +893,7 @@ var Protoshop = function() {
     var $el = $(e.target);
     var obj = $el.data('obj');
 
-    if ($el.data('lock') === true && e.altKey) {
+    if ($el.data('lock') === true && e.shiftKey) {
       obj.unlock();
     }
 

@@ -310,6 +310,15 @@ header {
     margin: -3px 0 0 -3px;
 }
 
+#canvas div.block[data-lock=true], #canvas div.text[data-lock=true] {
+    pointer-events: none;
+}
+
+.shift-down #canvas div.block[data-lock=true],
+.shift-down #canvas div.text[data-lock=true] {
+    pointer-events: all;
+}
+
 #canvas div.block, #canvas div.text, #canvas div.html {
     border: 0 solid black;
     position: absolute;
