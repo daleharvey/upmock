@@ -70,7 +70,7 @@ Trail.View.addShim('.picker', function() {
   });
 
   $value.bind('change', function() {
-    if (self.protoshop.selected[0].editing) {
+    if (self.protoshop.selected.length > 0 && self.protoshop.selected[0].editing) {
       document.execCommand('ForeColor', false, $value.val());
     } else {
       var obj = {};

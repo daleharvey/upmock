@@ -378,6 +378,7 @@ element.style {
 #canvas span {
     pointer-events: none;
     outline:none;
+    word-wrap: break-word;
 }
 
 #canvas span[contenteditable=true] {
