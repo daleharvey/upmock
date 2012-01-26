@@ -366,12 +366,17 @@ element.style {
     width: 100%;
 }
 
-#canvas span, #canvas img {
+#canvas img {
     display: block;
     width: 100%;
     height: 100%;
     -moz-user-select: -moz-none;
     pointer-events: none;
+}
+
+#canvas span {
+    pointer-events: none;
+    outline:none;
 }
 
 #canvas span[contenteditable=true] {
@@ -386,7 +391,7 @@ element.style {
     background: transparent;
 }
 
-#canvas span, #canvas textarea {
+#canvas textarea {
     display: block;
     width: 100%;
     height: 100%;

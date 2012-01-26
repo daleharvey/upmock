@@ -354,6 +354,27 @@ TextView = Trail.View.extend({
   template: '#text-toolbar-tpl',
 
   postRender: function(dom) {
+
+    function bindToggle($dom, inlineCommand, command) {
+      $dom.bind('mousedown', function(e) {
+        if (self.protoshop.selected[0].editing) {
+          var range = Utils.getSelectionRange();
+          setTimeout(function() {
+            Utils.restoreSelectionRange(range);
+            document.execCommand(inlineCommand, false, null);
+            window.protoshop.saveUndoPoint();
+          }, 0);
+        } else {
+          $(this).toggleClass('active');
+          self.protoshop.onSelectedUndo(command);
+        }
+      });
+    }
+
+    bindToggle($('#bold', dom), 'Bold', 'toggleBold');
+    bindToggle($('#italic', dom), 'Italic', 'toggleItalic');
+    bindToggle($('#underline', dom), 'Underline', 'toggleUnderline');
+
     $('#lorum-ipsum', dom).bind('mousedown', function() {
       var selected = self.protoshop.selected[0].$dom;
       var clone = selected.clone().css('visibility', 'hidden').appendTo(document.body);
@@ -379,18 +400,7 @@ TextView = Trail.View.extend({
         'font-family': Protoshop.Toolbar.fonts[$(this).val()]
       });
     });
-    $('#bold', dom).bind('mousedown', function() {
-      $(this).toggleClass('active');
-      self.protoshop.onSelectedUndo('toggleBold');
-    });
-    $('#italic', dom).bind('mousedown', function() {
-      $(this).toggleClass('active');
-      self.protoshop.onSelectedUndo('toggleItalic');
-    });
-    $('#underline', dom).bind('mousedown', function() {
-      $(this).toggleClass('active');
-      self.protoshop.onSelectedUndo('toggleUnderline');
-    });
+
     $('#text-align-left', dom).bind('mousedown', function() {
       $('.align').removeClass('active');
       $(this).toggleClass('active');

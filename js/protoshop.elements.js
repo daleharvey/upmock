@@ -197,6 +197,8 @@ Elements.HTMLElement.prototype = new CoreElement();
 
 Elements.TextElement = function(opts, obj) {
 
+  this.editing = false;
+
   opts.html = '<span>' + (opts.text || 'text') + '</span>';
   this.init(opts, {'data-type': 'TextElement', 'class': 'text'}, obj);
 
@@ -205,6 +207,7 @@ Elements.TextElement = function(opts, obj) {
     this.value = $span.html();
     $span[0].focus();
     document.execCommand('selectAll', false, null);
+    this.editing = true;
   };
 
   this.deselect = function() {
@@ -216,6 +219,7 @@ Elements.TextElement = function(opts, obj) {
       window.protoshop.saveUndoPoint();
     }
     this.value = null;
+    this.editing = false;
   };
 
 };
