@@ -208,13 +208,13 @@ var Protoshop = function() {
     var gridHeight = overlay.height;
     var g = overlay.gutter / 2;
     var width = $canvas.width();
-    var canvas = $('<canvas width="' + width + '" height="' + gridHeight +
+    var canvas = $('<canvas width="' + width + '" height="' + (gridHeight || 1) +
                    '"></canvas>');
     var ctx = canvas[0].getContext("2d");
 
     ctx.fillStyle = overlay.colour;
     while (g < width) {
-      ctx.fillRect(g, 0, overlay.width, gridHeight);
+      ctx.fillRect(g, 0, overlay.width, gridHeight || 1);
       g += overlay.width + overlay.gutter;
     }
     if (gridHeight !== 0) {
