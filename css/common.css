@@ -859,3 +859,40 @@ h3 {
     color: white;
     text-decoration: none;
 }
+
+.close {
+    cursor: pointer;
+    float:right;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 18px;
+    margin: 12px;
+}
+
+#font-preview-wrapper {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+#font-preview {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    margin-top: -5px;
+}
+
+#font-preview li {
+    padding: 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #EEE;
+}
+
+#font-preview li input[type=checkbox] {
+    margin-right: 10px;
+}
+
+#font-preview-wrapper button {
+    margin: 10px;
+    padding: 5px;
+}
+

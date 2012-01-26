@@ -9,3 +9,7 @@ Handlebars.registerHelper('option', function(selected) {
 Handlebars.registerHelper('active', function(active) {
   return active ? 'active' : '';
 });
+
+Handlebars.registerHelper('selected', function(current, active) {
+  return current === active ? 'selected="selected"' : '';
+});

@@ -419,9 +419,12 @@ TextView = Trail.View.extend({
       selected.find('span').text(acc.join(' '));
     });
     $('#font-family', dom).bind('change', function() {
-      self.protoshop.onSelectedUndo('css',{
-        'font-family': Protoshop.Toolbar.fonts[$(this).val()]
-      });
+      if (this.value === 'other') {
+        Protoshop.Toolbar.showFontsDialog();
+        this.selectedIndex = 0;
+      } else {
+        self.protoshop.onSelectedUndo('css',{'font-family': this.value});
+      }
     });
 
     $('#text-align-left', dom).bind('mousedown', function() {
@@ -468,8 +471,6 @@ TextView = Trail.View.extend({
   load: function(obj) {
 
     var dom = obj.$dom;
-    var family = Utils.findKey(Protoshop.Toolbar.fonts, dom.css('font-family')) ||
-      'helvetica';
     var align = dom.css('text-align');
 
     var data = {
@@ -480,14 +481,15 @@ TextView = Trail.View.extend({
       isItalic: dom.css('font-style') === 'italic',
       isUnderline: dom.css('text-decoration') === 'underline',
       shadow: Protoshop.Toolbar.parseShadow(dom.css('text-shadow')),
-      color: dom.css('color')
+      color: dom.css('color'),
+      selectedFont: dom.css('font-family'),
+      fonts: Protoshop.Toolbar.fonts.concat(DataStore.data.fonts)
     };
 
     if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {
       align = 'left';
     }
 
-    data['family-' + family] = true;
     data['align-' + align] = true;
 
     return this.render({data: data});
@@ -887,15 +889,70 @@ Protoshop.Toolbar.getBGProperties = function(colour) {
   };
 };
 
-Protoshop.Toolbar.fonts = {
-  'tnr': "Cambria, 'Hoefler Text', 'Times New Roman', serif",
-  'georgia': "Constantia, 'Lucida Bright', 'Bitstream Vera Serif', " +
-    "'Liberation Serif', Georgia, serif",
-  'garamond': "'Palatino Linotype', Baskerville, 'Bookman Old Style', " +
-    "'Bitstream Charter', Garamond, Georgia, serif",
-  'helvetica': "Frutiger, Univers, Helvetica, Arial, sans-serif",
-  'verdana': "Corbel, 'Bitstream Vera Sans', Verdana, sans-serif",
-  'trebuchet': "'Segoe UI', 'Trebuchet MS', Verdana, sans-serif",
-  'impact': "Impact, 'Franklin Gothic Bold', 'Arial Black', sans-serif",
-  'monospace': "Consolas, 'DejaVu Sans Mono', Monaco, Courier, monospace"
+Protoshop.Toolbar.fonts = [
+  'Times New Roman', 'Georgia', 'Garamond', 'Helvetica',
+  'Verdana', 'Trebuchet MS', 'Impact', 'Monaco'
+];
+
+Protoshop.Toolbar.showFontsDialog = function() {
+
+  var index = 0;
+  var fonts = [];
+  var $dialog = $('#add-fonts');
+  var $preview = $dialog.find('#font-preview');
+  var $previewStyle = $dialog.find('#font-preview-style');
+  var $button = $dialog.find('button');
+
+  function loadFonts() {
+    var toLoad = [];
+    var limit = Math.min(index + 40, fonts.length);
+    for (var i = index; i < limit; i++) {
+      var checked = $.inArray(fonts[i].family, DataStore.data.fonts) !== -1 ?
+        'checked="checked"' : '';
+      var item = '<li><label style="font-family: ' + fonts[i].family + '"> ' +
+        '<input type="checkbox" data-family="' + fonts[i].family + '" ' + checked +
+        '/>' + fonts[i].family + '</label></li>';
+      $preview.append(item);
+      toLoad.push(fonts[i].family);
+    }
+
+    var link = '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
+      toLoad.join('|') + '">';
+    $previewStyle.append(link);
+
+    index += 40;
+  }
+
+  $button.bind('mousedown', loadFonts);
+
+  $preview.bind('change', function(e) {
+    var family = $(e.target).data('family');
+    if ($(e.target).is(':checked')) {
+      DataStore.data.fonts.push(family);
+    } else {
+      DataStore.data.fonts = _.filter(DataStore.data.fonts, function(font) {
+        return family !== font;
+      });
+    }
+  });
+
+  $dialog.find('.close').unbind().bind('mousedown', function() {
+
+    DataStore.save();
+
+    window.protoshop.loadFonts();
+    window.protoshop.refreshToolbar();
+
+    $preview.empty();
+    $previewStyle.empty();
+    $dialog.hide();
+
+  });
+
+  $.get('/fonts/').then(function(data) {
+    fonts = data.items;
+    loadFonts();
+    $dialog.show();
+  });
+
 };

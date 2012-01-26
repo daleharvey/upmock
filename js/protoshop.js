@@ -7,6 +7,7 @@ $.couch.urlPrefix = '/couch';
 
 var defaultSite = {
   html: '',
+  fonts: [],
   width: 1024,
   overlay: true,
   bgColour: 'white',
@@ -234,6 +235,12 @@ var Protoshop = function() {
 
   this.grabFocus = function() {
     this.$canvas_wrapper.unbind('mousedown.global');
+  };
+
+  this.loadFonts = function() {
+    var link = '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
+      DataStore.data.fonts.join('|') + '">';
+    $('#font-links').html(link);
   };
 
   this.redraw = function() {
@@ -1184,6 +1191,12 @@ var Protoshop = function() {
   });
   $('#keyboard-placer').html(html.join(''));
 
+  this.refreshToolbar = function() {
+    self.$selection.trigger('change', {
+      selected: self.selected
+    });
+  };
+
   this.initaliseData = function(callback) {
 
     if (self.user) {
@@ -1199,14 +1212,13 @@ var Protoshop = function() {
 
       self.recalcHeight();
       self.redraw();
+      self.loadFonts();
 
       if (DataStore.data.overlay) {
         $('.grid-overlay[data-deleted!=true]:eq(0)').show();
       }
 
-      protoshop.$selection.trigger('change', {
-        selected: protoshop.selected
-      });
+      self.refreshToolbar();
 
       callback();
     });
