@@ -216,6 +216,7 @@ header {
 #distribute-vertical { background-image: url(../img/fague/ui-splitter-horizontal.png); }
 #distribute-horizontal { background-image: url(../img/fague/ui-splitter.png); }
 #lorum-ipsum { background-image: url(../img/famfam/text_letter_omega.png); }
+#clear-styles { background-image: url(../img/famfam/css_delete.png); }
 
 #canvas-width { background-image: url(../img/fague/application-resize.png); }
 #reset-img { background-image: url(../img/fague/image-resize-actual.png); }

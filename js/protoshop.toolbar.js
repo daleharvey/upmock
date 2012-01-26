@@ -375,6 +375,15 @@ TextView = Trail.View.extend({
     bindToggle($('#italic', dom), 'Italic', 'toggleItalic');
     bindToggle($('#underline', dom), 'Underline', 'toggleUnderline');
 
+    $('#clear-styles', dom).bind('mousedown', function() {
+      _.each(self.protoshop.selected, function(obj) {
+        var $span = obj.$dom.children('span');
+        $span.html($span.text());
+        window.protoshop.saveUndoPoint();
+      });
+    });
+
+
     $('#lorum-ipsum', dom).bind('mousedown', function() {
       var selected = self.protoshop.selected[0].$dom;
       var clone = selected.clone().css('visibility', 'hidden').appendTo(document.body);
