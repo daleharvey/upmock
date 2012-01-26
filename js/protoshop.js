@@ -142,19 +142,19 @@ var Protoshop = function() {
 
   this.undo = function() {
 
+
     // if there is a change that we delayed being saved as an undo point, do it now
-    if (this.deferredUndoAttribute !== null) {
-      this.saveUndoPoint();
-      this.deferredUndoAttribute = null;
+    if (self.deferredUndoAttribute !== null) {
+      self.saveUndoPoint();
+      self.deferredUndoAttribute = null;
     }
 
-    if (this.undo_stack.length > 1) {
+    if (self.undo_stack.length > 1) {
       self.selectElement(null);
 
       // This is the current state
       var current = self.undo_stack.pop();
-      this.redo_stack.push(current);
-
+      self.redo_stack.push(current);
       var html = self.undo_stack[self.undo_stack.length-1];
       self.restore(html);
     } else {

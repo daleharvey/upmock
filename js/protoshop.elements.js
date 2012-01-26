@@ -202,6 +202,7 @@ Elements.TextElement = function(opts, obj) {
 
   this.startEditing = function() {
     var $span = this.$dom.find('span').attr('contentEditable', true);
+    this.value = $span.html();
     $span[0].focus();
     document.execCommand('selectAll', false, null);
   };
@@ -211,7 +212,10 @@ Elements.TextElement = function(opts, obj) {
     $span[0].blur();
     $span.removeAttr('contentEditable');
     CoreElement.prototype.deselect.call(this);
-    window.protoshop.saveUndoPoint();
+    if (this.value && $span.html() !== this.value) {
+      window.protoshop.saveUndoPoint();
+    }
+    this.value = null;
   };
 
 };
