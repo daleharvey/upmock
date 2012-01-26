@@ -11,5 +11,5 @@ Handlebars.registerHelper('active', function(active) {
 });
 
 Handlebars.registerHelper('selected', function(current, active) {
-  return current === active ? 'selected="selected"' : '';
+  return current === active.replace(/'/g, '') ? 'selected="selected"' : '';
 });
