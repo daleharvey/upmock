@@ -933,6 +933,7 @@ Protoshop.Toolbar.showFontsDialog = function() {
         return family !== font;
       });
     }
+    DataStore.data.fonts = _.uniq(DataStore.data.fonts);
   });
 
   $dialog.find('.close').unbind().bind('mousedown', function() {
