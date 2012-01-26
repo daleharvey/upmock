@@ -131,6 +131,7 @@ var shortcuts = {
         callback: function() {
           _.each(this.selected, function(o) { o.$dom.remove(); });
           this.selectElement(null);
+          this.saveUndoPoint();
         },
         description: 'Delete Element'
       },

@@ -197,6 +197,7 @@ var Protoshop = function() {
     while(this.undo_stack.length > UNDO_ITEMS_LIMIT) {
       this.undo_stack.shift();
     }
+    AutoSave.trigger();
   };
 
 

@@ -937,7 +937,7 @@ Protoshop.Toolbar.showFontsDialog = function() {
 
   $dialog.find('.close').unbind().bind('mousedown', function() {
 
-    DataStore.save();
+    AutoSave.trigger();
 
     window.protoshop.loadFonts();
     window.protoshop.refreshToolbar();
