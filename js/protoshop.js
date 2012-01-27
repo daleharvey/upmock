@@ -183,6 +183,24 @@ var Protoshop = function() {
     }
   };
 
+  this.maybeShowSnap = function(direction) {
+
+    $guide.x.hide();
+    $guide.y.hide();
+
+    if (!self.snap) {
+      self.snap = collectSnapPoints(self.selected);
+    }
+
+    var bounds = self.calculateSelectionBounds();
+    offsetSnap({
+      top: bounds.nw.y,
+      left: bounds.nw.x,
+      width: bounds.se.x - bounds.nw.x,
+      height: bounds.se.y - bounds.se.y
+    }, null, 1);
+
+  };
 
   this.saveUndoPoint = function() {
 
@@ -446,30 +464,31 @@ var Protoshop = function() {
   };
 
   var snap = 4;
+
   var $guide = {
     x: $('#snapx'),
     y: $('#snapy')
   };
 
 
-  function within(a, b) {
-    return (a > (b - snap)) && (a < (b + snap));
+  function within(a, b, accuracy) {
+    return (a > (b - accuracy)) && (a < (b + accuracy));
   }
 
 
-  function snapPlane(position, size, points, centerPoints, type) {
+  function snapPlane(position, size, points, centerPoints, type, accuracy) {
 
     for (i = 0, len = points.length; i < len; i++) {
-      if (within(position, points[i]) && !/(s|e)/.test(type)) {
+      if (within(position, points[i], accuracy) && !/(s|e)/.test(type)) {
         return {point: 'start', value: points[i]};
       }
-      if (within(position + size, points[i])) {
+      if (within(position + size, points[i], accuracy)) {
         return {point: 'end', value: points[i]};
       }
     }
 
     for (i = 0, len = centerPoints.length; i < len; i++) {
-      if (within(Math.round((position + (size / 2))), centerPoints[i]) &&
+      if (within(Math.round((position + (size / 2))), centerPoints[i], accuracy) &&
           !/(n|w)/.test(type)) {
         return {point: 'middle', value: centerPoints[i]};
       }
@@ -491,7 +510,7 @@ var Protoshop = function() {
   };
 
 
-  function offsetSnap(bounds, type) {
+  function offsetSnap(bounds, type, accuracy) {
 
     type = type || '';
 
@@ -505,8 +524,10 @@ var Protoshop = function() {
     var x = type.replace(/(n|s)/, '');
     var y = type.replace(/(w|e)/, '');
 
-    var snapX = snapPlane(bounds.left, bounds.width, self.snap.x, self.snap.xcenter, x);
-    var snapY = snapPlane(bounds.top, bounds.height, self.snap.y, self.snap.ycenter, y);
+    var snapX = snapPlane(bounds.left, bounds.width, self.snap.x,
+                          self.snap.xcenter, x, accuracy);
+    var snapY = snapPlane(bounds.top, bounds.height, self.snap.y,
+                          self.snap.ycenter, y, accuracy);
 
     if (snapX !== false) {
       $guide.x.css('left', snapX.value + offset.x - $canvas_wrapper[0].scrollLeft)
@@ -604,7 +625,7 @@ var Protoshop = function() {
           left: startBounds.nw.x + diff.x,
           height: size.height,
           width: size.width
-        });
+        }, null, 4);
 
         if (snap.x) {
           if (snap.x.point === 'middle') {
@@ -774,7 +795,7 @@ var Protoshop = function() {
 
       if (!e.metaKey) {
         var tmp = $.extend({}, size, offset, obj);
-        var snap = offsetSnap(tmp, type);
+        var snap = offsetSnap(tmp, type, 4);
         obj = calculateResizeBounds(tmp, snap, e.shiftKey);
       }
 

@@ -115,25 +115,41 @@ var shortcuts = {
       {
         key: 'left',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 0, -1); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', 0, -1);
+          this.maybeShowSnap('w');
+          this.updateInfo();
+        },
         description: 'Move Left'
       },
       {
         key: 'right',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 0, 1); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', 0, 1);
+          this.maybeShowSnap('e');
+          this.updateInfo();
+        },
         description: 'Move Right'
       },
       {
         key: 'up',
         e: 'keydown',
-        callback: function() { this.onSelected('move', -1, 0); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', -1, 0);
+          this.maybeShowSnap('n');
+          this.updateInfo();
+        },
         description: 'Move Up'
       },
       {
         key: 'down',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 1, 0); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', 1, 0);
+          this.maybeShowSnap('s');
+          this.updateInfo();
+        },
         description: 'Move Down'
       },
       {
@@ -149,25 +165,41 @@ var shortcuts = {
       {
         key: 'shift+left',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 0, -10); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', 0, -10);
+          this.maybeShowSnap('e');
+          this.updateInfo();
+        },
         description: 'Move Left'
       },
       {
         key: 'shift+right',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 0, 10); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', 0, 10);
+          this.maybeShowSnap('w');
+          this.updateInfo();
+        },
         description: 'Move Right'
       },
       {
         key: 'shift+up',
         e: 'keydown',
-        callback: function() { this.onSelected('move', -10, 0); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', -10, 0);
+          this.maybeShowSnap('n');
+          this.updateInfo();
+        },
         description: 'Move Up'
       },
       {
         key: 'shift+down',
         e: 'keydown',
-        callback: function() { this.onSelected('move', 10, 0); this.updateInfo(); },
+        callback: function() {
+          this.onSelected('move', 10, 0);
+          this.maybeShowSnap('s');
+          this.updateInfo();
+        },
         description: 'Move Down'
       }
     ]
