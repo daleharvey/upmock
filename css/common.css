@@ -17,7 +17,7 @@ html, body {
  * LEFT PANEL
  */
 #panel {
-    z-index:4000;
+    z-index:6000;
     position: fixed;
     top: 80px;
     left: 0;
