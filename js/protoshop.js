@@ -13,8 +13,9 @@ var defaultSite = {
   bgColour: 'white',
   grid: {
     width:40,
-    height: 20,
     gutter: 20,
+    columns: 16,
+    height: 20,
     colour: 'rgb(0, 0, 0)',
     opacity: 0.05
   }
@@ -144,7 +145,6 @@ var Protoshop = function() {
 
   this.undo = function() {
 
-
     // if there is a change that we delayed being saved as an undo point, do it now
     if (self.deferredUndoAttribute !== null) {
       self.saveUndoPoint();
@@ -202,21 +202,29 @@ var Protoshop = function() {
   };
 
 
+  this.setCanvasWidth = function() {
+    var grid = DataStore.data.grid;
+    var wholeWidth = grid.width + grid.gutter;
+    DataStore.data.width = wholeWidth * grid.columns - grid.gutter;
+    self.redraw();
+  };
+
   this.drawOverlay = function() {
 
-    var overlay = DataStore.data.grid;
-    var gridHeight = overlay.height;
-    var g = overlay.gutter / 2;
-    var width = $canvas.width();
+    var grid = DataStore.data.grid;
+    var wholeWidth = grid.width + grid.gutter;
+    var width = wholeWidth * grid.columns - grid.gutter;
+    var gridHeight = grid.height;
+
     var canvas = $('<canvas width="' + width + '" height="' + (gridHeight || 1) +
                    '"></canvas>');
     var ctx = canvas[0].getContext("2d");
 
-    ctx.fillStyle = overlay.colour;
-    while (g < width) {
-      ctx.fillRect(g, 0, overlay.width, gridHeight || 1);
-      g += overlay.width + overlay.gutter;
+    ctx.fillStyle = grid.colour;
+    for (var i = 0; i < grid.columns; i++) {
+      ctx.fillRect(wholeWidth * i, 0, grid.width, gridHeight || 1);
     }
+
     if (gridHeight !== 0) {
       ctx.fillRect(0, gridHeight - 1, width, 1);
     }
@@ -224,7 +232,9 @@ var Protoshop = function() {
     var oldGrid = $('.grid-overlay[data-deleted!=true]:eq(0)');
     var newGrid = oldGrid.clone().css({
       background: 'url(' + canvas[0].toDataURL() + ')',
-      opacity: overlay.opacity
+      width: width,
+      'margin-left': (width / 2) * -1,
+      opacity: grid.opacity
     }).appendTo($canvas_copy);
 
     oldGrid.attr('data-deleted', 'true');
@@ -286,13 +296,11 @@ var Protoshop = function() {
       var gridHeight = overlay.height;
       var width = $canvas.width();
       var height = $canvas.height();
-      var g = overlay.gutter / 2;
-      while (g < width) {
-        x.push(g);
-        x.push(g + overlay.width);
-        g += overlay.width + overlay.gutter;
+      var g = 0;
+      for (var i = 0; i < overlay.columns; i++) {
+        x.push((overlay.width + overlay.gutter) * i);
+        x.push(((overlay.width + overlay.gutter) * i) + overlay.width);
       }
-      g = 0;
       if (gridHeight !== 0) {
         while(g < height) {
           y.push(g);
@@ -1227,7 +1235,7 @@ var Protoshop = function() {
       self.restore(DataStore.data);
 
       self.recalcHeight();
-      self.redraw();
+      self.setCanvasWidth();
       self.loadFonts();
 
       if (DataStore.data.overlay) {

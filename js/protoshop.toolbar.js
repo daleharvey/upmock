@@ -224,9 +224,12 @@ GlobalView = Trail.View.extend({
         width: parseInt($('#overlay-width', $dom).val(), 10),
         height: parseInt($('#overlay-height', $dom).val(), 10),
         gutter: parseInt($('#overlay-gutter', $dom).val(), 10),
+        columns: parseInt($('#overlay-columns', $dom).val(), 10),
         colour: $('#overlay-colour', $dom).val(),
         opacity: parseFloat($('#overlay-opacity', $dom).val())
       };
+
+      window.protoshop.setCanvasWidth();
       window.protoshop.deferredSaveUndoPoint('grid');
       window.protoshop.drawOverlay();
     });
@@ -261,11 +264,6 @@ BgView = Trail.View.extend({
       window.protoshop.deferredSaveUndoPoint('bgColour');
       DataStore.data.bgColour = this.value;
       window.protoshop.updateUsedColours();
-      window.protoshop.redraw();
-    });
-
-    $('#canvas-width', $dom).bind('change input', function() {
-      DataStore.data.width = parseInt(this.value, 10);
       window.protoshop.redraw();
     });
 

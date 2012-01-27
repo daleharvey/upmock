@@ -477,6 +477,7 @@ form label span {
     display: none;
     pointer-events: none;
     -moz-user-select: -moz-none;
+    left: 50%;
 }
 
 #selection {
