@@ -266,7 +266,6 @@ var Protoshop = function() {
     $canvas_wrapper.css('background', Utils.w3cGradient2Browser(bgColour));
     $canvas.width(width).css('margin-left', -Math.round(width/2));
     $canvas_copy.width(width).css('margin-left', -Math.round(width/2));
-    self.drawOverlay();
   };
 
   this.updateInfo = function() {
