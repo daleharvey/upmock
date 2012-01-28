@@ -326,6 +326,7 @@ header {
     top: 50px;
     box-sizing: border-box;
     cursor: pointer;
+    font-family: Helvetica;
 }
 
 #canvas div.block {

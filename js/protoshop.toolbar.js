@@ -514,7 +514,7 @@ TextView = Trail.View.extend({
       isUnderline: dom.css('text-decoration') === 'underline',
       shadow: Protoshop.Toolbar.parseShadow(dom.css('text-shadow')),
       color: dom.css('color'),
-      selectedFont: dom.css('font-family'),
+      selectedFont: dom.css('font-family') || 'helvetica',
       fonts: Protoshop.Toolbar.fonts.concat(DataStore.data.fonts)
     };
 
