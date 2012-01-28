@@ -185,9 +185,6 @@ PickerWidget = Trail.View.extend({
         var colour = $(e.target).data('background');
         var bg = Protoshop.Toolbar.getBGProperties(colour);
 
-        $('.picker-value', dom).val(colour).trigger('change');
-        window.protoshop.saveUndoPoint();
-
         $('#img-url', dom).val(bg.url);
         $('#img-color', dom).val(bg.colour).trigger('change');
         $('#img-top', dom).val(bg.posY);
@@ -195,6 +192,9 @@ PickerWidget = Trail.View.extend({
 
         $('#repeat-x').attr('checked', bg.repeatX);
         $('#repeat-y').attr('checked', bg.repeatX);
+
+        $('.picker-value', dom).val(colour).trigger('change');
+        window.protoshop.saveUndoPoint();
 
         switchToTab(colour);
       }
