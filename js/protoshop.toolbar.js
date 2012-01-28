@@ -922,8 +922,8 @@ Protoshop.Toolbar.getBGProperties = function(colour) {
 };
 
 Protoshop.Toolbar.fonts = [
-  'Times New Roman', 'Georgia', 'Garamond', 'Helvetica',
-  'Verdana', 'Trebuchet MS', 'Impact', 'Monaco'
+  'Times New Roman', 'Lucida Grande', 'Georgia', 'Garamond', 'Helvetica',
+  'Verdana', 'Trebuchet MS', 'Impact', 'minion-pro-1', 'Monaco'
 ];
 
 Protoshop.Toolbar.showFontsDialog = function() {
