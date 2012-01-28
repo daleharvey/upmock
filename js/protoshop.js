@@ -1198,7 +1198,7 @@ var Protoshop = function() {
         }));
       }},
       'help': { title: 'Show Help', callback: function() {
-        $('#keyboard-help').toggle();
+        HelpDialog.toggle();
       }}
     };
 
@@ -1218,7 +1218,6 @@ var Protoshop = function() {
 
   })();
 
-  var template = Handlebars.compile($('#shortcut-section-tpl').html());
   var isMac = /Mac/.test(navigator.appVersion);
   var html = _.map(shortcuts, function(data) {
     var tmp = $.extend({}, data);
@@ -1231,9 +1230,9 @@ var Protoshop = function() {
       }
     });
     tmp.shortcuts = newShortcuts;
-    return template(tmp);
+    return tmp;
   });
-  $('#keyboard-placer').html(html.join(''));
+  HelpDialog.data.sections = html;
 
   this.refreshToolbar = function() {
     self.$selection.trigger('change', {

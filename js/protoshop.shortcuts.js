@@ -25,7 +25,7 @@ var shortcuts = {
         key: '?',
         e:'keypress',
         override: 'shift+?',
-        callback: function() { $('#keyboard-help').toggle(); },
+        callback: function() { HelpDialog.toggle(); },
         description: 'Show / Hide the help dialog'
       },
       {

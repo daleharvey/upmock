@@ -505,7 +505,6 @@ form label span {
     right: 0;
     background: rgba(0,0,0,0.5);
     z-index: 9500;
-    display: none;
 }
 
 .inner-modal {
@@ -851,6 +850,7 @@ h3 {
 }
 
 #cursor-overlay {
+    display:none;
     background: transparent;
 }
 

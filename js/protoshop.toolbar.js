@@ -109,6 +109,39 @@ Trail.View.addShim('.tabs', function() {
 });
 
 
+Dialog = Trail.View.extend({
+  shown: false,
+  toggle: function() {
+    return this[this.shown ? 'hide' : 'show']();
+  },
+  show: function() {
+    var self = this;
+    $(document).bind('keydown.dialog', function(e) {
+      if (e.keyCode == 27) {
+        self.hide();
+      }
+    });
+    this.shown = true;
+    return this.render();
+  },
+  hide: function() {
+    $(document).unbind('keydown.dialog');
+    this.$dom.remove();
+    this.shown = false;
+  }
+});
+
+HelpDialog = Dialog.extend({
+  jointContainer: document.body,
+  template: '#keyboard-help-tpl'
+});
+
+FontsDialog = Dialog.extend({
+  jointContainer: document.body,
+  template: '#fonts-dialog-tpl'
+});
+
+
 PickerWidget = Trail.View.extend({
 
   template: '#picker-tpl',
@@ -897,7 +930,7 @@ Protoshop.Toolbar.showFontsDialog = function() {
 
   var index = 0;
   var fonts = [];
-  var $dialog = $('#add-fonts');
+  var $dialog = FontsDialog.show();
   var $preview = $dialog.find('#font-preview');
   var $previewStyle = $dialog.find('#font-preview-style');
   var $button = $dialog.find('button');
@@ -944,14 +977,12 @@ Protoshop.Toolbar.showFontsDialog = function() {
 
     $preview.empty();
     $previewStyle.empty();
-    $dialog.hide();
-
+    FontsDialog.hide()
   });
 
   $.get('/fonts/').then(function(data) {
     fonts = data.items;
     loadFonts();
-    $dialog.show();
   });
 
 };
