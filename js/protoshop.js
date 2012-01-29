@@ -1065,7 +1065,10 @@ var Protoshop = function() {
         return;
       }
 
-      html += '<div class="used-colour" data-background="' +
+      var css = /gradient/.test(key) ? 'gradient' :
+        (/url/.test(key) ? 'image' : 'plain');
+
+      html += '<div class="used-colour ' + css + '" data-background="' +
         Utils.browserGradient2w3c(key).replace(/"/g, '') + '" ' +
         'style="background: ' +
         Utils.w3cGradient2Browser(key).replace(/"/g, '') + '"></div>';

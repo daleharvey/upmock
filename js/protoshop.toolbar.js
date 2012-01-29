@@ -421,6 +421,18 @@ TextView = Trail.View.extend({
     bindToggle($('#italic', dom), 'Italic', 'toggleItalic');
     bindToggle($('#underline', dom), 'Underline', 'toggleUnderline');
 
+    $('#used-colours', dom).bind('mousedown', function(e) {
+      if ($(e.target).is('.used-colour')) {
+        e.preventDefault();
+        e.stopPropagation();
+        var colour = $(e.target).data('background');
+        $('.picker-value', dom).val(colour).trigger('change');
+        window.protoshop.updateUsedColours();
+        window.protoshop.saveUndoPoint();
+      }
+    });
+
+
     $('#clear-styles', dom).bind('mousedown', function() {
       _.each(self.protoshop.selected, function(obj) {
         var $span = obj.$dom.children('span');

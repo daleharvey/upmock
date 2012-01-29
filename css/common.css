@@ -222,6 +222,9 @@ header {
 #reset-img { background-image: url(../img/fague/image-resize-actual.png); }
 #fit-content { background-image: url(../img/fague/image-resize-actual.png); }
 
+#fg-picker .image, #fg-picker .gradient {
+    display: none;
+}
 
 
 .text-preview {
@@ -668,7 +671,7 @@ h3 {
     border: 1px solid orange;
 }
 
-.tabs h3 {
+.inner h3, .tabs h3 {
     font-weight: normal;
     font-size: inherit;
     border-bottom: 1px solid #AAA;
