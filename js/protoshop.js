@@ -149,14 +149,20 @@ var Protoshop = function() {
     'CREATE': 2
   };
 
-  this.state = Protoshop.States.EDIT;
+  this.state = null;
   this.createMode = null;
 
   this.setState = function(state) {
     $('#panel .active').removeClass('active');
     if (state === Protoshop.States.EDIT) {
+      $(document.body).css('cursor', 'auto');
       $('#cursor').addClass('active');
     } else if (state === Protoshop.States.CREATE) {
+      if (self.createMode === 'add-h1' || self.createMode === 'add-text') {
+        $(document.body).css('cursor', 'text');
+      } else {
+        $(document.body).css('cursor', 'crosshair');
+      }
       $('#panel #' + this.createMode).addClass('active');
     }
     self.state = state;
@@ -1438,6 +1444,7 @@ var Protoshop = function() {
     }
     // browser detection, thats the cool way right?
     if ($.browser.webkit || $.browser.mozilla) {
+      self.setState(Protoshop.States.EDIT);
       self.initaliseData(function () {
         $('#loading').fadeOut('fast', function() {
           $('#loading').remove();
