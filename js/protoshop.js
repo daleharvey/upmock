@@ -966,6 +966,10 @@ var Protoshop = function() {
         return bindMouseResize(element.$dom, e, panelFuns[self.createMode].handle);
       }
 
+      if (self.createMode === 'add-h1' || self.createMode === 'add-text') {
+        element.startEditing();
+      }
+
       self.setState(Protoshop.States.EDIT);
       return;
     }
