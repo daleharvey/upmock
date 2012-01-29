@@ -429,6 +429,18 @@ TextView = Trail.View.extend({
       });
     });
 
+    $('#fit-content', dom).bind('mousedown', function() {
+      _.each(self.protoshop.selected, function(obj) {
+        var clone = obj.$dom.clone()
+          .css({'visibility':'hidden', 'height': 'auto', width: 'auto'})
+          .appendTo(document.body);
+
+        obj.$dom.width(clone.find('span').width());
+        obj.$dom.height(clone.find('span').height());
+
+        clone.remove();
+      });
+    });
 
     $('#lorum-ipsum', dom).bind('mousedown', function() {
       var selected = self.protoshop.selected[0].$dom;
