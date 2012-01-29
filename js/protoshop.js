@@ -455,7 +455,7 @@ var Protoshop = function() {
         left: parseInt($obj.css('left'), 10) + (offset ? 50 : 0),
         top: parseInt($obj.css('top'), 10) + (offset ? 50 : 0)
       });
-      var obj = new Elements[$obj.data('type')](++self.index.max, $obj);
+      var obj = new Elements[$obj.data('type')]({index: ++self.index.max}, $obj);
       obj.$dom.appendTo($('#canvas'));
       if (offset) {
         self.selectElement(obj);
