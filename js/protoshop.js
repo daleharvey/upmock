@@ -481,9 +481,11 @@ var Protoshop = function() {
   this.paste = function(data, offset) {
     var arr = _.map(data, function(html) {
       var $obj = $(html);
+      var top = !offset ? parseInt($obj.css('top'), 10)
+        : $canvas_wrapper[0].scrollTop + 50;
       $obj.css({
         left: parseInt($obj.css('left'), 10) + (offset ? 50 : 0),
-        top: parseInt($obj.css('top'), 10) + (offset ? 50 : 0)
+        top: top
       });
       var obj = new Elements[$obj.data('type')]({index: ++self.index.max}, $obj);
       obj.$dom.appendTo($('#canvas'));
