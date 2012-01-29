@@ -82,6 +82,8 @@ var AutoSave = {
   }
 };
 
+
+
 var Protoshop = function() {
 
   var self = this;
@@ -108,6 +110,16 @@ var Protoshop = function() {
     w: 'ew-resize'
   };
 
+  var $guide = {
+    x: $('#snapx'),
+    y: $('#snapy')
+  };
+
+
+  this.scrollHorizontal = false;
+  this.scrollVertical = false;
+  this.scrollInterval = null;
+
   this.deferredUndoAttribute = null;
   this.$selection = $selection;
   this.selected = [];
@@ -131,6 +143,24 @@ var Protoshop = function() {
   this.redo_stack = [];
 
   this.user = false;
+
+  Protoshop.States = {
+    'EDIT': 1,
+    'CREATE': 2
+  };
+
+  this.state = Protoshop.States.EDIT;
+  this.createMode = null;
+
+  this.setState = function(state) {
+    $('#panel .active').removeClass('active');
+    if (state === Protoshop.States.EDIT) {
+      $('#cursor').addClass('active');
+    } else if (state === Protoshop.States.CREATE) {
+      $('#panel #' + this.createMode).addClass('active');
+    }
+    self.state = state;
+  };
 
   this.redo = function() {
     if (this.redo_stack.length > 0) {
@@ -463,13 +493,6 @@ var Protoshop = function() {
     });
   };
 
-  var snap = 4;
-
-  var $guide = {
-    x: $('#snapx'),
-    y: $('#snapy')
-  };
-
 
   function within(a, b, accuracy) {
     return (a > (b - accuracy)) && (a < (b + accuracy));
@@ -496,11 +519,6 @@ var Protoshop = function() {
 
     return false;
   }
-
-
-  this.scrollHorizontal = false;
-  this.scrollVertical = false;
-  this.scrollInterval = null;
 
   this.autoScroll = function() {
     if (self.scrollVertical) {
@@ -811,7 +829,7 @@ var Protoshop = function() {
       self.maybeScroll(e);
     });
 
-    $window.bind('mouseup.moving', function(e) {
+    $window.bind('mouseup.resize', function(e) {
 
       $('#cursor-overlay').hide();
 
@@ -823,6 +841,11 @@ var Protoshop = function() {
       $guide.y.hide();
       $window.unbind('.resize');
       self.saveUndoPoint();
+
+      if (self.state === Protoshop.States.CREATE) {
+        self.setState(Protoshop.States.EDIT);
+      }
+
     });
 
   }
@@ -923,6 +946,28 @@ var Protoshop = function() {
 
     if ($(e.target).is('span[contenteditable=true]')) {
       return true;
+    }
+
+    if (self.state === Protoshop.States.CREATE) {
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var yOffset = $canvas_wrapper[0].scrollTop - $canvas_wrapper[0].offsetTop;
+      var xOffset = $('#canvas_copy')[0].offsetLeft - $canvas_wrapper[0].scrollLeft;
+
+      e.clientY += yOffset;
+      e.clientX -= xOffset;
+
+      var element = panelFuns[self.createMode].create(e);
+      append(element);
+
+      if (panelFuns[self.createMode].handle) {
+        return bindMouseResize(element.$dom, e, panelFuns[self.createMode].handle);
+      }
+
+      self.setState(Protoshop.States.EDIT);
+      return;
     }
 
     if (e.target === this || e.target === $canvas[0]) {
@@ -1145,78 +1190,191 @@ var Protoshop = function() {
     });
   });
 
-
-  (function() {
-
-    var panelFuns = {
-      'cursor': { title: 'Select elements', callback: function() {
+  var panelFuns = {
+    'cursor': {
+      title: 'Select elements',
+      callback: function() {
+        self.setState(Protoshop.States.EDIT);
         self.selectElement(null);
-      }},
-      'add-block': { title: 'Add Block Element', callback: function() {
-        append(new Elements.BlockElement({index: ++self.index.max}));
-      }},
-      'add-h1': { title: 'Add Headers', callback: function() {
-        append(new Elements.TextElement({
+      }
+    },
+    'add-block': {
+      title: 'Add Block Element',
+      callback: function() {
+        self.createMode = 'add-block';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.BlockElement({
           index: ++self.index.max,
-          css: {'font-size': 24, 'font-weight': 'bold'},
+          css: {top: e.clientY, left: e.clientX, width: 0, height: 0}
+        });
+      },
+      handle: 'se'
+    },
+    'add-h1': {
+      title: 'Add Headers',
+      callback: function() {
+        self.createMode = 'add-h1';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.TextElement({
+          index: ++self.index.max,
+          css: {
+            top: e.clientY,
+            left: e.clientX,
+            'font-size': 24,
+            'font-weight': 'bold'
+          },
           text: 'Header'
-        }));
-      }},
-      'add-text': { title: 'Add Paragraph', callback: function() {
-        append(new Elements.TextElement({index: ++self.index.max}));
-      }},
-      'add-hr': { title: 'Add Horizontal Rule', callback: function() {
-        append(new Elements.HRElement({index: ++self.index.max}));
-      }},
-      'add-vr': { title: 'Add Vertical Rule', callback: function() {
-        append(new Elements.VRElement({index: ++self.index.max}));
-      }},
-      'add-input': { title: 'Add Input Element', callback: function() {
-        append(new Elements.HTMLElement({
+        });
+      }
+    },
+    'add-text': {
+      title: 'Add Paragraph',
+      callback: function() {
+        self.createMode = 'add-text';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.TextElement({
           index: ++self.index.max,
-          html: '<input type="text" />'
-        }));
-      }},
-      'add-checkbox': { title: 'Add Checkbox', callback: function() {
-        append(new Elements.HTMLElement({
+          css: {top: e.clientY, left: e.clientX}
+        });
+      }
+    },
+    'add-hr': {
+      title: 'Add Horizontal Rule',
+      callback: function() {
+        self.createMode = 'add-hr';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.HRElement({
+          index: ++self.index.max,
+          css: {top: e.clientY, left: e.clientX, width: 0}
+        });
+      },
+      handle: 'e'
+    },
+    'add-vr': {
+      title: 'Add Vertical Rule',
+      callback: function() {
+        self.createMode = 'add-vr';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.VRElement({
+          index: ++self.index.max,
+          css: {top: e.clientY, left: e.clientX, height: 0}
+        });
+      },
+      handle: 's'
+    },
+    'add-input': {
+      title: 'Add Input Element',
+      callback: function() {
+        self.createMode = 'add-input';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.HTMLElement({
+          index: ++self.index.max,
+          html: '<input type="text" />',
+          css: {top: e.clientY, left: e.clientX}
+        });
+      }
+    },
+    'add-checkbox': {
+      title: 'Add Checkbox',
+      callback: function() {
+        self.createMode = 'add-checkbox';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.HTMLElement({
           index: ++self.index.max,
           html: '<input type="checkbox" />',
-          attrs: {'data-handles': ''}
-        }));
-      }},
-      'add-button': { title: 'Add Button', callback: function() {
-        append(new Elements.ButtonElement({index: ++self.index.max}));
-      }},
-      'add-select': { title: 'Add Dropdown Menu', callback: function() {
-        append(new Elements.SelectElement({index: ++self.index.max}));
-      }},
-      'add-image': { title: 'Add Image', callback: function() {
-        append(new Elements.ImgElement({
+          attrs: {'data-handles': ''},
+          css: {top: e.clientY, left: e.clientX}
+        });
+      }
+    },
+    'add-button': {
+      title: 'Add Button',
+      callback: function() {
+        self.createMode = 'add-button';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.ButtonElement({
           index: ++self.index.max,
-          css: { width: 100, height: 100},
+          css: {top: e.clientY, left: e.clientX, width: 0, height: 0}
+        });
+      },
+      handle: 'se'
+    },
+    'add-select': {
+      title: 'Add Dropdown Menu',
+      callback: function() {
+        self.createMode = 'add-select';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.SelectElement({
+          index: ++self.index.max,
+          css: {top: e.clientY, left: e.clientX}
+        });
+      }
+    },
+    'add-image': {
+      title: 'Add Image',
+      callback: function() {
+        self.createMode = 'add-image';
+        self.setState(Protoshop.States.CREATE);
+        self.selectElement(null);
+      },
+      create: function(e) {
+        return new Elements.ImgElement({
+          index: ++self.index.max,
+          css: {top: e.clientY, left: e.clientX, width: 0, height: 0},
           html: '<img src="" />'
-        }));
-      }},
-      'help': { title: 'Show Help', callback: function() {
+        });
+      },
+      handle: 'se'
+    },
+    'help': {
+      title: 'Show Help',
+      callback: function() {
         HelpDialog.toggle();
-      }}
-    };
+      }
+    }
+  };
 
-    var $panel = $('<div id="panel"></div>');
-    var $ul = $('<ul></ul>');
 
-    _.each(panelFuns, function(v, k) {
-      var $li = $('<li />', {title: v.title});
-      var $btn = $('<a id="' + k + '"></a>');
-      $btn.bind('mousedown', v.callback);
-      $li.append($btn);
-      $ul.append($li);
-    });
+  var $panel = $('<div id="panel"></div>');
+  var $ul = $('<ul></ul>');
 
-    $panel.append($ul);
-    $(document.body).append($panel);
+  _.each(panelFuns, function(v, k) {
+    var $li = $('<li />', {title: v.title});
+    var $btn = $('<a id="' + k + '"></a>');
+    $btn.bind('mousedown', v.callback);
+    $li.append($btn);
+    $ul.append($li);
+  });
 
-  })();
+  $panel.append($ul);
+  $(document.body).append($panel);
 
   var isMac = /Mac/.test(navigator.appVersion);
   var html = _.map(shortcuts, function(data) {
