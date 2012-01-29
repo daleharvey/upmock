@@ -1240,8 +1240,7 @@ var Protoshop = function() {
             left: e.clientX,
             'font-size': 24,
             'font-weight': 'bold'
-          },
-          text: 'Header'
+          }
         });
       }
     },

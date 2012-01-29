@@ -199,7 +199,7 @@ Elements.TextElement = function(opts, obj) {
 
   this.editing = false;
 
-  opts.html = '<span>' + (opts.text || 'text') + '</span>';
+  opts.html = '<span>' + (opts.text || '') + '</span>';
   this.init(opts, {'data-type': 'TextElement', 'class': 'text'}, obj);
 
   this.startEditing = function() {

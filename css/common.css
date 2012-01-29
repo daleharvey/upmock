@@ -368,7 +368,7 @@ header {
 }
 
 #canvas div.text {
-    width: 200px;
+    min-height: 20px;
 }
 
 element.style {
