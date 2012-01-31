@@ -1450,6 +1450,7 @@ var Protoshop = function() {
       self.initaliseData(function () {
         $('#loading').fadeOut('fast', function() {
           $('#loading').remove();
+          $(document.body).append('<div id="selenium"></div>');
         });
       });
     } else {
