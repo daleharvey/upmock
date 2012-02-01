@@ -266,13 +266,21 @@ GlobalView = Trail.View.extend({
       window.protoshop.deferredSaveUndoPoint('grid');
       window.protoshop.drawOverlay();
     });
+
+    $('#save-data', $dom).bind('mousedown', function(e) {
+      AutoSave.trigger(true).then(function() {
+        Utils.alert('Saved');
+      });
+    });
+
     return $dom;
   },
 
   load: function() {
     return this.render({data: {
       overlay: DataStore.data.grid,
-      isOverlay: DataStore.data.overlay
+      isOverlay: DataStore.data.overlay,
+      isDirty: !AutoSave.isDirty()
     }});
   }
 });

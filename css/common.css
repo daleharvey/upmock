@@ -221,6 +221,7 @@ header {
 #canvas-width { background-image: url(../img/fague/application-resize.png); }
 #reset-img { background-image: url(../img/fague/image-resize-actual.png); }
 #fit-content { background-image: url(../img/fague/image-resize-actual.png); }
+#save-data { background-image: url(../img/famfam/disk.png); }
 
 #fg-picker .image, #fg-picker .gradient {
     display: none;

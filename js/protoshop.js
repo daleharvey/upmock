@@ -44,9 +44,12 @@ var DataStore = {
     var self = this;
     if (!self.local) {
       var db = $.couch.db('upmock-' + window.protoshop.user.name);
+      var dfd = $.Deferred();
       db.saveDoc(this.data).then(function(result) {
         self.data._rev = result.rev;
+        dfd.resolve();
       });
+      return dfd.promise();
     } else {
       localJSON.set(this.data._id, this.data);
     }
@@ -67,18 +70,25 @@ var AutoSave = {
     var toSave = $('#canvas').clone();
     toSave.find('#info, .handles, #selection').remove();
     DataStore.data.html = toSave.html();
-    DataStore.save();
     this.timer = null;
+    $('#save-data').attr('disabled', 'disabled');
+    return DataStore.save();
   },
 
-  trigger: function() {
+  trigger: function(immediately) {
+
+    $('#save-data').removeAttr('disabled');
 
     if (this.timer !== null) {
       clearTimeout(this.timer);
       this.timer = null;
     }
 
-    this.timer = setTimeout($.proxy(this.autoSave, this), this.TIMEOUT);
+    if (immediately) {
+      return this.autoSave();
+    } else {
+      this.timer = setTimeout($.proxy(this.autoSave, this), this.TIMEOUT);
+    }
   }
 };
 

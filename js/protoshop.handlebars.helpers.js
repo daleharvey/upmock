@@ -6,6 +6,10 @@ Handlebars.registerHelper('option', function(selected) {
   return selected ? 'selected="selected"' : '';
 });
 
+Handlebars.registerHelper('disabled', function(disabled) {
+  return disabled ? 'disabled=disabled' : '';
+});
+
 Handlebars.registerHelper('active', function(active) {
   return active ? 'active' : '';
 });
