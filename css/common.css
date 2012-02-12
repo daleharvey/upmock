@@ -19,16 +19,16 @@ html, body {
 #panel {
     z-index:6000;
     position: fixed;
-    top: 80px;
+    top: 60px;
     left: 0;
-    background: #DDD;
+    background: #EAEAEA;
     border: 1px solid #CCC;
     border-width: 1px 1px 1px 0;
 }
 
 #panel ul {
     list-style-type: none;
-    padding: 5px;
+    padding: 2px;
     margin: 0;
 }
 
@@ -41,28 +41,32 @@ html, body {
 
 #panel li a {
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 30px;
+    height: 30px;
     border: 1px solid #DDD;
     cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 5px;
 }
 
 #panel li a:hover, #panel li a.active {
-    background-color: #EEE;
+    background-color: #FFF;
+    border-color: #4183C4;
 }
 
-#cursor { background: url(../img/famfam/cursor.png); }
-#add-block { background: url(../img/fague/ui-panel.png); }
-#add-text { background: url(../img/fague/ui-label.png); }
-#add-h1 { background: url(../img/famfam/text_heading_1.png); }
-#add-hr { background: url(../img/fague/ui-separator.png); }
-#add-vr { background: url(../img/fague/ui-vertical-separator.png); }
-#add-input { background: url(../img/fague/ui-text-field.png); }
-#add-checkbox { background: url(../img/fague/ui-check-box.png); }
-#add-button { background: url(../img/fague/ui-button.png); }
-#add-select { background: url(../img/fague/ui-combo-box.png); }
-#add-image { background: url(../img/fague/image.png); }
-#help { background: url(../img/famfam/help.png); }
+#cursor { background-image: url(../img/famfam/cursor.png); }
+#add-block { background-image: url(../img/fague/ui-panel.png); }
+#add-text { background-image: url(../img/fague/ui-label.png); }
+#add-h1 { background-image: url(../img/famfam/text_heading_1.png); }
+#add-hr { background-image: url(../img/fague/ui-separator.png); }
+#add-vr { background-image: url(../img/fague/ui-vertical-separator.png); }
+#add-input { background-image: url(../img/fague/ui-text-field.png); }
+#add-checkbox { background-image: url(../img/fague/ui-check-box.png); }
+#add-button { background-image: url(../img/fague/ui-button.png); }
+#add-select { background-image: url(../img/fague/ui-combo-box.png); }
+#add-image { background-image: url(../img/fague/image.png); }
+#help { background-image: url(../img/famfam/help.png); }
 
 
 /*
@@ -73,30 +77,30 @@ header {
     top: 0;
     left: 0;
     right: 0;
-    background: #DDD;
-    height: 19px;
+    background: -webkit-linear-gradient(#FAFAFA 0%, #EAEAEA 100%);
     padding: 5px;
     z-index: 9000;
     border-bottom: 1px solid #CCC;
 }
 
 #top-bar-inner {
-    width: 800px;
+    width: 1200px;
     margin: 0 auto;
 }
 
 .toolbar-icon, .picker-wrapper {
     cursor: pointer;
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 30px;
+    height: 30px;
     border: 1px solid transparent;
     background-color: transparent;
-    background-position: center 0;
+    background-position: center center;
     background-repeat: no-repeat;
     float: left;
     margin-right: 5px;
     position: relative;
+    border-radius: 5px;
 }
 
 .picker-wrapper {
@@ -113,14 +117,13 @@ header {
     float: left;
     padding-left: 20px;
     width: 40px;
-    line-height: 15px;
-    height: 15px;
+    line-height: 30px;
+    height: 30px;
     font-size: 9px;
     border-radius: 3px;
     margin-right: 5px;
     position: relative;
     margin-top:0px;
-    background-color: #CDCDCD;
 }
 
 #canvas-width {
@@ -134,25 +137,26 @@ header {
 
 .toolbar-label-icon:hover, .toolbar-label-icon.active, .toolbar-label-icon:focus,
 .toolbar-icon:hover, .toolbar-icon.active {
-    background-color: #EEE;
+    background-color: #FFF;
+    border-color: #4183C4;
 }
 
 .dropdown .inner {
     display: none;
-    background: #DDD;
+    background: #EAEAEA;
     padding: 10px;
     border-radius: 3px;
     position: absolute;
-    top: 30px;
+    top: 40px;
     left: -27px;
     color: #333;
     z-index: 9000;
-    border: 1px solid #CCC;
-    box-shadow: 1px 1px 1px #222;
+    border: 1px solid #DDD;
+    box-shadow: 1px 1px 1px #666;
 }
 
 .inner:after {
-    border-color: #DDD transparent;
+    border-color: #EAEAEA transparent;
     border-style: solid;
     content: "";
     display: block;
@@ -245,10 +249,10 @@ header {
 
 .picker-preview {
     position:absolute;
-    bottom: -1px;
-    left: 0px;
-    right: 0px;
-    height: 4px;
+    bottom: 4px;
+    left: 2px;
+    right: 2px;
+    height: 6px;
     z-index: 30000;
 }
 
@@ -258,7 +262,7 @@ header {
 #canvas_wrapper {
     overflow: scroll;
     position: absolute;
-    top: 30px;
+    top: 43px;
     left: 0;
     bottom: 0;
     right: 0;
@@ -819,7 +823,7 @@ h3 {
     float: left;
     position: relative;
     left: -5px;
-    padding-top:7px;
+    padding-top:13px;
     padding-left:1px;
 }
 

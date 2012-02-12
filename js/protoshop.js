@@ -125,6 +125,7 @@ var Protoshop = function() {
     y: $('#snapy')
   };
 
+  var TOP_OFFSET = parseInt($canvas_wrapper.css('top'), 10);
 
   this.scrollHorizontal = false;
   this.scrollVertical = false;
@@ -572,7 +573,8 @@ var Protoshop = function() {
     }
 
     if (snapY !== false) {
-      $guide.y.css('top', snapY.value + offset.y + 30 - $canvas_wrapper[0].scrollTop)
+      $guide.y.css('top', snapY.value + offset.y + TOP_OFFSET -
+                   $canvas_wrapper[0].scrollTop)
         .show();
       snap.y = snapY;
     }
@@ -726,7 +728,7 @@ var Protoshop = function() {
     self.scrollVertical = 0;
     if (e.clientY > $(window).height()) {
       self.scrollVertical = AUTOSCROLL_INCREMENT;
-    } else if (e.clientY < 30) {
+    } else if (e.clientY < TOP_OFFSET) {
       self.scrollVertical = -AUTOSCROLL_INCREMENT;
     }
 

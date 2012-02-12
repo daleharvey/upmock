@@ -1010,7 +1010,7 @@ Protoshop.Toolbar.showFontsDialog = function() {
 
     $preview.empty();
     $previewStyle.empty();
-    FontsDialog.hide()
+    FontsDialog.hide();
   });
 
   $.get('/fonts/').then(function(data) {
