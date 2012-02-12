@@ -887,7 +887,8 @@ Protoshop.Toolbar.parseShadow = function(text) {
 
 Protoshop.Toolbar.vector2xy = function(angle, distance) {
 
-  angle -= 270;
+  // Shadow angles are reversed
+  angle -= 180;
 
   if (angle < 0) {
     angle = 360 + angle;
@@ -905,7 +906,7 @@ Protoshop.Toolbar.xy2vector = function(x, y) {
   var distance = Math.sqrt((x * x) + (y * y));
 
   return {
-    angle: Math.round(Math.atan2(x, -y) * (180 / Math.PI)) + 180,
+    angle: Math.round(Math.atan2(x, -y) * (180 / Math.PI)) + 90,
     distance: distance
   };
 };
