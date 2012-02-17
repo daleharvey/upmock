@@ -41,18 +41,18 @@ html, body {
 
 #panel li a {
     display: block;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #DDD;
-    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    border: 1px solid transparent;
     background-repeat: no-repeat;
     background-position: center center;
-    border-radius: 5px;
+    border-radius: 2px;
+    opacity: 0.8;
 }
 
 #panel li a:hover, #panel li a.active {
-    background-color: #FFF;
-    border-color: #4183C4;
+    opacity: 1;
+    border-color: #CCC;
 }
 
 #cursor { background-image: url(../img/famfam/cursor.png); }
@@ -84,15 +84,14 @@ header {
 }
 
 #top-bar-inner {
-    width: 1200px;
+    width: 940px;
     margin: 0 auto;
 }
 
 .toolbar-icon, .picker-wrapper {
-    cursor: pointer;
     display: block;
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
     border: 1px solid transparent;
     background-color: transparent;
     background-position: center center;
@@ -100,7 +99,7 @@ header {
     float: left;
     margin-right: 5px;
     position: relative;
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
 .picker-wrapper {
@@ -117,8 +116,8 @@ header {
     float: left;
     padding-left: 20px;
     width: 40px;
-    line-height: 30px;
-    height: 30px;
+    line-height: 22px;
+    height: 22px;
     font-size: 9px;
     border-radius: 3px;
     margin-right: 5px;
@@ -137,8 +136,8 @@ header {
 
 .toolbar-label-icon:hover, .toolbar-label-icon.active, .toolbar-label-icon:focus,
 .toolbar-icon:hover, .toolbar-icon.active {
-    background-color: #FFF;
-    border-color: #4183C4;
+    opacity: 1;
+    border-color: #CCC;
 }
 
 .dropdown .inner {
@@ -200,7 +199,7 @@ header {
 #border-radius  { background-image: url(../img/fague/layer-shape-round.png); }
 #border-picker  { background-image: url(../img/fague/border-weight.png); }
 #lock           { background-image: url(../img/famfam/lock.png); }
-#shadow         { background-image: url(../img/proto-shadow-thevisibleshadow.png); }
+#shadow         { background-image: url(../img/fague/layers.png); }
 #text-shadow    { background-image: url(../img/fague/edit-shadow.png); }
 #send-to-back   { background-image: url(../img/famfam/shape_move_back.png); }
 #bring-to-front { background-image: url(../img/famfam/shape_move_front.png); }
@@ -249,10 +248,10 @@ header {
 
 .picker-preview {
     position:absolute;
-    bottom: 4px;
+    bottom: 3px;
     left: 2px;
     right: 2px;
-    height: 6px;
+    height: 4px;
     z-index: 30000;
 }
 
@@ -262,7 +261,7 @@ header {
 #canvas_wrapper {
     overflow: scroll;
     position: absolute;
-    top: 43px;
+    top: 37px;
     left: 0;
     bottom: 0;
     right: 0;
@@ -761,16 +760,11 @@ h3 {
     left: 0px;
     bottom: 0px;
     right: 0px;
-    background: rgb(249,248, 226);
+    background-color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.7) url(../img/loading.gif) no-repeat center 80px;
     z-index: 9999;
     text-align: center;
     padding-top: 100px;
-    font-weight: bold;
-    color: rgb(91, 93, 93);
-    font-style: italic;
-    font-family: 'Palatino Linotype', Baskerville, 'Bookman Old Style', 'Bitstream Charter', Garamond, Georgia, serif;
-    font-size: 47px;
-    text-shadow: rgb(249, 229, 177) -3px -3px 0px;
 }
 
 .border-picker {
