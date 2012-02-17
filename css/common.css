@@ -122,7 +122,7 @@ header {
     float: left;
     padding-left: 20px;
     width: 60px;
-    line-height: 22px;
+    line-height: 19px;
     height: 22px;
     font-size: 9px;
     border-radius: 3px;
@@ -663,8 +663,12 @@ h3 {
 .stops { position: relative; left: -5px; }
 .stop-input { visibility: hidden; }
 
-#background-picker .inner { width: 220px; }
-.gradient { margin-bottom: 10px; }
+#background-picker .inner {
+    width: 240px;
+}
+.gradient {
+    margin-bottom: 10px;
+}
 
 #info {
     position: absolute;
