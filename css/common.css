@@ -84,6 +84,7 @@ header {
     left: 0;
     right: 0;
     background: -webkit-linear-gradient(#FAFAFA 0%, #EAEAEA 100%);
+    background: -moz-linear-gradient(#FAFAFA 0%, #EAEAEA 100%);
     padding: 5px;
     z-index: 9000;
     border-bottom: 1px solid #CCC;
