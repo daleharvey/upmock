@@ -1460,7 +1460,6 @@ var Protoshop = function() {
     if ($.browser.webkit || $.browser.mozilla) {
       self.setState(Protoshop.States.EDIT);
       self.initaliseData(function () {
-        console.log();
         $('#loading').fadeOut('fast', function() {
           $('#loading').remove();
           document.title = self.site_prefix + ' | ' + document.title;

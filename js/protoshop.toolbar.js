@@ -482,12 +482,17 @@ TextView = Trail.View.extend({
       clone.remove();
       selected.find('span').text(acc.join(' '));
     });
-    $('#font-family', dom).bind('change', function() {
-      if (this.value === 'other') {
-        Protoshop.Toolbar.showFontsDialog();
-        this.selectedIndex = 0;
-      } else {
-        self.protoshop.onSelectedUndo('css',{'font-family': this.value});
+
+    var span = $('#font-family-wrapper > span', dom);
+    $('#font-family', dom).bind('mousedown', function(e) {
+      if (e.target.nodeName === 'LI') {
+        var value = e.target.getAttribute('data-value');
+        if (value === 'other') {
+          Protoshop.Toolbar.showFontsDialog();
+        } else {
+          span.text(value).css('font-family', value);
+          self.protoshop.onSelectedUndo('css',{'font-family': value});
+        }
       }
     });
 
