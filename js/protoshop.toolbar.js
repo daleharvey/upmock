@@ -136,12 +136,6 @@ HelpDialog = Dialog.extend({
   template: '#keyboard-help-tpl'
 });
 
-FontsDialog = Dialog.extend({
-  jointContainer: document.body,
-  template: '#fonts-dialog-tpl'
-});
-
-
 PickerWidget = Trail.View.extend({
 
   template: '#picker-tpl',
@@ -406,6 +400,8 @@ ImgView = Trail.View.extend({
 TextView = Trail.View.extend({
 
   template: '#text-toolbar-tpl',
+  scrollInterval: null,
+  $fontPreviewLinks: $('#font-preview-links'),
 
   postRender: function(dom) {
 
@@ -483,17 +479,114 @@ TextView = Trail.View.extend({
       selected.find('span').text(acc.join(' '));
     });
 
-    var span = $('#font-family-wrapper > span', dom);
+    var currentFont = $('#font-family-wrapper > span', dom);
+
     $('#font-family', dom).bind('mousedown', function(e) {
       if (e.target.nodeName === 'LI') {
         var value = e.target.getAttribute('data-value');
         if (value === 'other') {
           Protoshop.Toolbar.showFontsDialog();
         } else {
-          span.text(value).css('font-family', value);
+          self.protoshop.addFont(value);
+          self.protoshop.loadFonts();
+          currentFont.text(value).css('font-family', value);
           self.protoshop.onSelectedUndo('css',{'font-family': value});
         }
       }
+    });
+
+    var $fontFamily = $('#font-family', dom);
+    var instance = this;
+
+    var results = Protoshop.Toolbar.systemFonts.concat(DataStore.data.fonts);
+    var currentIndex = results.length;
+
+    var searchTerm = '';
+    var loadingFonts = false;
+    var hasScrolled = false;
+
+    function match(str, term) {
+      return str.match(new RegExp(term, "i")) !== null;
+    };
+
+    function bottom(el) {
+      return (el[0].clientHeight + el[0].scrollTop) >= el[0].scrollHeight;
+    };
+
+    function showFonts() {
+      if (results.length === 0) {
+        $('<li class="noresults">There were no results matching "' +
+          searchTerm + '"</li>').appendTo($fontFamily);
+        return;
+      }
+
+      if (currentIndex === results.length || loadingFonts) {
+        return;
+      }
+
+      var loading = $('<li class="loading">&nbsp;</li>').appendTo($fontFamily);
+      $fontFamily[0].scrollTop = $fontFamily[0].scrollHeight - 1;
+      loadingFonts = true;
+
+      var html = [];
+      var toLoad = [];
+      var max = 40;
+      var len = Math.min(currentIndex + max, results.length);
+      var font;
+
+      for (var i = currentIndex; i < len; i++) {
+        html.push('<li data-value="' + results[i].family + '" style="font-family:' +
+                  results[i].family + '">' + results[i].family + '</li>');
+        toLoad.push(results[i].family);
+      }
+
+      var link =
+        '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
+        toLoad.join('|') + '">';
+
+      instance.$fontPreviewLinks.append(link);
+
+      setTimeout(function() {
+        $fontFamily.append(html.join(''));
+        currentIndex += max;
+        loading.remove();
+        loadingFonts = false;
+      }, 500);
+    };
+
+    $fontFamily.bind('scroll', function(e) {
+      hasScrolled = true;
+    });
+
+    instance.scrollInterval = window.setInterval(function() {
+      if (hasScrolled && bottom($fontFamily)) {
+        showFonts();
+      }
+      hasScrolled = false;
+    }, 500);
+
+    $('#show-all-fonts', dom).bind('mousedown', function() {
+      $('#font-preview-links').html('');
+      $('#font-family').html('');
+      $(this).addClass('disabled');
+      results = Protoshop.Toolbar.fonts;
+      currentIndex = 0;
+      showFonts();
+    });
+
+    $('#search-fonts', dom).bind('input', function(e) {
+      $('#show-all-fonts', dom).addClass('disabled');
+      $('#font-preview-links').html('');
+      $('#font-family').html('');
+      currentIndex = 0;
+      results = [];
+      searchTerm = this.value;
+      _.each(Protoshop.Toolbar.fonts, function(font) {
+        if (match(font.family, searchTerm)) {
+          results.push({family: font.family});
+        }
+      });
+      showFonts();
     });
 
     $('#text-align-left', dom).bind('mousedown', function() {
@@ -537,6 +630,11 @@ TextView = Trail.View.extend({
     return dom;
   },
 
+  unload: function() {
+    this.$fontPreviewLinks.html('');
+    window.clearInterval(this.scrollInterval);
+  },
+
   load: function(obj) {
 
     var dom = obj.$dom;
@@ -552,7 +650,7 @@ TextView = Trail.View.extend({
       shadow: Protoshop.Toolbar.parseShadow(dom.css('text-shadow')),
       color: dom.css('color'),
       selectedFont: dom.css('font-family') || 'helvetica',
-      fonts: Protoshop.Toolbar.fonts.concat(DataStore.data.fonts)
+      fonts: Protoshop.Toolbar.systemFonts.concat(DataStore.data.fonts)
     };
 
     if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {
@@ -706,7 +804,6 @@ ElementView = Trail.View.extend({
       data[key] = this.value + 'px';
 
       window.protoshop.onSelectedUndo('css', data);
-
     });
 
     $('#border-picker', dom).bind('change input', function(e) {
@@ -787,6 +884,11 @@ Protoshop.Toolbar = function(protoshop) {
 
   this.protoshop = protoshop;
   this.sections = [];
+  this.fonts = [];
+
+  $.get('/fonts/').then(function(data) {
+    Protoshop.Toolbar.fonts = data.items;
+  });
 
   function areAll(arr, type) {
     return _.all(arr, function(x) {
@@ -838,6 +940,12 @@ Protoshop.Toolbar = function(protoshop) {
 
   this.render = function(sections, args) {
 
+    _.each(self.sections, function(sect) {
+      if (sect.unload) {
+        sect.unload();
+      }
+    });
+
     var picked = (args && args.selected && args.selected.length > 0) ?
       args.selected[0] : false;
 
@@ -846,13 +954,13 @@ Protoshop.Toolbar = function(protoshop) {
       $el.append(section.load(picked));
     });
 
+    self.sections = sections;
     self.protoshop.updateUsedColours();
   };
 
 
   this.protoshop.$selection.bind('change', function(evt, data) {
-    self.sections = pickSections(data.selected);
-    self.render(self.sections, data);
+    self.render(pickSections(data.selected), data);
   });
 
 };
@@ -959,68 +1067,7 @@ Protoshop.Toolbar.getBGProperties = function(colour) {
   };
 };
 
-Protoshop.Toolbar.fonts = [
+Protoshop.Toolbar.systemFonts = [
   'Times New Roman', 'Lucida Grande', 'Georgia', 'Garamond', 'Helvetica',
   'Verdana', 'Trebuchet MS', 'Impact', 'minion-pro-1', 'Monaco'
 ];
-
-Protoshop.Toolbar.showFontsDialog = function() {
-
-  var index = 0;
-  var fonts = [];
-  var $dialog = FontsDialog.show();
-  var $preview = $dialog.find('#font-preview');
-  var $previewStyle = $dialog.find('#font-preview-style');
-  var $button = $dialog.find('button');
-  var tpl = Handlebars.compile($('#font-item-tpl').html());
-
-  function loadFonts() {
-    var toLoad = [];
-    var limit = Math.min(index + 40, fonts.length);
-    for (var i = index; i < limit; i++) {
-      var checked = $.inArray(fonts[i].family, DataStore.data.fonts) !== -1 ?
-        'checked="checked"' : '';
-      var item = tpl({checked: checked, family: fonts[i].family});
-      $preview.append(item);
-      toLoad.push(fonts[i].family);
-    }
-
-    var link = '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
-      toLoad.join('|') + '">';
-    $previewStyle.append(link);
-
-    index += 40;
-  }
-
-  $button.bind('mousedown', loadFonts);
-
-  $preview.bind('change', function(e) {
-    var family = $(e.target).data('family');
-    if ($(e.target).is(':checked')) {
-      DataStore.data.fonts.push(family);
-    } else {
-      DataStore.data.fonts = _.filter(DataStore.data.fonts, function(font) {
-        return family !== font;
-      });
-    }
-    DataStore.data.fonts = _.uniq(DataStore.data.fonts);
-  });
-
-  $dialog.find('.close').unbind().bind('mousedown', function() {
-
-    AutoSave.trigger();
-
-    window.protoshop.loadFonts();
-    window.protoshop.refreshToolbar();
-
-    $preview.empty();
-    $previewStyle.empty();
-    FontsDialog.hide();
-  });
-
-  $.get('/fonts/').then(function(data) {
-    fonts = data.items;
-    loadFonts();
-  });
-
-};

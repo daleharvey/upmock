@@ -319,6 +319,11 @@ var Protoshop = function() {
     this.$canvas_wrapper.unbind('mousedown.global');
   };
 
+  this.addFont = function(font) {
+    DataStore.data.fonts.push(font);
+    DataStore.data.fonts = _.uniq(DataStore.data.fonts);
+  };
+
   this.loadFonts = function() {
     var link = '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
       DataStore.data.fonts.join('|') + '">';
@@ -872,7 +877,8 @@ var Protoshop = function() {
 
   function bind(scope, fn) {
     return function (evt) {
-      if (!$(evt.target).is('span[contenteditable=true]')) {
+      var target = $(evt.target);
+      if (!(target.is('span[contenteditable=true]') || target.is('input'))) {
         evt.stopPropagation();
         evt.preventDefault();
         if (fn.apply(scope, arguments) !== false) {

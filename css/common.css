@@ -942,10 +942,13 @@ h3 {
   margin-right: 10px;
   float:left;
   position: relative;
-  text-indent: 10px;
   line-height: 22px;
   cursor:pointer;
   padding-right: 15px;
+}
+
+#font-family-wrapper .inner {
+  width: 200px;
 }
 
 #font-family-wrapper span {
@@ -953,12 +956,15 @@ h3 {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow:hidden;
+  text-indent: 10px;
 }
 
 #font-family {
   padding: 0;
   margin: 0;
-  width: 150px;
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 #font-family-wrapper .arrow-down {
@@ -969,11 +975,50 @@ h3 {
 
 #font-family li {
   list-style-type: none;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 20px;
   margin: 5px 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow:hidden;
+  text-indent: 10px;
+}
+
+#font-family li.noresults, #font-family li.loading {
+  color: #666666;
+  white-space: normal;
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+  text-indent: 0;
+}
+
+#font-family li.noresults:hover, #font-family li.loading:hover {
+  background-color: transparent;
+}
+
+#font-family li.loading {
+  background: transparent url(../img/loading.gif) no-repeat center center;
 }
 
 #font-family li:hover {
-  background: white;
+  background-color: white;
+}
+
+#search-fonts {
+  width:100%;
+  margin: 0 0 5px 0;
+}
+
+#show-all-fonts {
+  float:right;
+  margin-bottom: 10px;
+  font-size: 11px;
+  line-height: 11px;
+  color: rgb(64,158, 205);
+  text-decoration: underline;
+}
+
+#show-all-fonts.disabled {
+  color: lightgray;
 }
