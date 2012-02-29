@@ -509,14 +509,14 @@ TextView = Trail.View.extend({
       return (el[0].clientHeight + el[0].scrollTop) >= el[0].scrollHeight;
     }
 
-    function showFonts() {
+    function showFonts(newSearch) {
       if (results.length === 0) {
         $('<li class="noresults">There were no results matching "' +
           searchTerm + '"</li>').appendTo($fontFamily.empty());
         return;
       }
 
-      if (currentIndex === results.length || loadingFonts) {
+      if (currentIndex === results.length || (loadingFonts && !newSearch)) {
         return;
       }
 
@@ -582,7 +582,7 @@ TextView = Trail.View.extend({
           results.push(font);
         }
       });
-      showFonts();
+      showFonts(true);
     });
 
     $('#text-align-left', dom).bind('mousedown', function() {
