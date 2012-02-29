@@ -512,7 +512,7 @@ TextView = Trail.View.extend({
     function showFonts() {
       if (results.length === 0) {
         $('<li class="noresults">There were no results matching "' +
-          searchTerm + '"</li>').appendTo($fontFamily);
+          searchTerm + '"</li>').appendTo($fontFamily.empty());
         return;
       }
 
