@@ -483,15 +483,11 @@ TextView = Trail.View.extend({
 
     $('#font-family', dom).bind('mousedown', function(e) {
       if (e.target.nodeName === 'LI') {
-        var value = e.target.getAttribute('data-value');
-        if (value === 'other') {
-          Protoshop.Toolbar.showFontsDialog();
-        } else {
-          self.protoshop.addFont(value);
-          self.protoshop.loadFonts();
-          currentFont.text(value).css('font-family', value);
-          self.protoshop.onSelectedUndo('css',{'font-family': value});
-        }
+        var data = $(e.target).data('font-data');
+        self.protoshop.addFont(data);
+        self.protoshop.loadOwnFonts();
+        currentFont.text(data.family).css('font-family', data.id);
+        self.protoshop.onSelectedUndo('css',{'font-family': data.id});
       }
     });
 
@@ -507,11 +503,11 @@ TextView = Trail.View.extend({
 
     function match(str, term) {
       return str.match(new RegExp(term, "i")) !== null;
-    };
+    }
 
     function bottom(el) {
       return (el[0].clientHeight + el[0].scrollTop) >= el[0].scrollHeight;
-    };
+    }
 
     function showFonts() {
       if (results.length === 0) {
@@ -532,27 +528,27 @@ TextView = Trail.View.extend({
       var toLoad = [];
       var max = 40;
       var len = Math.min(currentIndex + max, results.length);
-      var font;
+      var li, list = [];
 
       for (var i = currentIndex; i < len; i++) {
-        html.push('<li data-value="' + results[i].family + '" style="font-family:' +
-                  results[i].family + '">' + results[i].family + '</li>');
-        toLoad.push(results[i].family);
+        li = $('<li style="font-family: ' + results[i].id +'">' +
+               results[i].family + '</li>').data('font-data', results[i]);
+        list.push(li);
+        toLoad.push(results[i]);
       }
 
-      var link =
-        '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
-        toLoad.join('|') + '">';
-
-      instance.$fontPreviewLinks.append(link);
+      self.protoshop.loadFonts(toLoad, 'preview');
 
       setTimeout(function() {
-        $fontFamily.append(html.join(''));
+        // Ugh, fix
+        _.each(list, function(x) {
+          x.appendTo($fontFamily);
+        });
         currentIndex += max;
         loading.remove();
         loadingFonts = false;
       }, 500);
-    };
+    }
 
     $fontFamily.bind('scroll', function(e) {
       hasScrolled = true;
@@ -583,7 +579,7 @@ TextView = Trail.View.extend({
       searchTerm = this.value;
       _.each(Protoshop.Toolbar.fonts, function(font) {
         if (match(font.family, searchTerm)) {
-          results.push({family: font.family});
+          results.push(font);
         }
       });
       showFonts();
@@ -887,7 +883,17 @@ Protoshop.Toolbar = function(protoshop) {
   this.fonts = [];
 
   $.get('/fonts/').then(function(data) {
-    Protoshop.Toolbar.fonts = data.items;
+    Protoshop.Toolbar.fonts = data.sort(function(a, b) {
+      var nameA = a.family.toLowerCase();
+      var nameB = b.family.toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
   });
 
   function areAll(arr, type) {
@@ -1067,7 +1073,9 @@ Protoshop.Toolbar.getBGProperties = function(colour) {
   };
 };
 
-Protoshop.Toolbar.systemFonts = [
+Protoshop.Toolbar.systemFonts = _.map([
   'Times New Roman', 'Lucida Grande', 'Georgia', 'Garamond', 'Helvetica',
   'Verdana', 'Trebuchet MS', 'Impact', 'minion-pro-1', 'Monaco'
-];
+], function(name) {
+  return {'source': 'system', 'family': name, 'id': name};
+});

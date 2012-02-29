@@ -5,6 +5,11 @@ $.ajaxSetup({
 
 $.couch.urlPrefix = '/couch';
 
+TypekitPreview.setup({
+  'auth_id': 'um',
+  'auth_token': '3bb2a6e53c9684ffdc9a9aff1a5b2a62c615d4ea61e8172f1df48866d69614cd407f1d0946ba61786365a60f65b5ae9f31aeba2008be0a65cbd7d1ccfb4a4c3656b2f1a4bab823ceba99053c0d7d466b59f1326e036d5146593b'
+});
+
 var defaultSite = {
   html: '',
   fonts: [],
@@ -32,6 +37,10 @@ var DataStore = {
     if (!self.local) {
       $.couch.db('upmock-' + user.name).openDoc(name).then(function(data) {
         self.data = $.extend(true, defaultSite, data);
+        // Clear out the old font formats
+        if (typeof self.data.fonts[0] === 'string') {
+          self.data.fonts = [];
+        }
         callback();
       });
     } else {
@@ -324,10 +333,31 @@ var Protoshop = function() {
     DataStore.data.fonts = _.uniq(DataStore.data.fonts);
   };
 
-  this.loadFonts = function() {
-    var link = '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
-      DataStore.data.fonts.join('|') + '">';
-    $('#font-links').html(link);
+  this.loadFonts = function(fonts, preview) {
+    var google = fonts
+      .filter(function(x) { return x.source === 'google'; })
+      .map(function(x) { return x.id; });
+
+    var typekit = fonts
+      .filter(function(x) { return x.source === 'typekit'; })
+      .map(function(x) { x.variations = ['n4']; return x; });
+
+    TypekitPreview.load(typekit);
+
+    // We are gonna want to wrap this so we can detect font loading
+    var link =
+      '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=' +
+      google.join('|') + '">';
+
+    if (preview) {
+      $('#font-preview-links').append(link);
+    } else {
+      $('#font-links').html(link);
+    }
+  };
+
+  this.loadOwnFonts = function() {
+    this.loadFonts(DataStore.data.fonts, false);
   };
 
   this.redraw = function() {
@@ -1445,7 +1475,7 @@ var Protoshop = function() {
 
       self.recalcHeight();
       self.setCanvasWidth();
-      self.loadFonts();
+      self.loadOwnFonts();
 
       if (DataStore.data.overlay) {
         $('.grid-overlay[data-deleted!=true]:eq(0)').show();

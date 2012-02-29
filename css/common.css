@@ -976,7 +976,6 @@ h3 {
 #font-family li {
   list-style-type: none;
   font-size: 18px;
-  line-height: 20px;
   margin: 5px 0;
   text-overflow: ellipsis;
   white-space: nowrap;
