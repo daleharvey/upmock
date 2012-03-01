@@ -338,16 +338,35 @@ var Protoshop = function() {
     });
   };
 
-  this.loadFonts = function(fonts, preview) {
+  var typekitLoaded = [];
+
+  this.loadFonts = function(fonts, preview, callback) {
+    var loaded = 0;
+
     var google = fonts
       .filter(function(x) { return x.source === 'google'; })
       .map(function(x) { return x.id; });
 
     var typekit = fonts
-      .filter(function(x) { return x.source === 'typekit'; })
+      .filter(function(x) {
+        return x.source === 'typekit' && typekitLoaded.indexOf(x.id) === -1;
+      })
       .map(function(x) { x.variations = ['n4']; return x; });
 
-    TypekitPreview.load(typekit);
+    typekitLoaded = typekitLoaded.concat(_.pluck(typekit, 'id'));
+
+    var hasLoaded = function() {
+      if (loaded === typekit.length && callback) {
+        callback();
+      }
+    };
+
+    var fontDone = function() {
+      loaded++;
+      hasLoaded();
+    };
+
+    TypekitPreview.load(typekit, {fontactive: fontDone, fontinactive:fontDone});
 
     // We are gonna want to wrap this so we can detect font loading
     var link =
@@ -359,6 +378,8 @@ var Protoshop = function() {
     } else {
       $('#font-links').html(link);
     }
+
+    hasLoaded();
   };
 
   this.loadOwnFonts = function() {

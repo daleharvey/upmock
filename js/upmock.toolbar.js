@@ -531,23 +531,21 @@ TextView = Trail.View.extend({
       var li, list = [];
 
       for (var i = currentIndex; i < len; i++) {
-        li = $('<li style="font-family: ' + results[i].id +'" class="' + results[i].source + '">' +
+        li = $('<li style="font-family: ' + results[i].id +'" class="' +
+               results[i].source + '">' +
                results[i].family + '</li>').data('font-data', results[i]);
         list.push(li);
         toLoad.push(results[i]);
       }
 
-      self.protoshop.loadFonts(toLoad, 'preview');
-
-      setTimeout(function() {
-        // Ugh, fix
+      self.protoshop.loadFonts(toLoad, 'preview', function() {
         _.each(list, function(x) {
           x.appendTo($fontFamily);
         });
         currentIndex += max;
         loading.remove();
         loadingFonts = false;
-      }, 500);
+      });
     }
 
     showFonts();
