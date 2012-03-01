@@ -985,6 +985,7 @@ h3 {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow:hidden;
+  padding-left: 15px;
   text-indent: 10px;
 }
 
@@ -1025,4 +1026,11 @@ h3 {
 
 #show-all-fonts.disabled {
   color: lightgray;
+}
+
+.typekit {
+  background: url(../img/typekit.gif) 5px center no-repeat;
+}
+.google {
+  background: url(../img/google.gif) 5px center no-repeat;
 }
