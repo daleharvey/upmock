@@ -495,7 +495,7 @@ TextView = Trail.View.extend({
     var instance = this;
 
     var results = Protoshop.Toolbar.systemFonts.concat(DataStore.data.fonts);
-    var currentIndex = results.length;
+    var currentIndex = 0;
 
     var searchTerm = '';
     var loadingFonts = false;
@@ -516,7 +516,7 @@ TextView = Trail.View.extend({
         return;
       }
 
-      if (currentIndex === results.length || (loadingFonts && !newSearch)) {
+      if (currentIndex > results.length || (loadingFonts && !newSearch)) {
         return;
       }
 
@@ -549,6 +549,8 @@ TextView = Trail.View.extend({
         loadingFonts = false;
       }, 500);
     }
+
+    showFonts();
 
     $fontFamily.bind('scroll', function(e) {
       hasScrolled = true;
@@ -645,8 +647,7 @@ TextView = Trail.View.extend({
       isUnderline: dom.css('text-decoration') === 'underline',
       shadow: Protoshop.Toolbar.parseShadow(dom.css('text-shadow')),
       color: dom.css('color'),
-      selectedFont: dom.css('font-family') || 'helvetica',
-      fonts: Protoshop.Toolbar.systemFonts.concat(DataStore.data.fonts)
+      selectedFont: dom.css('font-family') || 'helvetica'
     };
 
     if ($.inArray(align, ['left', 'center', 'right', 'justify']) === -1) {

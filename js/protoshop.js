@@ -329,8 +329,13 @@ var Protoshop = function() {
   };
 
   this.addFont = function(font) {
+    if (font.source === 'system') {
+      return;
+    }
     DataStore.data.fonts.push(font);
-    DataStore.data.fonts = _.uniq(DataStore.data.fonts);
+    DataStore.data.fonts = _.uniq(DataStore.data.fonts, false, function (v) {
+      return v.id;
+    });
   };
 
   this.loadFonts = function(fonts, preview) {
