@@ -884,17 +884,7 @@ Protoshop.Toolbar = function(protoshop) {
   this.fonts = [];
 
   $.get('/fonts/').then(function(data) {
-    Protoshop.Toolbar.fonts = data.sort(function(a, b) {
-      var nameA = a.family.toLowerCase();
-      var nameB = b.family.toLowerCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
+    Protoshop.Toolbar.fonts = data;
   });
 
   function areAll(arr, type) {
