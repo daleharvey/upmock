@@ -118,6 +118,7 @@ header {
     cursor: pointer;
     display: block;
     border: 1px solid #CCC;
+    background-color: transparent;
     background-position: 2px center;
     background-repeat: no-repeat;
     float: left;
@@ -130,6 +131,10 @@ header {
     margin-right: 5px;
     position: relative;
     margin-top:0px;
+}
+
+.toolbar-label-icon:focus {
+  background-color: #FFF;
 }
 
 #canvas-width {
