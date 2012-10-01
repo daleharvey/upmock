@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="/upmock.appcache">
   <head>
     <meta charset="utf-8" />
     <title>UpMock</title>
@@ -8,9 +8,9 @@
 
   <body>
 
-    <div id="loading"><span>loading ...</span></div>
+    <div id="loading"><span>Warming the tubes</span></div>
 
-    <div id="home"><a>UpMock<a></div>
+    <div id="home"><a>UpMock</a></div>
 
     <header><div id="top-bar-inner"></div></header>
 
@@ -26,24 +26,39 @@
 
     <div id="cursor-overlay" class="modal-overlay"></div>
 
+    <div id="font-links"></div>
+    <div id="font-preview-links"></div>
+
+  </body>
+
+
+  <script type="text/html" id="keyboard-help-tpl">
     <div id="keyboard-help" class="modal-overlay">
       <div class="inner-modal">
         <span id="close-help">Press <strong>?</strong> to hide / show help</span>
         <h2>Keyboard Shortcuts</h2>
         <hr />
-        <div id="keyboard-placer"></div>
+        <div id="keyboard-placer">
+          {{#sections}}
+          <div class="shortcut-section">
+            <h3>{{description}}</h3>
+            {{#shortcuts}}
+            <dl>
+              <dt>{{key}}</dt>
+              <dd>{{description}}</dd>
+            </dl>
+            {{/shortcuts}}
+          </div>
+          {{/sections}}
+        </div>
       </div>
     </div>
-
-  </body>
+  </script>
 
 
   <script type="text/html" id="background-toolbar-tpl">
     <div class="section">
       <div id="picker-placeholder"></div>
-      <input type="number" min="100" value="{{canvasWidth}}"
-             title="Background Width"
-             id="canvas-width" class="toolbar-label-icon" />
     </div>
   </script>
 
@@ -122,6 +137,7 @@
            data-background="{{backgroundColor}}"></div>
       <div class="dropdown toolbar-icon" id="border-picker" title="Border Options">
         <form class="inner">
+
           <label>
             <span>Border:</span>
             <select id="border-picked">
@@ -214,7 +230,7 @@
     <div class="section">
       <a id="send-to-back" title="Send to Back" class="toolbar-icon"></a>
       <a id="bring-to-front" title="Bring to Front" class="toolbar-icon"></a>
-      <a id="lock" title="Lock" class="toolbar-icon"></a>
+      <a id="lock" title="Lock (Shift + Click to unlock)" class="toolbar-icon"></a>
       <div class="dropdown toolbar-icon" id="css" title="Custom CSS">
         <form id="css-form" class="inner">
           <textarea id="css-value">{{cssValue}}</textarea>
@@ -272,6 +288,16 @@
                    value="{{overlay.gutter}}" />
           </label>
           <label>
+            <span>Columns:</span>
+            <input id="overlay-columns" type="number"
+                   value="{{overlay.columns}}" />
+          </label>
+          <label>
+            <span>Height:</span>
+            <input id="overlay-height" type="number"
+                   value="{{overlay.height}}" />
+          </label>
+          <label>
             <span>Colour:</span>
             <input id="overlay-colour" type="colour" class="color"
                    value="{{overlay.colour}}" />
@@ -279,10 +305,11 @@
           <label>
             <span>Opacity:</span>
             <input id="overlay-opacity" type="number" max="1" min="0"
-                   step="0.05" value="{{overlay.opacity}}" />
+                   step="0.1" value="{{overlay.opacity}}" />
           </label>
         </form>
       </div>
+      <a id="save-data" {{disabled isDirty}} class="toolbar-icon" title="Save"></a>
     </div>
   </script>
 
@@ -340,20 +367,22 @@
         <div class="picker-preview"></div>
         <div class="inner">
           <input class="picker-value" value="{{color}}" data-css="color" />
+          <h3>Used Colours</h3>
+          <div id="used-colours" class="overflow"></div>
           <div class="picker-placeholder"></div>
         </div>
       </div>
 
-      <select id="font-family" class="toolbar-select" title="Font Family">
-        <option {{option family-helvetica}} value="helvetica">Helvetica</option>
-        <option {{option family-tnr}} value="tnr">Times New Roman</option>
-        <option {{option family-georgia}} value="georgia">Georgia</option>
-        <option {{option family-garamond}} value="garamond">Garamond</option>
-        <option {{option family-verdana}} value="verdana">Verdana</option>
-        <option {{option family-trebuchet}} value="trebuchet">Trebuchet</option>
-        <option {{option family-impact}} value="impact">Impact</option>
-        <option {{option family-monospace}} value="monospace">Monospace</option>
-      </select>
+      <div id="font-family-wrapper" class="dropdown">
+        <span style="font-family:{{selectedFont}}">{{selectedFont}}</span>
+        <div class="arrow-down"></div>
+        <div class="inner">
+          <a id="show-all-fonts">Show All Fonts</a>
+          <input type="search" id="search-fonts" placeholder="Search Fonts" />
+          <ul id="font-family" class="toolbar-select" title="Font Family">
+          </ul>
+        </div>
+      </div>
 
       <input type="number" id="font-size" data-css="font-size" title="Font Size"
              value="{{fontSize}}"
@@ -384,6 +413,10 @@
 
       <a id="lorum-ipsum" title="Lorum Ipsum" class="toolbar-icon"></a>
 
+      <a id="clear-styles" title="Clear Inline Styles" class="toolbar-icon"></a>
+
+      <a id="fit-content" class="toolbar-icon" title="Size to Content"></a>
+
       <div class="dropdown toolbar-icon" id="text-shadow" title="Text Shadow">
         <form class="inner">
           <label>
@@ -412,17 +445,18 @@
     </div>
   </script>
 
-  <script type="text/html" id="shortcut-section-tpl">
-    <div class="shortcut-section">
-      <h3>{{description}}</h3>
-      {{#shortcuts}}
-      <dl>
-        <dt>{{key}}</dt>
-        <dd>{{description}}</dd>
-      </dl>
-      {{/shortcuts}}
-    </div>
+  <script type="text/html" id="font-item-tpl">
+    <li>
+      <label style="font-family: {{family}}">
+        <input type="checkbox" data-family="{{family}}" {{checked}} />
+        <span>{{family}}</span>
+        <span style="font-weight: bold">{{family}}</span>
+        <span style="font-style: italic">{{family}}</span>
+      </label>
+    </li>
   </script>
+
+  <script src="http://use.typekit.net/previewkits/pk-v1.js"></script>
 
   <script src="./js/libs/jquery-1.7.1.min.js"></script>
   <script src="./js/libs/handlebars-1.0.0.beta.4.js"></script>
@@ -437,12 +471,12 @@
 
   <script src="./js/libs/trail/trail.js"></script>
 
-  <script src="./js/protoshop.utils.js"></script>
-  <script src="./js/protoshop.handlebars.helpers.js"></script>
-  <script src="./js/protoshop.js"></script>
-  <script src="./js/protoshop.shortcuts.js"></script>
-  <script src="./js/protoshop.elements.js"></script>
-  <script src="./js/protoshop.toolbar.js"></script>
+  <script src="./js/upmock.utils.js"></script>
+  <script src="./js/upmock.handlebars.helpers.js"></script>
+  <script src="./js/upmock.js"></script>
+  <script src="./js/upmock.shortcuts.js"></script>
+  <script src="./js/upmock.elements.js"></script>
+  <script src="./js/upmock.toolbar.js"></script>
 
   <script>
     window.protoshop = new Protoshop();
