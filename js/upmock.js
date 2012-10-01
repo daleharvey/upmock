@@ -5,11 +5,6 @@ $.ajaxSetup({
 
 $.couch.urlPrefix = '/couch';
 
-TypekitPreview.setup({
-  'auth_id': 'um',
-  'auth_token': '3bb2a6e53c9684ffdc9a9aff1a5b2a62c615d4ea61e8172f1df48866d69614cd407f1d0946ba61786365a60f65b5ae9f31aeba2008be0a65cbd7d1ccfb4a4c3656b2f1a4bab823ceba99053c0d7d466b59f1326e036d5146593b'
-});
-
 var defaultSite = {
   html: '',
   fonts: [],
@@ -338,8 +333,6 @@ var Protoshop = function() {
     });
   };
 
-  var typekitLoaded = [];
-
   this.loadFonts = function(fonts, preview, callback) {
     var loaded = 0;
 
@@ -347,16 +340,8 @@ var Protoshop = function() {
       .filter(function(x) { return x.source === 'google'; })
       .map(function(x) { return x.id; });
 
-    var typekit = fonts
-      .filter(function(x) {
-        return x.source === 'typekit' && typekitLoaded.indexOf(x.id) === -1;
-      })
-      .map(function(x) { x.variations = ['n4']; return x; });
-
-    typekitLoaded = typekitLoaded.concat(_.pluck(typekit, 'id'));
-
     var hasLoaded = function() {
-      if (loaded === typekit.length && callback) {
+      if (callback) {
         callback();
       }
     };
@@ -365,8 +350,6 @@ var Protoshop = function() {
       loaded++;
       hasLoaded();
     };
-
-    TypekitPreview.load(typekit, {fontactive: fontDone, fontinactive:fontDone});
 
     // We are gonna want to wrap this so we can detect font loading
     var link =
