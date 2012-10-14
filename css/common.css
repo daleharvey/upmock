@@ -88,6 +88,7 @@ header {
     padding: 5px;
     z-index: 9000;
     border-bottom: 1px solid #CCC;
+    min-height: 22px;
 }
 
 #top-bar-inner {
