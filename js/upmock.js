@@ -1,10 +1,3 @@
-$.ajaxSetup({
-  cache: false,
-  contentType: 'application/json'
-});
-
-$.couch.urlPrefix = '/couch';
-
 var defaultSite = {
   html: '',
   fonts: [],
@@ -24,39 +17,18 @@ var defaultSite = {
 var DataStore = {
 
   data: null,
-  local: false,
+  local: true,
 
-  load: function(user, name, callback) {
-    var self = this;
-    self.local = !user;
-    if (!self.local) {
-      $.couch.db('upmock-' + user.name).openDoc(name).then(function(data) {
-        self.data = $.extend(true, defaultSite, data);
-        // Clear out the old font formats
-        if (typeof self.data.fonts[0] === 'string') {
-          self.data.fonts = [];
-        }
-        callback();
-      });
-    } else {
-      this.data = localJSON.get(name, defaultSite);
-      callback();
-    }
+  load: function(name, callback) {
+    this.data = localJSON.get('default', defaultSite);
+    callback();
   },
 
   save: function() {
-    var self = this;
-    if (!self.local) {
-      var db = $.couch.db('upmock-' + window.protoshop.user.name);
-      var dfd = $.Deferred();
-      db.saveDoc(this.data).then(function(result) {
-        self.data._rev = result.rev;
-        dfd.resolve();
-      });
-      return dfd.promise();
-    } else {
-      localJSON.set(this.data._id, this.data);
-    }
+    localJSON.set('default', this.data);
+    var dfd = $.Deferred();
+    setTimeout(dfd.resolve, 0);
+    return dfd;
   }
 
 };
@@ -329,7 +301,7 @@ var Protoshop = function() {
     }
     DataStore.data.fonts.push(font);
     DataStore.data.fonts = _.uniq(DataStore.data.fonts, false, function (v) {
-      return v.id;
+      return v.family;
     });
   };
 
@@ -337,8 +309,8 @@ var Protoshop = function() {
     var loaded = 0;
 
     var google = fonts
-      .filter(function(x) { return x.source === 'google'; })
-      .map(function(x) { return x.id; });
+      .filter(function(x) { return x.source !== 'system'; })
+      .map(function(x) { return x.family; });
 
     var hasLoaded = function() {
       if (callback) {
@@ -350,6 +322,11 @@ var Protoshop = function() {
       loaded++;
       hasLoaded();
     };
+
+    if (!google.length) {
+      hasLoaded();
+      return;
+    }
 
     // We are gonna want to wrap this so we can detect font loading
     var link =
@@ -1471,13 +1448,9 @@ var Protoshop = function() {
 
   this.initaliseData = function(callback) {
 
-    if (self.user) {
-      self.site_prefix = decodeURIComponent(document.location.pathname.split('/')[3]);
-    } else {
-      self.site_prefix = 'default';
-    }
+    self.site_prefix = 'default';
 
-    DataStore.load(self.user, self.site_prefix, function() {
+    DataStore.load(self.site_prefix, function() {
 
       self.undo_stack.push(DataStore.data);
       self.restore(DataStore.data);
@@ -1491,7 +1464,6 @@ var Protoshop = function() {
       }
 
       self.refreshToolbar();
-
       callback();
     });
 
@@ -1516,14 +1488,8 @@ var Protoshop = function() {
     }
   }
 
-  $.couch.session({}).then(function(data) {
-    self.user = !data.userCtx.name ? false : {name: data.userCtx.name};
-  }, "json").then(function() {
-    show();
-  }).fail(function() {
-    self.user = false;
-    show();
-  });
+  self.user = false;
+  show();
 
   $(window).bind('beforeunload', function() {
     if (AutoSave.isDirty()) {

@@ -486,8 +486,8 @@ TextView = Trail.View.extend({
         var data = $(e.target).data('font-data');
         self.protoshop.addFont(data);
         self.protoshop.loadOwnFonts();
-        currentFont.text(data.family).css('font-family', data.id);
-        self.protoshop.onSelectedUndo('css',{'font-family': data.id});
+        currentFont.text(data.family).css('font-family', data.family);
+        self.protoshop.onSelectedUndo('css',{'font-family': data.family});
       }
     });
 
@@ -496,7 +496,6 @@ TextView = Trail.View.extend({
 
     var results = Protoshop.Toolbar.systemFonts.concat(DataStore.data.fonts);
     var currentIndex = 0;
-
     var searchTerm = '';
     var loadingFonts = false;
     var hasScrolled = false;
@@ -531,7 +530,7 @@ TextView = Trail.View.extend({
       var li, list = [];
 
       for (var i = currentIndex; i < len; i++) {
-        li = $('<li style="font-family: ' + results[i].id +'" class="' +
+        li = $('<li style="font-family: ' + results[i].family +'" class="' +
                results[i].source + '">' +
                results[i].family + '</li>').data('font-data', results[i]);
         list.push(li);
@@ -876,13 +875,15 @@ ElementView = Trail.View.extend({
 Protoshop.Toolbar = function(protoshop) {
 
   var self = this;
+  var key = 'AIzaSyAEogJHWsfcjUcXt4_k1ahQlbKxDGTwubM';
 
   this.protoshop = protoshop;
   this.sections = [];
   this.fonts = [];
 
-  $.get('/fonts/').then(function(data) {
-    Protoshop.Toolbar.fonts = data;
+  $.get('https://www.googleapis.com/webfonts/v1/webfonts?key=' + key).then(function(data) {
+    var obj = JSON.parse(data);
+    Protoshop.Toolbar.fonts = obj.items;
   });
 
   function areAll(arr, type) {
