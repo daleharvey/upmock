@@ -881,9 +881,12 @@ Protoshop.Toolbar = function(protoshop) {
   this.sections = [];
   this.fonts = [];
 
-  $.get('https://www.googleapis.com/webfonts/v1/webfonts?key=' + key).then(function(data) {
-    var obj = JSON.parse(data);
-    Protoshop.Toolbar.fonts = obj.items;
+  $.ajax({
+    type: 'GET',
+    url: 'https://www.googleapis.com/webfonts/v1/webfonts?key=' + key,
+    dataType: 'json'
+  }).then(function(data) {
+    Protoshop.Toolbar.fonts = data.items;
   });
 
   function areAll(arr, type) {
