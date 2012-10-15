@@ -1,0 +1,110 @@
+<html>
+  <head>
+
+    <title>jsColour</title>
+
+    <style>
+      * { font-family: sans-serif; }
+      body { width: 800px; margin: 20px auto; }
+      .gradientBox { height: 100%; width: 100%; }
+      .color-stop { width: 8px; height: 8px; border: 1px solid #999; }
+      .stops { position: relative; left: -5px; }
+      .stop-input { visibility: hidden; }
+      textarea { float:left; width:385px; height:100%; resize: none; font-family: monospace; border: 0px; }
+      iframe, .iframe { width: 385px; float:right; height: 100%; border: 0px; background: #FFF; padding: 10px; box-sizing: border-box; }
+      .wrapper { background: #CCC;padding: 10px; height:200px; }
+    </style>
+  </head>
+  <body>
+
+    <h1>jsColour.js</h1>
+
+    <p>jsColour is a series of utilities and widgets used for working with colour in JavaScript</p>
+
+    <h2>Colour Picker</h2>
+
+    <div class="wrapper">
+      <div>
+        <textarea disabled><html>
+  <body>
+    <input type="color" />
+
+    <script src="./jquery-1.7.1.min.js"></script>
+    <script src="./jscolour.js"></script>
+    <script>
+      jscolour.bindAll();
+    </script>
+  </body>
+</html></textarea>
+        <div class="iframe"><input type="color" value=""></div>
+      </div>
+    </div>
+
+    <h2>Gradient Picker</h2>
+
+    <div class="wrapper">
+      <div>
+        <textarea disabled><html>
+  <body>
+    <input type="color" />
+
+    <script src="./jquery-1.7.1.min.js"></script>
+    <script src="./jscolour.gradient.js"></script>
+    <script src="./jscolour.js"></script>
+    <script>
+      new jscolour.gradientPicker({
+        $domStyle: $('#gradient'),
+        $domValue: $('#gradient'),
+      });
+    </script>
+  </body>
+</html></textarea>
+        <div class="iframe"><div id="gradient" style="width: 200px; margin-top: 20px;"></div>
+</div>
+      </div>
+    </div>
+
+    <h2>Angle Picker</h2>
+
+    <div class="wrapper">
+      <div>
+        <textarea disabled><html>
+  <body>
+    <input type="color" />
+
+    <script src="./jquery-1.7.1.min.js"></script>
+    <script src="./jscolour.angle.js"></script>
+    <script src="./jscolour.js"></script>
+    <script>
+      new jscolour.anglePicker({
+        $domValue: $('#angle')
+      });
+    </script>
+  </body>
+</html></textarea>
+        <div class="iframe"><input type="number" type="angle" id="angle" /></div>
+</div>
+      </div>
+    </div>
+
+
+    <script src="./jquery-1.7.1.min.js"></script>
+    <script src="./jscolour.js"></script>
+    <script src="./jscolour.gradient.js"></script>
+    <script src="./jscolour.angle.js"></script>
+    <script>
+
+      jscolour.bindAll();
+
+      new jscolour.gradientPicker({
+        $domStyle: $('#gradient'),
+        $domValue: $('#gradient'),
+      });
+
+      new jscolour.anglePicker({
+        $domValue: $('#angle')
+      });
+
+    </script>
+  </body>
+</html>
