@@ -1475,12 +1475,13 @@ var Protoshop = function() {
     }
     // browser detection, thats the cool way right?
     if ($.browser.webkit || $.browser.mozilla) {
-      self.setState(Protoshop.States.EDIT);
       self.initaliseData(function () {
         $('#loading').fadeOut('fast', function() {
           $('#loading').remove();
           document.title = self.site_prefix + ' | ' + document.title;
           $(document.body).append('<div id="selenium"></div>');
+          self.setState(Protoshop.States.EDIT);
+          self.selectElement(null);
         });
       });
     } else {
